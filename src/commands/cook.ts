@@ -27,8 +27,16 @@ export async function cookCommand(task: string): Promise<void> {
     orchestrator.register(docsManagerAgent);
     orchestrator.register(gitManagerAgent);
 
-    // Initialize team session
-    orchestrator.startSession(process.cwd(), task);
+    // Initialize team session with auto-resume from previous
+    const { previousSummary } = orchestrator.resumeSession(process.cwd(), task);
+
+    // Show previous session info if exists
+    if (previousSummary) {
+        console.log(chalk.blue('📂 Resuming from previous session:'));
+        console.log(chalk.gray(`   Last task: ${previousSummary.lastTask}`));
+        console.log(chalk.gray(`   Completed: ${previousSummary.completedSteps.join(', ') || 'None'}`));
+        console.log('');
+    }
 
     // Step 1: Planner
     const spinner = ora('Step 1/6: Planning...').start();
@@ -87,7 +95,11 @@ export async function cookCommand(task: string): Promise<void> {
         spinner.warn(`Docs update skipped: ${error}`);
     }
 
-    console.log(chalk.green.bold('\n✅ Cook workflow complete!\n'));
+    // Save session context for next time
+    orchestrator.endSession();
+
+    console.log(chalk.green.bold('\n✅ Cook workflow complete!'));
+    console.log(chalk.gray('   Session saved - context will be available next time'));
     logger.info('Use `gk git:cm` to commit changes');
 }
 
