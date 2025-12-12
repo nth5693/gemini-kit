@@ -71,7 +71,7 @@ class CoderAgent extends BaseAgent {
                 const content = match[2]?.trim() ?? '';
 
                 // Try to find filename in first line comment
-                const firstLineMatch = content.match(/^(?:\/\/|\/\*|#|<!--)\s*(?:File:|filename:)?\s*([^\s*\/]+\.\w+)/i);
+                const firstLineMatch = content.match(/^(?:\/\/|\/\*|#|<!--)\s*(?:File:|filename:)?\s*([^\s*/]+\.\w+)/i);
                 if (firstLineMatch && firstLineMatch[1]) {
                     blocks.push({
                         filePath: firstLineMatch[1],

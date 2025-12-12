@@ -90,7 +90,7 @@ Common patterns:
                 logger.success(`🎯 Selected: ${decision.agents.join(' → ')}`);
                 return decision;
             }
-        } catch (error) {
+        } catch {
             logger.warn('AI Router fallback to default');
         }
 

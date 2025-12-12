@@ -35,7 +35,7 @@ export class DocsManagerAgent extends BaseAgent {
             // Gather team context
             let teamSummary = '';
             let artifacts: string[] = [];
-            let newFeatures: string[] = [];
+            const newFeatures: string[] = [];
 
             if (teamCtx) {
                 const fullCtx = teamCtx.getFullContext();

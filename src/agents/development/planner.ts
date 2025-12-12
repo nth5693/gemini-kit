@@ -27,12 +27,7 @@ export class PlannerAgent extends BaseAgent {
         logger.agent(this.name, `Planning: ${ctx.currentTask}`);
 
         try {
-            // Get team context if available - TEMPORARILY DISABLED FOR TESTING
-            const teamInfo = '';
-            // if (teamCtx) {
-            //     const summary = teamCtx.getSummaryForAgent(this.name);
-            //     teamInfo = `\n\n## Team Context\n${summary}`;
-            // }
+            // Team context is available via teamCtx for future use
 
             // Generate plan using AI - SIMPLIFIED PROMPT FOR TESTING
             const prompt = `Create a simple implementation plan for: ${ctx.currentTask}
