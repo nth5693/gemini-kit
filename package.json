@@ -68,6 +68,7 @@
     "ora": "^8.1.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@types/node": "^22.10.0",
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
@@ -75,6 +76,7 @@
     "prettier": "^3.4.0",
     "tsup": "^8.3.5",
     "typescript": "^5.7.0",
+    "typescript-eslint": "^8.49.0",
     "vitest": "^2.1.0"
   }
 }

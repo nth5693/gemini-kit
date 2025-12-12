@@ -172,7 +172,7 @@ export class SessionManager {
         }
 
         try {
-            const fs = require('fs');
+            const fs = require('node:fs') as { unlinkSync: (path: string) => void };
             fs.unlinkSync(filePath);
             logger.info(`🗑️ Session deleted: ${sessionId}`);
             return true;
@@ -186,12 +186,13 @@ export class SessionManager {
      */
     loadLatest(): TeamContextManager | null {
         const sessions = this.list();
-        if (sessions.length === 0) {
+        const firstSession = sessions[0];
+        if (!firstSession) {
             logger.info('No saved sessions found');
             return null;
         }
 
-        return this.load(sessions[0].id);
+        return this.load(firstSession.id);
     }
 }
 

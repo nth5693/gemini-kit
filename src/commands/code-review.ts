@@ -11,7 +11,7 @@ import { execSync } from 'child_process';
 export async function codeReviewCommand(target?: string): Promise<void> {
     console.log(chalk.cyan.bold('\n🔍 Code Review...\n'));
 
-    let filesToReview = target || 'staged changes';
+    const filesToReview = target || 'staged changes';
     console.log(chalk.gray(`Target: ${filesToReview}\n`));
 
     const ctx = {

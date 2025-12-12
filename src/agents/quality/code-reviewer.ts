@@ -81,7 +81,7 @@ Be concise and actionable.`;
 
                     // Try to extract score
                     const scoreMatch = result.content.match(/(\d+)\s*\/?\s*10/);
-                    const score = scoreMatch ? parseInt(scoreMatch[1]) : undefined;
+                    const score = scoreMatch && scoreMatch[1] ? parseInt(scoreMatch[1], 10) : undefined;
 
                     reviews.push({ file, review: result.content, score });
                 } catch {
