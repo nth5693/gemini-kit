@@ -1,6 +1,6 @@
 {
   "name": "gemini-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "ClaudeKit-style AI Development Assistant with multi-model support (Gemini, Claude, OpenAI)",
   "author": "hieu",
   "license": "MIT",
