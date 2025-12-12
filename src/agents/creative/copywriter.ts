@@ -1,19 +1,21 @@
 /**
  * Copywriter Agent
  * Create high-converting marketing copy
- * Shares copy with team for design and implementation
+ * NOW SAVES copy to docs/copy/ folder
  */
 
 import { BaseAgent, AgentOutput } from '../base-agent.js';
 import { getTeamContext } from '../../context/team-context.js';
 import { providerManager } from '../../providers/index.js';
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { join } from 'path';
 import { logger } from '../../utils/logger.js';
 
 export class CopywriterAgent extends BaseAgent {
     constructor() {
         super({
             name: 'copywriter',
-            description: 'Create high-converting marketing copy',
+            description: 'Marketing copy - saves to docs/copy/',
             category: 'creative',
         });
     }
@@ -25,90 +27,73 @@ export class CopywriterAgent extends BaseAgent {
         logger.agent(this.name, `Writing copy: ${ctx.currentTask}`);
 
         try {
-            // Get context from team
+            const projectCtx = this.getProjectContext();
+
             let additionalContext = '';
             if (teamCtx) {
                 const artifacts = Array.from(teamCtx.getFullContext().artifacts.values());
-                const brainstormArtifact = artifacts.find(a => a.name === 'brainstorm-ideas');
-                const designArtifact = artifacts.find(a => a.name === 'ui-ux-design');
+                const brainstorm = artifacts.find(a => a.name === 'brainstorm-ideas');
+                const design = artifacts.find(a => a.name === 'ui-ux-design');
 
-                if (brainstormArtifact && brainstormArtifact.content) {
-                    additionalContext += `\n\nBrainstorm Ideas:\n${String(brainstormArtifact.content).slice(0, 500)}`;
-                }
-                if (designArtifact && designArtifact.content) {
-                    additionalContext += `\n\nDesign Context:\n${String(designArtifact.content).slice(0, 500)}`;
-                }
+                if (brainstorm?.content) additionalContext += `\n\nIdeas:\n${String(brainstorm.content).slice(0, 500)}`;
+                if (design?.content) additionalContext += `\n\nDesign:\n${String(design.content).slice(0, 500)}`;
             }
 
             const prompt = `You are an expert copywriter. Create compelling copy for:
 
 Task: ${ctx.currentTask}
+${projectCtx ? `\nProject: ${projectCtx.slice(0, 500)}` : ''}
 ${additionalContext}
 
-Provide multiple versions:
+Provide:
 1. **Headlines** (3 options)
 2. **Subheadlines** (3 options)
-3. **Body Copy** (short, medium, long versions)
+3. **Body Copy** (short, medium, long)
 4. **Call-to-Action** (3 options)
 5. **SEO Meta Description**
 
-Focus on benefits, use power words, create urgency.`;
+Focus on benefits, power words, urgency.`;
 
-            const result = await providerManager.generate([
-                { role: 'user', content: prompt },
-            ]);
+            const result = await providerManager.generate([{ role: 'user', content: prompt }]);
 
-            logger.success('Copy created');
+            // Save copy to file
+            const copyPath = await this.saveCopy(ctx.projectRoot, ctx.currentTask, result.content);
+            logger.success(`Copy saved: ${copyPath}`);
 
-            // Share with team
             if (teamCtx) {
-                teamCtx.sendMessage(
-                    this.name,
-                    'all',
-                    'result',
-                    '✍️ Marketing copy created',
-                    { hasCopy: true }
-                );
+                teamCtx.sendMessage(this.name, 'all', 'result',
+                    `✍️ Copy saved to ${copyPath}`, { hasCopy: true, path: copyPath });
 
                 teamCtx.addArtifact('marketing-copy', {
-                    name: 'copywriter-output',
-                    type: 'doc',
-                    createdBy: this.name,
-                    content: result.content.slice(0, 2000),
+                    name: 'copywriter-output', type: 'doc', createdBy: this.name,
+                    path: copyPath, content: result.content.slice(0, 2000),
                 });
 
-                teamCtx.addFinding('marketingCopy', {
-                    task: ctx.currentTask,
-                    copy: result.content.slice(0, 1500),
-                });
-
-                // Handoff to UI designer
-                teamCtx.sendMessage(
-                    this.name,
-                    'ui-ux-designer',
-                    'handoff',
-                    'Copy is ready. Use these texts for the design.',
-                    { copyReady: true }
-                );
+                teamCtx.sendMessage(this.name, 'ui-ux-designer', 'handoff',
+                    'Copy ready for design.', { copyReady: true, copyPath });
             }
 
-            return this.createOutput(
-                true,
-                'Copy created',
-                { copy: result.content },
-                [],
-                'ui-ux-designer'
-            );
+            return this.createOutput(true, `Copy saved to ${copyPath}`,
+                { copy: result.content, copyPath }, [copyPath], 'ui-ux-designer');
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error';
-
-            if (teamCtx) {
-                teamCtx.sendMessage(this.name, 'all', 'info', `⚠️ Copywriting failed: ${message}`);
-            }
-
+            if (teamCtx) teamCtx.sendMessage(this.name, 'all', 'info', `⚠️ Copy failed: ${message}`);
             return this.createOutput(false, message, {});
         }
+    }
+
+    private async saveCopy(projectRoot: string, topic: string, content: string): Promise<string> {
+        const dir = join(projectRoot, 'docs', 'copy');
+        if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+
+        const filename = topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40);
+        const date = new Date().toISOString().split('T')[0];
+        const path = join(dir, `${filename}-${date}.md`);
+
+        writeFileSync(path, `# Copy: ${topic}\n\n> Generated: ${new Date().toISOString()}\n\n---\n\n${content}\n`);
+        return path;
     }
 }
 
 export const copywriterAgent = new CopywriterAgent();
+
