@@ -1,9 +1,11 @@
 /**
  * Project Manager Agent
  * Comprehensive project oversight and coordination
+ * Has full view of team context and progress
  */
 
 import { BaseAgent, AgentOutput } from '../base-agent.js';
+import { getTeamContext } from '../../context/team-context.js';
 import { providerManager } from '../../providers/index.js';
 import { readdirSync, statSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
@@ -20,6 +22,8 @@ export class ProjectManagerAgent extends BaseAgent {
 
     async execute(): Promise<AgentOutput> {
         const ctx = this.getContext();
+        const teamCtx = getTeamContext();
+
         logger.agent(this.name, 'Analyzing project status...');
 
         try {
@@ -37,20 +41,38 @@ export class ProjectManagerAgent extends BaseAgent {
             // Check for common issues
             const issues = this.checkCommonIssues(ctx.projectRoot);
 
+            // Get team context
+            let teamStatus = '';
+            if (teamCtx) {
+                const fullCtx = teamCtx.getFullContext();
+                const progress = fullCtx.knowledge.taskProgress;
+                const members = fullCtx.activeMembers;
+                const artifacts = Array.from(fullCtx.artifacts.values());
+
+                teamStatus = `
+Team Status:
+- Active Members: ${members.map(m => m.name).join(', ') || 'None'}
+- Progress: Planned ${progress.planned ? '✅' : '❌'}, Tested ${progress.tested ? '✅' : '❌'}, Reviewed ${progress.reviewed ? '✅' : '❌'}
+- Artifacts: ${artifacts.length} created
+- Messages: ${fullCtx.messageLog.length} exchanged`;
+            }
+
             const prompt = `You are a project manager. Provide a project status report:
 
 Project: ${(packageInfo as { name?: string }).name ?? 'Unknown'}
 Version: ${(packageInfo as { version?: string }).version ?? 'Unknown'}
 Source Files: ${fileCount}
 Current Task: ${ctx.currentTask}
+${teamStatus}
 
 Issues Found: ${issues.join(', ') || 'None'}
 
 Provide:
 1. Project Health Summary (Good/Warning/Critical)
 2. Key Metrics
-3. Recommended Actions
-4. Risk Assessment
+3. Team Progress Assessment
+4. Recommended Actions
+5. Risk Assessment
 
 Be concise.`;
 
@@ -59,6 +81,31 @@ Be concise.`;
             ]);
 
             logger.success('Project status report generated');
+
+            // Share with team
+            if (teamCtx) {
+                teamCtx.sendMessage(
+                    this.name,
+                    'all',
+                    'result',
+                    '📊 Project status report generated',
+                    { hasReport: true, fileCount, issues }
+                );
+
+                teamCtx.addArtifact('project-report', {
+                    name: 'project-status',
+                    type: 'doc',
+                    createdBy: this.name,
+                    content: result.content.slice(0, 2000),
+                });
+
+                teamCtx.addFinding('projectStatus', {
+                    fileCount,
+                    issues,
+                    health: result.content.includes('Good') ? 'good' :
+                        result.content.includes('Warning') ? 'warning' : 'critical',
+                });
+            }
 
             return this.createOutput(
                 true,
@@ -71,6 +118,11 @@ Be concise.`;
             );
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error';
+
+            if (teamCtx) {
+                teamCtx.sendMessage(this.name, 'all', 'info', `⚠️ Project analysis failed: ${message}`);
+            }
+
             return this.createOutput(false, message, {});
         }
     }
