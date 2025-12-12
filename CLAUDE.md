@@ -1,134 +1,119 @@
 # GEMINI-KIT PROJECT INSTRUCTIONS
 
-> **QUAN TRỌNG**: File này PHẢI được đọc ở đầu MỖI phiên làm việc.
-> AI assistant phải tuân theo quy trình trong file này.
+> ⚠️ **BẮT BUỘC ĐỌC FILE NÀY ĐẦU TIÊN MỖI PHIÊN LÀM VIỆC**
+> AI assistant PHẢI tuân theo quy trình trong file này.
+
+---
+
+## 🚨 NGAY LẬP TỨC KHI BẮT ĐẦU PHIÊN
+
+**TRƯỚC KHI LÀM BẤT CỨ ĐIỀU GÌ, PHẢI:**
+
+```
+1. ĐỌC SESSION_LOG.md (xem phần cuối - session mới nhất)
+2. ĐỌC TASKS.md (biết task hiện tại và tiếp theo)
+3. ĐỌC WORKFLOW.md (nếu cần nhắc lại 8 steps)
+4. XÁC NHẬN với user về task tiếp theo
+```
+
+**SAU ĐÓ BÁO CÁO:**
+```
+✅ Đã đọc SESSION_LOG.md - Session [N] là mới nhất
+✅ Đã đọc TASKS.md - Task tiếp theo là [X]
+📊 Version: [X], Build: [X]KB
+```
+
+---
+
+## 🚨 TRƯỚC KHI KẾT THÚC PHIÊN
+
+**BẮT BUỘC PHẢI:**
+
+```
+1. CẬP NHẬT TASKS.md (mark completed, update build size)
+2. CẬP NHẬT SESSION_LOG.md (thêm session mới)
+3. CẬP NHẬT CHANGELOG.md (nếu có feature mới)
+4. COMMIT với message rõ ràng
+5. BÁO CÁO: "✅ Tracking files updated"
+```
 
 ---
 
 ## 📋 Project Overview
 
 **Dự án:** Gemini-Kit - ClaudeKit-style AI Development Assistant
-**Mục tiêu:** Clone 100% kiến trúc và behavior của ClaudeKit
 **Tech Stack:** TypeScript, Node.js, Commander.js
 **AI Models:** Gemini (primary), Claude, OpenAI
+**Version:** 0.2.1 | **Build:** 141KB | **Agents:** 15 | **Commands:** 43+
 
 ---
 
-## 🏗️ Architecture (KHÔNG ĐƯỢC THAY ĐỔI)
+## 🏗️ Architecture
 
 ```
-Core Architecture:
-├── 14 Specialized Agents (CORE) ← Trung tâm hệ thống
-├── Agent Orchestration
-├── Slash Commands (gọi Agents)
-└── CLI (gk command)
-```
-
-### Nguyên tắc bắt buộc:
-1. **Agents là CORE** - Mọi logic nằm trong agents
-2. **Commands chỉ là wrapper** - Commands gọi agents, không tự implement
-3. **Context sharing** - Agents chia sẻ context qua orchestrator
-4. **ClaudeKit Parity** - Giữ đúng 100% behavior
-
----
-
-## 📁 Key Files (Đọc trước khi làm việc)
-
-| File | Mục đích |
-|------|----------|
-| `CLAUDE.md` | File này - Project instructions |
-| `CLAUDEKIT_REFERENCE.md` | ⭐ Tài liệu ClaudeKit chính thức |
-| `TASKS.md` | Task tracking với checklist |
-| `IMPLEMENTATION_PLAN.md` | Detailed implementation plan |
-| `SESSION_LOG.md` | Log các phiên làm việc |
-| `.gemini-kit/context.json` | Current project state |
-
----
-
-## 🔄 Workflow Process (BẮT BUỘC THEO)
-
-### Khi bắt đầu phiên làm việc mới:
-
-```
-1. ĐỌC file CLAUDE.md (file này)
-2. ĐỌC file TASKS.md để biết progress hiện tại
-3. ĐỌC file SESSION_LOG.md để biết phiên trước làm gì
-4. XÁC NHẬN với user về task tiếp theo
-5. CẬP NHẬT TASKS.md khi hoàn thành task
-6. GHI LOG vào SESSION_LOG.md khi kết thúc
-```
-
-### Khi implement feature:
-
-```
-1. NGHIÊN CỨU ClaudeKit docs trước
-2. TẠO plan trong TASKS.md
-3. XIN APPROVAL từ user
-4. IMPLEMENT theo đúng plan
-5. CẬP NHẬT progress trong TASKS.md
-6. GHI LOG session
-```
-
-### Khi gặp quyết định thiết kế:
-
-```
-1. KHÔNG tự ý quyết định
-2. HỎI user trước
-3. SO SÁNH với ClaudeKit behavior
-4. THEO ClaudeKit nếu có thể
+gemini-kit/
+├── src/agents/        # 15 agents (all with team context)
+├── src/commands/      # 43+ commands
+├── src/providers/     # Gemini, Claude, OpenAI, CLIProxyAPI
+├── src/context/       # TeamContext, SessionManager
+└── src/cli/index.ts
 ```
 
 ---
 
-## ⚠️ Những điều KHÔNG ĐƯỢC LÀM
+## 📁 Key Files
 
-1. ❌ Tự ý thay đổi kiến trúc
-2. ❌ Thêm feature không có trong ClaudeKit
-3. ❌ Skip bước trong workflow
-4. ❌ Implement logic trong commands (phải ở agents)
-5. ❌ Quên cập nhật TASKS.md
-6. ❌ Quên ghi SESSION_LOG.md
-
----
-
-## ✅ Những điều PHẢI LÀM
-
-1. ✅ Đọc CLAUDE.md mỗi phiên
-2. ✅ Theo đúng workflow process
-3. ✅ Hỏi user khi không chắc
-4. ✅ Cập nhật TASKS.md real-time
-5. ✅ Ghi SESSION_LOG.md khi kết thúc
-6. ✅ Giữ ClaudeKit parity
+| File | Khi nào đọc |
+|------|-------------|
+| `SESSION_LOG.md` | **ĐẦU TIÊN** - biết phiên trước làm gì |
+| `TASKS.md` | **THỨ HAI** - biết task hiện tại |
+| `WORKFLOW.md` | Khi cần nhắc 8-step workflow |
+| `CLAUDEKIT_REFERENCE.md` | Khi cần tham chiếu ClaudeKit |
+| `CHANGELOG.md` | Khi thêm feature mới |
 
 ---
 
-## 📊 Current Status
+## 🔄 8-Step Workflow (Khi implement feature)
 
-**Phase hiện tại:** Phase 1 - Foundation
-**Task hiện tại:** Chưa bắt đầu
-**Blocker:** Không có
+```
+1. PLANNER - Tạo plan, XIN APPROVAL
+2. SCOUT - Tìm files liên quan
+3. IMPLEMENTATION - Viết code
+4. TESTER - Chạy tests
+5. CODE-REVIEWER - Review
+6. DOCS-MANAGER - Update docs
+7. GIT-MANAGER - Commit
+8. UPDATE TRACKING FILES - TASKS.md, SESSION_LOG.md
+```
 
 ---
 
-## 🔗 ClaudeKit Reference
+## ⚠️ QUY TẮC BẮT BUỘC
 
-- Docs: https://docs.claudekit.cc/
-- Architecture: 14 Specialized Agents + Orchestration
-- Commands: 38+ slash commands
+### KHÔNG ĐƯỢC:
+1. ❌ Bắt đầu làm việc mà không đọc SESSION_LOG.md và TASKS.md
+2. ❌ Implement trước khi có plan được approve
+3. ❌ Kết thúc phiên mà không update tracking files
+4. ❌ Quên commit sau khi update
+
+### PHẢI:
+1. ✅ Đọc tracking files đầu tiên mỗi phiên
+2. ✅ Update tracking files cuối mỗi phiên
+3. ✅ Xin approval trước khi implement
+4. ✅ Commit sau mỗi feature hoàn thành
 
 ---
 
-## 📝 Quick Reference
+## 📊 Current State
 
-### 14 Agents:
-1. planner, 2. scout, 3. coder, 4. debugger
-5. tester, 6. code-reviewer, 7. git-manager, 8. database-admin
-9. ui-ux-designer, 10. copywriter, 11. brainstormer
-12. researcher, 13. journal-writer, 14. docs-manager/project-manager
+**Session:** 4
+**Version:** 0.2.1
+**Build:** 141KB
+**Next Task:** Skills Upgrade Phase 1
 
-### Core Commands:
-`/cook`, `/bootstrap`, `/plan`, `/scout`, `/test`, `/debug`
-`/fix`, `/fix:fast`, `/fix:hard`, `/fix:types`, `/fix:ui`, `/fix:ci`
-`/git:commit`, `/git:cp`, `/git:pr`
-`/design:fast`, `/design:good`
-`/docs:init`, `/docs:update`
+---
+
+## 🔗 Slash Commands
+
+- `/start-session` - Bắt đầu phiên làm việc
+- `/end-session` - Kết thúc phiên làm việc
