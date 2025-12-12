@@ -3,6 +3,8 @@
  * Like a team's shared workspace/communication hub
  */
 
+import { readFileSync, existsSync } from 'fs';
+
 export interface TeamMember {
     name: string;
     role: string;
@@ -271,9 +273,8 @@ ${handoff.content}` : ''}
         try {
             // Read package.json
             const pkgPath = `${projectRoot}/package.json`;
-            const fs = require('fs');
-            if (fs.existsSync(pkgPath)) {
-                const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+            if (existsSync(pkgPath)) {
+                const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
                 this.addFinding('projectMemory', {
                     name: pkg.name || 'Unknown',
                     version: pkg.version || '0.0.0',
@@ -285,8 +286,8 @@ ${handoff.content}` : ''}
 
             // Read README if exists
             const readmePath = `${projectRoot}/README.md`;
-            if (fs.existsSync(readmePath)) {
-                const readme = fs.readFileSync(readmePath, 'utf-8');
+            if (existsSync(readmePath)) {
+                const readme = readFileSync(readmePath, 'utf-8');
                 // Extract first 500 chars as summary
                 this.addFinding('readmeSummary', readme.slice(0, 500));
             }

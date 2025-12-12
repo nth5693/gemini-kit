@@ -4,7 +4,7 @@
  */
 
 import { TeamContext, TeamContextManager, initTeamContext } from './team-context.js';
-import { writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { logger } from '../utils/logger.js';
 
@@ -172,8 +172,7 @@ export class SessionManager {
         }
 
         try {
-            const fs = require('node:fs') as { unlinkSync: (path: string) => void };
-            fs.unlinkSync(filePath);
+            unlinkSync(filePath);
             logger.info(`🗑️ Session deleted: ${sessionId}`);
             return true;
         } catch {

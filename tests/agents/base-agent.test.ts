@@ -68,7 +68,7 @@ describe('BaseAgent', () => {
         expect(result.nextAgent).toBe('next-agent');
     });
 
-    it('should cleanup after execution', () => {
+    it('should cleanup after execution', async () => {
         const ctx: AgentContext = {
             projectRoot: '/test/path',
             currentTask: 'test',
@@ -79,6 +79,6 @@ describe('BaseAgent', () => {
         agent.cleanup();
 
         // After cleanup, calling execute should throw because context is cleared
-        expect(async () => await agent.execute()).rejects.toThrow();
+        await expect(async () => await agent.execute()).rejects.toThrow();
     });
 });
