@@ -141,6 +141,58 @@ export class TeamOrchestrator {
     }
 
     /**
+     * Execute agent with auto-retry on failure
+     * Implements: Tester → (fail) → Debugger → Retry Tester
+     */
+    async executeAgentWithRetry(
+        agentName: string,
+        maxRetries: number = 2,
+        customTask?: string
+    ): Promise<AgentOutput> {
+        let result = await this.executeAgent(agentName, customTask);
+        let retries = 0;
+
+        // If agent suggests next agent on failure, execute that and retry
+        while (!result.success && result.nextAgent && retries < maxRetries) {
+            const nextAgentName = result.nextAgent;
+            const nextAgent = this.agents.get(nextAgentName);
+
+            if (!nextAgent) {
+                logger.warn(`⚠️ Suggested agent ${nextAgentName} not available`);
+                break;
+            }
+
+            logger.info(`\n🔄 Retry Loop ${retries + 1}/${maxRetries}`);
+            logger.info(`   ${agentName} → ${nextAgentName} → ${agentName}`);
+
+            // Execute the helper agent (e.g., debugger)
+            const helperResult = await this.executeAgent(nextAgentName);
+
+            if (!helperResult.success) {
+                logger.error(`   ${nextAgentName} could not help`);
+                break;
+            }
+
+            logger.info(`   ${nextAgentName}: ${helperResult.message}`);
+
+            // Retry the original agent
+            logger.info(`   Retrying ${agentName}...`);
+            result = await this.executeAgent(agentName, customTask);
+            retries++;
+
+            if (result.success) {
+                logger.success(`   ✅ ${agentName} passed on retry ${retries}!`);
+            }
+        }
+
+        if (!result.success && retries >= maxRetries) {
+            logger.warn(`⚠️ Max retries (${maxRetries}) reached for ${agentName}`);
+        }
+
+        return result;
+    }
+
+    /**
      * Execute the full cook workflow (like standup + work)
      */
     async executeCookWorkflow(task: string): Promise<AgentOutput[]> {
@@ -185,7 +237,10 @@ export class TeamOrchestrator {
                     step.action
                 );
 
-                const result = await this.executeAgent(step.agent);
+                // Use retry for tester (auto debug→retest loop)
+                const result = step.agent === 'tester'
+                    ? await this.executeAgentWithRetry(step.agent, 2)
+                    : await this.executeAgent(step.agent);
                 results.push(result);
 
                 // Update progress
