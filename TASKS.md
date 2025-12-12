@@ -8,7 +8,7 @@
 | Commands | 43+ | ✅ Complete |
 | Multi-model | 4 | ✅ Gemini, Claude, OpenAI, CLIProxyAPI |
 | Tests | 9 | ✅ All passing |
-| Build | 136KB | ✅ |
+| Build | 141KB | ✅ |
 
 ---
 
@@ -74,6 +74,12 @@
 ### Auto-Retry Loop
 - Tester fails → Debugger analyzes → Retry Tester
 - Max 2 retries per agent
+
+### Session Memory ✨ NEW
+- Auto-load previous session context
+- Project context (README, package.json) injected
+- Previous session summary available to agents
+- `resumeSession()`, `endSession()` in orchestrator
 
 ---
 
