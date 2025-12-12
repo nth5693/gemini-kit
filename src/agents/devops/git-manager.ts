@@ -60,7 +60,7 @@ Be concise and descriptive.`;
             const commitMessage = result.content
                 .replace(/```/g, '')
                 .trim()
-                .split('\n')[0];
+                .split('\n')[0] || 'chore: update';
 
             logger.info(`Generated commit: ${commitMessage}`);
 

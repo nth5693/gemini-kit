@@ -11,10 +11,11 @@ export { orchestrator } from './agents/orchestrator.js';
 export { providerManager } from './providers/index.js';
 
 // Context
-export { contextManager } from './context/context-manager.js';
+export { ContextManager } from './context/context-manager.js';
 
 // Utils
 export { loadConfig, saveConfig, type GeminiKitConfig } from './utils/config.js';
 export { logger } from './utils/logger.js';
+
 
 

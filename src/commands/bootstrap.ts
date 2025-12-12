@@ -8,7 +8,6 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { researcherAgent } from '../agents/research/researcher.js';
 import { plannerAgent } from '../agents/development/planner.js';
-import { testerAgent } from '../agents/quality/tester.js';
 import { mkdirSync, existsSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
@@ -43,7 +42,7 @@ export async function bootstrapCommand(projectName: string, template?: string): 
         const ctx = {
             projectRoot: projectPath,
             currentTask: `setup ${template || 'TypeScript'} project: ${projectName}`,
-            sharedData: {},
+            sharedData: {} as Record<string, unknown>,
         };
 
         researcherAgent.initialize(ctx);
@@ -57,7 +56,7 @@ export async function bootstrapCommand(projectName: string, template?: string): 
 
         ctx.sharedData = { research: researchResult.data };
         plannerAgent.initialize(ctx);
-        const planResult = await plannerAgent.execute();
+        await plannerAgent.execute();
         plannerAgent.cleanup();
 
         spinner.succeed('Plan created');

@@ -159,12 +159,7 @@ export async function fixCiCommand(): Promise<void> {
     try {
         // Check for common CI config files
         let ciConfig = '';
-        const ciFiles = [
-            '.github/workflows/*.yml',
-            '.gitlab-ci.yml',
-            'Jenkinsfile',
-            '.circleci/config.yml',
-        ];
+        // Supported: .github/workflows/*.yml, .gitlab-ci.yml, Jenkinsfile, .circleci/config.yml
 
         try {
             ciConfig = execSync('cat .github/workflows/*.yml 2>/dev/null || echo ""', {
