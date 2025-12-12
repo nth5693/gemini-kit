@@ -9,6 +9,7 @@ import ora from 'ora';
 import { orchestrator } from '../agents/orchestrator.js';
 import { plannerAgent } from '../agents/development/planner.js';
 import { scoutAgent } from '../agents/development/scout.js';
+import { coderAgent } from '../agents/development/coder.js';
 import { testerAgent } from '../agents/quality/tester.js';
 import { codeReviewerAgent } from '../agents/quality/code-reviewer.js';
 import { docsManagerAgent } from '../agents/documentation/docs-manager.js';
@@ -22,6 +23,7 @@ export async function cookCommand(task: string): Promise<void> {
     // Register agents
     orchestrator.register(plannerAgent);
     orchestrator.register(scoutAgent);
+    orchestrator.register(coderAgent);
     orchestrator.register(testerAgent);
     orchestrator.register(codeReviewerAgent);
     orchestrator.register(docsManagerAgent);
@@ -41,7 +43,7 @@ export async function cookCommand(task: string): Promise<void> {
     // Step 1: Planner
     const spinner = ora('Step 1/6: Planning...').start();
     try {
-        const planResult = await runAgent('planner');
+        const planResult = await runAgent('planner', task);
         if (!planResult?.success) {
             spinner.fail('Planning failed');
             return;
@@ -55,19 +57,30 @@ export async function cookCommand(task: string): Promise<void> {
     // Step 2: Scout
     spinner.start('Step 2/6: Scouting codebase...');
     try {
-        const scoutResult = await runAgent('scout');
+        const scoutResult = await runAgent('scout', task);
         spinner.succeed(`Found ${(scoutResult?.data as { results?: unknown[] })?.results?.length ?? 0} relevant files`);
     } catch (error) {
         spinner.warn(`Scouting skipped: ${error}`);
     }
 
-    // Step 3: Implementation (manual for now)
-    spinner.info('Step 3/6: Implementation - (manual step)');
+    // Step 3: Coder - ACTUALLY WRITES FILES NOW
+    spinner.start('Step 3/6: Writing code...');
+    try {
+        const codeResult = await runAgent('coder', task);
+        if (codeResult?.success) {
+            const filesWritten = (codeResult.data as { filesWritten?: string[] })?.filesWritten?.length ?? 0;
+            spinner.succeed(`Code written: ${filesWritten} files`);
+        } else {
+            spinner.warn('Code generation had issues');
+        }
+    } catch (error) {
+        spinner.warn(`Coding skipped: ${error}`);
+    }
 
     // Step 4: Tester
     spinner.start('Step 4/6: Running tests...');
     try {
-        const testResult = await runAgent('tester');
+        const testResult = await runAgent('tester', task);
         if (testResult?.success) {
             spinner.succeed('Tests passed');
         } else {
@@ -80,7 +93,7 @@ export async function cookCommand(task: string): Promise<void> {
     // Step 5: Code Review
     spinner.start('Step 5/6: Code review...');
     try {
-        await runAgent('code-reviewer');
+        await runAgent('code-reviewer', task);
         spinner.succeed('Code reviewed');
     } catch (error) {
         spinner.warn(`Review skipped: ${error}`);
@@ -89,7 +102,7 @@ export async function cookCommand(task: string): Promise<void> {
     // Step 6: Docs
     spinner.start('Step 6/6: Updating docs...');
     try {
-        await runAgent('docs-manager');
+        await runAgent('docs-manager', task);
         spinner.succeed('Documentation updated');
     } catch (error) {
         spinner.warn(`Docs update skipped: ${error}`);
@@ -103,7 +116,7 @@ export async function cookCommand(task: string): Promise<void> {
     logger.info('Use `gk git:cm` to commit changes');
 }
 
-async function runAgent(name: string) {
+async function runAgent(name: string, task: string) {
     const agent = orchestrator.getAgent(name);
     if (!agent) {
         throw new Error(`Agent ${name} not found`);
@@ -111,7 +124,7 @@ async function runAgent(name: string) {
 
     const ctx = {
         projectRoot: process.cwd(),
-        currentTask: 'cook workflow',
+        currentTask: task,
         sharedData: {},
     };
 

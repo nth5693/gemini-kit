@@ -27,30 +27,22 @@ export class PlannerAgent extends BaseAgent {
         logger.agent(this.name, `Planning: ${ctx.currentTask}`);
 
         try {
-            // Get team context if available
-            let teamInfo = '';
-            if (teamCtx) {
-                const summary = teamCtx.getSummaryForAgent(this.name);
-                teamInfo = `\n\n## Team Context\n${summary}`;
-            }
+            // Get team context if available - TEMPORARILY DISABLED FOR TESTING
+            const teamInfo = '';
+            // if (teamCtx) {
+            //     const summary = teamCtx.getSummaryForAgent(this.name);
+            //     teamInfo = `\n\n## Team Context\n${summary}`;
+            // }
 
-            // Generate plan using AI
-            const prompt = `You are a senior software architect and Tech Lead. Create a detailed implementation plan for the following task:
-
-Task: ${ctx.currentTask}
-
-Project Root: ${ctx.projectRoot}
-${teamInfo}
+            // Generate plan using AI - SIMPLIFIED PROMPT FOR TESTING
+            const prompt = `Create a simple implementation plan for: ${ctx.currentTask}
 
 Please provide:
-1. Overview of the task
-2. Technical approach  
-3. Files to create/modify
-4. Step-by-step implementation
-5. Testing strategy
-6. Potential challenges
+1. Overview
+2. Files to create
+3. Implementation steps
 
-Format the plan in Markdown. Be specific about what each team member (coder, tester, reviewer) should do.`;
+Format in Markdown.`;
 
             const result = await providerManager.generate([
                 { role: 'user', content: prompt },

@@ -20,6 +20,9 @@ export class OpenAIProvider extends BaseProvider {
         this.client = new OpenAI({
             apiKey,
             baseURL: baseURL || undefined,
+            defaultHeaders: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+            },
         });
     }
 
@@ -45,25 +48,32 @@ export class OpenAIProvider extends BaseProvider {
             });
         }
 
-        const response = await this.client.chat.completions.create({
-            model: this.model,
-            messages: chatMessages,
-            temperature: options?.temperature,
-            max_tokens: options?.maxTokens,
-            stop: options?.stopSequences,
-        });
+        try {
+            const response = await this.client.chat.completions.create({
+                model: this.model,
+                messages: chatMessages,
+                temperature: options?.temperature,
+                max_tokens: options?.maxTokens,
+                stop: options?.stopSequences,
+            });
 
-        const content = response.choices[0]?.message?.content ?? '';
+            const content = response.choices[0]?.message?.content ?? '';
 
-        return {
-            content,
-            model: this.model,
-            provider: this.providerName,
-            usage: {
-                inputTokens: response.usage?.prompt_tokens ?? 0,
-                outputTokens: response.usage?.completion_tokens ?? 0,
-            },
-        };
+            return {
+                content,
+                model: this.model,
+                provider: this.providerName,
+                usage: {
+                    inputTokens: response.usage?.prompt_tokens ?? 0,
+                    outputTokens: response.usage?.completion_tokens ?? 0,
+                },
+            };
+        } catch (error: unknown) {
+            const err = error as { status?: number; message?: string; error?: { message?: string } };
+            const statusCode = err.status || 'unknown';
+            const errorMessage = err.error?.message || err.message || String(error);
+            throw new Error(`API Error (${statusCode}): ${errorMessage}`);
+        }
     }
 
     async *generateStream(
