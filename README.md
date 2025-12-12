@@ -472,20 +472,88 @@ pnpm build
 }
 ```
 
-### Using CLIProxyAPI (Free via OAuth)
+### Using CLI Proxy API (Use Gemini without API Key!)
+
+[CLI Proxy API](https://github.com/xsigoking/cli-proxy-api) lets you use Gemini models **without needing your own API key** by leveraging Google's OAuth (Gemini Advanced subscription).
+
+#### Why CLI Proxy API?
+
+| Feature | Direct API Key | CLI Proxy API |
+|---------|----------------|---------------|
+| Cost | Pay per token | Free (with Gemini Advanced) |
+| Rate Limits | API limits | Higher limits |
+| Models | gemini-1.5-pro | gemini-2.5-pro, gemini-2.5-flash, gemini-3-pro-preview |
+
+#### Step 1: Deploy CLI Proxy API
+
+Option A: **Docker (Recommended)**
+```bash
+docker run -d -p 8317:8317 xsigoking/cli-proxy-api
+```
+
+Option B: **Use a Public Instance** (if available)
+```
+https://your-cli-proxy-server.com
+```
+
+#### Step 2: Authenticate
+
+1. Open browser: `http://localhost:8317/management.html`
+2. Click "Login with Google" 
+3. Sign in with a Google account that has **Gemini Advanced** subscription
+
+#### Step 3: Configure Gemini-Kit
+
+Create `~/.gemini-kit/config.json`:
 
 ```json
 {
   "defaultProvider": "cliproxy",
   "providers": {
     "cliproxy": {
-      "apiKey": "cliproxy",
-      "model": "gemini-2.5-pro",
-      "baseURL": "http://localhost:8080/v1"
+      "apiKey": "your-api-key-1",
+      "baseURL": "https://your-cli-proxy-server.com/v1",
+      "model": "gemini-2.5-flash"
     }
   }
 }
 ```
+
+> ⚠️ **Important:** The `baseURL` must end with `/v1`
+
+#### Available Models via CLI Proxy
+
+| Model | Best For |
+|-------|----------|
+| `gemini-2.5-flash` | Fast responses, general tasks |
+| `gemini-2.5-pro` | Complex reasoning, longer context |
+| `gemini-2.5-flash-lite` | Quick tasks, lower latency |
+| `gemini-3-pro-preview` | Experimental, newest features |
+
+#### Step 4: Test Connection
+
+```bash
+# Test with a simple ask
+gk ask "Hello, what model are you?"
+
+# Run the full workflow
+gk cook "Create a simple todo app"
+```
+
+#### Troubleshooting CLI Proxy
+
+**403 Forbidden:**
+- Ensure your Google account has Gemini Advanced subscription
+- Re-authenticate at `/management.html`
+
+**404 Not Found:**
+- Make sure `baseURL` ends with `/v1`
+- Example: `https://server.com/v1` ✅
+- Not: `https://server.com` ❌
+
+**Connection Refused:**
+- Check if CLI Proxy API is running
+- Verify the port (default: 8317)
 
 ---
 
