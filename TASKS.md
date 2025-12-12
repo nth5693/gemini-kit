@@ -50,19 +50,32 @@
 ### Database (3)
 - `gk db query` | `optimize` | `schema`
 
+### Session (5) ✨ NEW
+- `gk session list` | `save` | `load` | `info` | `delete`
+
 ### Other (3)
 - `gk brainstorm` | `journal` | `watzup`
+
+---
+
+## ✨ New Features (v0.2.0+)
+
+- **Team Context Sharing** - Agents communicate like a real team
+- **Session Persistence** - Save/resume sessions across restarts
+- **Auto-Retry Loop** - Tester → Debugger → Retry on failures
+- **Multi-model Support** - Gemini, Claude, OpenAI, CLIProxyAPI
 
 ---
 
 ## 📁 Final Structure
 
 ```
-gemini-kit/ (84KB build)
+gemini-kit/ (126KB build)
 ├── src/
 │   ├── agents/        # 15 agents
-│   ├── commands/      # 30 commands
-│   ├── providers/     # Gemini, Claude, OpenAI
+│   ├── commands/      # 43+ commands
+│   ├── providers/     # Gemini, Claude, OpenAI, CLIProxyAPI
+│   ├── context/       # TeamContext, SessionManager
 │   └── cli/index.ts
 ├── tests/             # 9 tests
 └── package.json
@@ -70,6 +83,7 @@ gemini-kit/ (84KB build)
 
 ---
 
-## 🎯 ClaudeKit Parity: 100% ✅
+## 🎯 ClaudeKit Parity: 100% ✅ + Enhancements
 
-All features from CLAUDEKIT_REFERENCE.md implemented.
+All features from CLAUDEKIT_REFERENCE.md implemented + team context + session persistence.
+

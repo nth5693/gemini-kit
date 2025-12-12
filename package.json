@@ -36,7 +36,23 @@
     "development",
     "assistant",
     "agents",
-    "claudekit"
+    "claudekit",
+    "team",
+    "context"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nth5693/gemini-kit.git"
+  },
+  "homepage": "https://github.com/nth5693/gemini-kit#readme",
+  "bugs": {
+    "url": "https://github.com/nth5693/gemini-kit/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": ">=20.0.0"
