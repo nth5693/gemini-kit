@@ -488,6 +488,60 @@ CHANGELOG.md                # NEW
 
 ---
 
+## Session 5 - 2024-12-13 01:40
+
+### 📌 Mục tiêu phiên
+- Fix audit issues (ESLint, tests)
+- Tích hợp CLI Proxy API với gemini-kit
+- Implement Coder agent file writing
+
+### ✅ Đã hoàn thành
+
+1. **CLI Proxy API Integration**:
+   - Fix 403 Cloudflare block với custom User-Agent header
+   - Fix 404 - baseURL cần `/v1` suffix
+   - Hỗ trợ gemini-2.5-flash, gemini-2.5-pro, gemini-3-pro-preview
+
+2. **Coder Agent File Writing** ✨:
+   - extractCodeBlocks() với 4 regex patterns:
+     - `## File: path/file.ext`
+     - `**path/file.ext**`
+     - `` `path/file.ext`: ``
+     - Fallback: đọc filename từ comment
+   - writeFiles() tạo files và directories tự động
+   - Cook workflow Step 3 runs coder agent thay vì manual
+
+3. **Demo App Created**:
+   - Employee Manager app (HTML/CSS/JS)
+   - Dark mode toggle
+   - LocalStorage persistence
+   - 3 files: index.html, style.css, script.js
+
+4. **Documentation**:
+   - README.md - Comprehensive CLI Proxy API guide
+   - .gitignore - Exclude config files, demo-apps, plans
+
+### 📁 Files đã sửa/tạo
+- `src/agents/development/coder.ts` - File writing capability
+- `src/commands/cook.ts` - Register coder, pass task
+- `src/providers/openai.ts` - User-Agent header, error handling
+- `src/agents/development/planner.ts` - Simplified prompt
+- `.gitignore` - Config exclusions
+- `README.md` - CLI Proxy API documentation
+
+### 📊 Stats
+- **Build**: 148KB
+- **Tests**: 9/9 ✅
+- **Commits**: 83a6060, f45b4e9
+
+### 🔜 Task tiếp theo
+- Skills Upgrade Phase 1:
+  - Tester: Test Generation
+  - Debugger: Auto-Fix
+- Improve coder regex for edge cases
+
+---
+
 <!-- Thêm session mới ở trên dòng này -->
 
 

@@ -1,6 +1,6 @@
 # Gemini-Kit Tasks
 
-## 📊 Current Status: v0.2.1
+## 📊 Current Status: v0.2.2
 
 | Component | Count | Status |
 |-----------|-------|--------|
@@ -8,7 +8,7 @@
 | Commands | 43+ | ✅ Complete |
 | Multi-model | 4 | ✅ Gemini, Claude, OpenAI, CLIProxyAPI |
 | Tests | 9 | ✅ All passing |
-| Build | 141KB | ✅ |
+| Build | 148KB | ✅ |
 
 ---
 
@@ -81,12 +81,22 @@
 - Previous session summary available to agents
 - `resumeSession()`, `endSession()` in orchestrator
 
+### Coder File Writing ✨ NEW (v0.2.2)
+- extractCodeBlocks() với 4 regex patterns
+- writeFiles() tự động tạo files từ AI response
+- Cook workflow Step 3 runs coder agent
+
+### CLI Proxy API Integration ✨ NEW (v0.2.2)
+- Custom User-Agent header bypass Cloudflare
+- baseURL requires `/v1` suffix
+- Supports gemini-2.5-flash, gemini-2.5-pro, gemini-3-pro-preview
+
 ---
 
 ## 🔜 Next: Skills Upgrade
 
 ### Phase 1 (Priority High)
-- [ ] **Coder**: File Writing - auto write to files
+- [x] **Coder**: File Writing - auto write to files ✅
 - [ ] **Tester**: Test Generation - auto create tests
 - [ ] **Debugger**: Auto-Fix - auto fix simple errors
 

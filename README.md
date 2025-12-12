@@ -474,7 +474,7 @@ pnpm build
 
 ### Using CLI Proxy API (Use Gemini without API Key!)
 
-[CLI Proxy API](https://github.com/xsigoking/cli-proxy-api) lets you use Gemini models **without needing your own API key** by leveraging Google's OAuth (Gemini Advanced subscription).
+[CLI Proxy API](https://github.com/router-for-me/CLIProxyAPI) lets you use Gemini models **without needing your own API key** by leveraging Google's OAuth (Gemini Advanced subscription).
 
 #### Why CLI Proxy API?
 
