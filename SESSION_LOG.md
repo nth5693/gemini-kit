@@ -730,15 +730,16 @@ gemini-cli-reference/packages/core/src/gemini-kit/
 ```
 
 ### 📊 Stats
-- **New Code**: ~50KB across 17 files
+- **New Code**: ~148KB across 28 files
 - **Agents**: 15/15 complete
+- **Commands**: 11 (cook, plan, scout, fix, test, review, git, docs, brainstorm, research, look)
+- **Skills**: 2 (checkpoint, assistants)
 - **Version**: 0.4.0-alpha
 
 ### 🔜 Task tiếp theo
-- Phase 5: Context System (TeamContext, Session)
-- Phase 6: Commands (24 commands)
-- Phase 7: Skills (checkpoint, screenshot)
-- Phase 8: Integration & Testing
+- Install deps và fix import paths
+- Integrate với Gemini CLI main codebase
+- Test end-to-end
 
 ---
 
