@@ -4,31 +4,43 @@ description: Bắt đầu phiên làm việc với gemini-kit
 
 # Workflow: Bắt đầu phiên làm việc
 
+## 📁 DANH SÁCH FILES QUAN TRỌNG
+
+| File | Mục đích | Khi nào đọc |
+|------|----------|-------------|
+| `SESSION_LOG.md` | Lịch sử các phiên | **ĐẦU TIÊN** - biết phiên trước làm gì |
+| `TASKS.md` | Danh sách tasks | **THỨ HAI** - biết task hiện tại |
+| `IMPLEMENTATION_PLAN.md` | Kế hoạch tổng thể | Khi cần hiểu kiến trúc |
+| `WORKFLOW.md` | Quy trình 8 bước | Khi implement feature mới |
+| `CLAUDE.md` | Project rules | Khi cần nhắc lại rules |
+| `CHANGELOG.md` | Lịch sử thay đổi | Khi thêm feature mới |
+| `CLAUDEKIT_REFERENCE.md` | Tham chiếu ClaudeKit | Khi cần so sánh |
+
+---
+
 ## Bước 1: ĐỌC CÁC FILE BẮT BUỘC
 
-Trước khi làm bất cứ điều gì, PHẢI đọc các file sau theo thứ tự:
-
+// turbo
 ```
-1. view_file /Users/hieu/Dev/gemini-kit/WORKFLOW.md
-2. view_file /Users/hieu/Dev/gemini-kit/SESSION_LOG.md (xem phần cuối - session mới nhất)
-3. view_file /Users/hieu/Dev/gemini-kit/TASKS.md
-4. view_file /Users/hieu/Dev/gemini-kit/IMPLEMENTATION_PLAN.md
+1. view_file /Users/hieu/Dev/gemini-kit/SESSION_LOG.md (xem phần cuối - session mới nhất)
+2. view_file /Users/hieu/Dev/gemini-kit/TASKS.md
+3. view_file /Users/hieu/Dev/gemini-kit/IMPLEMENTATION_PLAN.md
+4. view_file /Users/hieu/Dev/gemini-kit/WORKFLOW.md
 5. view_file /Users/hieu/Dev/gemini-kit/CLAUDE.md
 ```
 
 ## Bước 2: XÁC NHẬN ĐÃ ĐỌC
 
-Sau khi đọc xong, PHẢI báo cáo:
-
 ```
-✅ Đã đọc WORKFLOW.md - Hiểu 8 steps
 ✅ Đã đọc SESSION_LOG.md - Session [N] là session gần nhất
 ✅ Đã đọc TASKS.md - Task tiếp theo là [X]
+✅ Đã đọc IMPLEMENTATION_PLAN.md - Migration status: [X]
+✅ Đã đọc WORKFLOW.md - Hiểu 8 steps
 ✅ Đã đọc CLAUDE.md - Hiểu project rules
 
 📊 Current State:
 - Session: [N]
-- Version: [X]
+- Version: [X.X.X]
 - Next Task: [Y]
 ```
 
@@ -40,18 +52,6 @@ Bạn muốn làm gì trong phiên này?
 2. Task mới
 3. Review/Fix
 ```
-
-## Bước 4: THEO WORKFLOW 8 STEPS
-
-Với bất kỳ feature mới nào:
-1. Planner → Tạo plan, XIN APPROVAL
-2. Scout → Tìm files
-3. Implementation → Viết code
-4. Tester → Test
-5. Code-Reviewer → Review
-6. Docs-Manager → Update docs
-7. Git-Manager → Commit
-8. Update TASKS.md + SESSION_LOG.md
 
 ## ⚠️ KHÔNG ĐƯỢC:
 - Skip đọc files

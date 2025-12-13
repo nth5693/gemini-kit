@@ -4,74 +4,82 @@ description: Kết thúc phiên làm việc với gemini-kit
 
 # Workflow: Kết thúc phiên làm việc
 
-## ⚠️ BẮT BUỘC TRƯỚC KHI KẾT THÚC
+## 📁 FILES PHẢI CẬP NHẬT
 
-### Bước 1: CẬP NHẬT TASKS.md
+| File | Bắt buộc | Khi nào |
+|------|----------|---------|
+| `SESSION_LOG.md` | ✅ LUÔN | Mọi session |
+| `TASKS.md` | ✅ LUÔN | Mọi session |
+| `CHANGELOG.md` | ⚠️ Có thể | Khi có version mới |
+| `IMPLEMENTATION_PLAN.md` | ⚠️ Có thể | Khi có thay đổi lớn |
+| `WORKFLOW.md` | ⚠️ Có thể | Khi cập nhật Current State |
 
-```
-1. Mark completed tasks với [x]
-2. Update build size nếu có thay đổi
-3. Thêm feature mới vào danh sách nếu có
-```
+---
 
-### Bước 2: CẬP NHẬT SESSION_LOG.md
+## Bước 1: CẬP NHẬT SESSION_LOG.md (BẮT BUỘC)
 
-Thêm vào cuối file (trước <!-- Thêm session mới -->):
+Thêm vào cuối file (trước `<!-- Thêm session mới -->`):
 
 ```markdown
-## Session [N] (Continued) - [DATE TIME]
+## Session [N] - [DATE TIME]
 
-### 📌 Mục tiêu
-- [Mục tiêu phiên này]
+### 📌 Mục tiêu phiên
+- [Mục tiêu]
 
 ### ✅ Đã hoàn thành
-- [Liệt kê các task đã làm]
+- [Task 1]
+- [Task 2]
 
 ### 📁 Files đã tạo/sửa
-- [Danh sách files]
+- [file1.ts]
+- [file2.ts]
 
 ### 📊 Stats
-- Build: [X]KB
-- Tests: [X/X]
-- Commits: [hash1, hash2]
+- **Version**: x.x.x
+- **Build**: xxxKB
+- **Tests**: x/x ✅
 
 ### 🔜 Task tiếp theo
-- [Task kế tiếp]
+- [Next task]
 ```
 
-### Bước 3: CẬP NHẬT IMPLEMENTATION_PLAN.md (nếu có thay đổi lớn)
+## Bước 2: CẬP NHẬT TASKS.md (BẮT BUỘC)
+
+```
+- Mark completed tasks với [x]
+- Update version và build size
+- Thêm tasks mới nếu có
+```
+
+## Bước 3: CẬP NHẬT CHANGELOG.md (NẾU CÓ VERSION MỚI)
 
 ```markdown
-1. Update Current Status table (version, build size)
-2. Mark completed phases với [x]
-3. Update "So Sánh với ClaudeKit" nếu có feature mới
+## [x.x.x] - YYYY-MM-DD
+
+### Added
+- [Feature mới]
+
+### Changed
+- [Thay đổi]
+
+### Fixed
+- [Bug fix]
 ```
 
-### Bước 4: CẬP NHẬT CHANGELOG.md (nếu có feature mới)
-
-```markdown
-- **[Feature Name]** - [Mô tả ngắn]
-  - [Chi tiết 1]
-  - [Chi tiết 2]
-```
-
-### Bước 5: COMMIT VÀ PUSH
+## Bước 4: COMMIT
 
 ```bash
 git add -A
-git commit -m "docs: update tracking files for session [N]"
-git push
+git commit -m "docs: update session [N]"
 ```
 
-### Bước 6: XÁC NHẬN HOÀN THÀNH
+## Bước 5: XÁC NHẬN
 
-Báo cáo cho user:
 ```
-✅ TASKS.md updated
-✅ SESSION_LOG.md updated
-✅ IMPLEMENTATION_PLAN.md updated (nếu có)
-✅ CHANGELOG.md updated (nếu có)
+✅ SESSION_LOG.md - Session [N]
+✅ TASKS.md - v[X.X.X]
+✅ CHANGELOG.md - v[X.X.X] (nếu có)
 ✅ Committed: [hash]
 ```
 
-## ⚠️ KHÔNG ĐƯỢC KẾT THÚC MÀ KHÔNG LÀM CÁC BƯỚC TRÊN!
+## ⚠️ KHÔNG ĐƯỢC KẾT THÚC MÀ KHÔNG UPDATE FILES!
