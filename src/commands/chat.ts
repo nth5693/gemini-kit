@@ -1,6 +1,6 @@
 /**
- * Chat Command - Agentic Chat Mode (như ClaudeKit)
- * Features: Conversation, File Reading, Agent Invocation
+ * Chat Command - Full Agentic Chat Mode (như ClaudeKit)
+ * Features: Conversation, File Reading, Agent Invocation, Skills
  */
 
 import { createInterface } from 'readline';
@@ -11,6 +11,9 @@ import { join, relative } from 'path';
 import { cookCommand } from './cook.js';
 import { plannerAgent } from '../agents/development/planner.js';
 import { scoutAgent } from '../agents/development/scout.js';
+import { handleScreenshotCommand } from '../skills/screenshot.js';
+import { createCheckpoint, listCheckpoints, rollbackToCheckpoint } from '../skills/checkpoint.js';
+import { listAssistants, chatWithAssistant } from '../skills/assistants.js';
 
 interface ChatMessage {
     role: 'user' | 'assistant' | 'system';
@@ -193,6 +196,75 @@ Respond in the same language the user uses.`
                 return;
             }
 
+            // @screenshot command - convert image to code
+            if (trimmed.startsWith('@screenshot ') || trimmed.startsWith('@ss ')) {
+                const imagePath = trimmed.replace(/^@(screenshot|ss)\s+/, '');
+                const result = await handleScreenshotCommand(imagePath, cwd);
+                console.log(result);
+                history.push({ role: 'assistant', content: result });
+                prompt();
+                return;
+            }
+
+            // @checkpoint commands
+            if (trimmed === '@save' || trimmed.startsWith('@save ')) {
+                const name = trimmed.replace(/^@save\s*/, '') || undefined;
+                const cp = createCheckpoint(cwd, name);
+                console.log(`\n📸 Checkpoint saved: ${cp.name} (${cp.files.length} files)`);
+                prompt();
+                return;
+            }
+
+            if (trimmed === '@checkpoints' || trimmed === '@cps') {
+                const cps = listCheckpoints(cwd);
+                console.log('\n📸 Checkpoints:');
+                if (cps.length === 0) {
+                    console.log('  No checkpoints yet. Use @save to create one.');
+                } else {
+                    cps.forEach(cp => {
+                        console.log(`  • ${cp.id}: ${cp.name} (${new Date(cp.timestamp).toLocaleString()})`);
+                    });
+                }
+                prompt();
+                return;
+            }
+
+            if (trimmed.startsWith('@rollback ')) {
+                const id = trimmed.replace(/^@rollback\s+/, '');
+                const success = rollbackToCheckpoint(cwd, id);
+                console.log(success ? `\n⏪ Rolled back to checkpoint: ${id}` : '\n❌ Rollback failed');
+                prompt();
+                return;
+            }
+
+            // @use command - use specific assistant
+            if (trimmed.startsWith('@use ')) {
+                const parts = trimmed.replace(/^@use\s+/, '').split(/\s+(.+)/);
+                const assistantName = parts[0];
+                const message = parts[1] || '';
+
+                if (!message) {
+                    console.log(`\n❓ Usage: @use <assistant> <message>`);
+                    console.log(listAssistants(cwd));
+                } else {
+                    const response = await chatWithAssistant(cwd, assistantName || 'coder', message,
+                        history.filter(m => m.role !== 'system').map(m => ({ role: m.role, content: m.content }))
+                    );
+                    console.log(`\n🤖 ${assistantName}:`);
+                    console.log(response);
+                    history.push({ role: 'assistant', content: response });
+                }
+                prompt();
+                return;
+            }
+
+            // @assistants - list available assistants
+            if (trimmed === '@assistants' || trimmed === '@ast') {
+                console.log(listAssistants(cwd));
+                prompt();
+                return;
+            }
+
             // Help
             if (trimmed.toLowerCase() === 'help' || trimmed === '?') {
                 showHelp();
@@ -237,14 +309,18 @@ Respond in the same language the user uses.`
 
 function showHelp(): void {
     console.log('\n📖 Commands:');
-    console.log('  @do <task>     - Run full workflow (plan → code → test)');
-    console.log('  @plan <task>   - Create plan only');
-    console.log('  @scout <query> - Search codebase with AI');
-    console.log('  @file <path>   - Read a file');
-    console.log('  @search <term> - Search files by name');
-    console.log('  @ls [dir]      - List directory');
-    console.log('  exit           - Exit chat\n');
-    console.log('  exit           - Exit chat\n');
+    console.log('  @do <task>       - Run full workflow (plan → code → test)');
+    console.log('  @plan <task>     - Create plan only');
+    console.log('  @scout <query>   - Search codebase with AI');
+    console.log('  @screenshot <img>- Convert image to code');
+    console.log('  @save [name]     - Create checkpoint');
+    console.log('  @checkpoints     - List all checkpoints');
+    console.log('  @rollback <id>   - Rollback to checkpoint');
+    console.log('  @use <ast> <msg> - Use specific assistant');
+    console.log('  @assistants      - List available assistants');
+    console.log('  @file <path>     - Read a file');
+    console.log('  @search <term>   - Search files');
+    console.log('  exit             - Exit chat\n');
 }
 
 function searchFiles(dir: string, query: string, results: string[] = [], depth = 0): string[] {
