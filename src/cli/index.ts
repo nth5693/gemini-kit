@@ -1,9 +1,10 @@
 /**
- * Gemini-Kit CLI - 100% ClaudeKit Parity
+ * Gemini-Kit CLI - Beautiful ClaudeKit-style Interface
  */
 
 import { Command } from 'commander';
 import chalk from 'chalk';
+import { logger } from '../utils/logger.js';
 
 // Core
 import { cookCommand } from '../commands/cook.js';
@@ -138,11 +139,7 @@ session.command('info').description('Show current session info').action(sessionI
 session.command('delete <id>').description('Delete session').action(sessionDeleteCommand);
 
 // Banner
-console.log(chalk.bold.cyan(`
-╔═══════════════════════════════════════════╗
-║           Gemini-Kit v0.1.0               ║
-║       100% ClaudeKit Parity (38+)         ║
-╚═══════════════════════════════════════════╝
-`));
+logger.header('Gemini-Kit v0.3.1', '15 Agents • 43+ Commands • Multi-Model AI');
 
 program.parse();
+
