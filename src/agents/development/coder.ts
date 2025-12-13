@@ -28,60 +28,80 @@ class CoderAgent extends BaseAgent {
 
     /**
      * Extract code blocks from AI response
-     * Supports multiple formats:
-     * 1. ## File: path/to/file.ext \n ```lang \n code \n ```
-     * 2. **path/to/file.ext** \n ```lang \n code \n ```
-     * 3. `path/to/file.ext`: \n ```lang \n code \n ```
-     * 4. Single code block with filename in first comment
+     * Strategy: Find all code blocks, then identify filename by scanning preceding lines backwards
      */
     private extractCodeBlocks(text: string): CodeBlock[] {
         const blocks: CodeBlock[] = [];
+        const foundFiles = new Set<string>();
 
-        // Pattern 1: ## File: path/to/file.ext
-        const pattern1 = /##\s*File:\s*([^\n]+)\n```(\w+)?\n([\s\S]*?)```/gi;
+        // Regex to capture code blocks: ```lang ... ```
+        const codeBlockRegex = /```([^\n]*)\n([\s\S]*?)```/g;
+        
+        let match;
+        while ((match = codeBlockRegex.exec(text)) !== null) {
+            const [fullMatch, lang, content] = match;
+            const startIndex = match.index;
+            
+            // Get preceding text lines
+            const precedingText = text.slice(0, startIndex);
+            const lines = precedingText.split('\n');
+            
+            let filename = '';
 
-        // Pattern 2: **path/to/file.ext** or ### path/to/file.ext
-        const pattern2 = /(?:\*\*|###?\s+)([^\s*#]+\.\w+)\*?\*?\s*\n```(\w+)?\n([\s\S]*?)```/gi;
+            // Scan backwards up to 10 lines to find a filename header
+            for (let i = lines.length - 1; i >= Math.max(0, lines.length - 10); i--) {
+                const line = lines[i].trim();
+                if (!line) continue;
 
-        // Pattern 3: `filename.ext`:
-        const pattern3 = /`([^\s`]+\.\w+)`[:\s]*\n```(\w+)?\n([\s\S]*?)```/gi;
+                // Pattern A: ## File: path/to/file.ext
+                const headerMatch = /##\s*File:\s*([^\s]+)/i.exec(line);
+                if (headerMatch) {
+                    filename = headerMatch[1];
+                    break;
+                }
 
-        // Try all patterns
-        const patterns = [pattern1, pattern2, pattern3];
+                // Pattern B: **path/to/file.ext**
+                // Matches: **file.ext**, ** path/file.ext **, ### file.ext
+                const boldMatch = /(?:\*\*|###\s+)([\w./-]+)(?:\*\*|:)?/i.exec(line);
+                if (boldMatch) {
+                    // Validate that it looks like a filename (has dot)
+                    if (boldMatch[1].includes('.')) {
+                        filename = boldMatch[1];
+                        break;
+                    }
+                }
 
-        for (const pattern of patterns) {
-            let match;
-            while ((match = pattern.exec(text)) !== null) {
-                const filePath = match[1]?.trim() ?? '';
-                const language = match[2] ?? 'text';
-                const content = match[3]?.trim() ?? '';
-
-                if (filePath && content && !blocks.some(b => b.filePath === filePath)) {
-                    blocks.push({ filePath, language, content });
+                // Pattern C: `path/to/file.ext`:
+                const backtickMatch = /`([\w./-]+)`(?::)?/i.exec(line);
+                if (backtickMatch) {
+                     if (backtickMatch[1].includes('.')) {
+                        filename = backtickMatch[1];
+                        break;
+                    }
                 }
             }
-        }
 
-        // Fallback: if no blocks found but has code block, try to extract filename from content
-        if (blocks.length === 0) {
-            const singleBlock = /```(\w+)?\n([\s\S]*?)```/gi;
-            let match;
-            while ((match = singleBlock.exec(text)) !== null) {
-                const lang = match[1] ?? 'text';
-                const content = match[2]?.trim() ?? '';
-
-                // Try to find filename in first line comment
+            // 2. Fallback: Look inside code block (first line comment)
+            if (!filename) {
                 const firstLineMatch = content.match(/^(?:\/\/|\/\*|#|<!--)\s*(?:File:|filename:)?\s*([^\s*/]+\.\w+)/i);
-                if (firstLineMatch && firstLineMatch[1]) {
-                    blocks.push({
-                        filePath: firstLineMatch[1],
-                        language: lang,
-                        content: content,
-                    });
-                }
+                if (firstLineMatch) filename = firstLineMatch[1];
+            }
+
+            // Clean up filename (remove trailing punctuation if any caught)
+            if (filename) {
+                filename = filename.replace(/[:*`]+$/, '').trim();
+            }
+
+            if (filename && content && !foundFiles.has(filename)) {
+                blocks.push({
+                    filePath: filename,
+                    language: lang || 'text',
+                    content: content.trim()
+                });
+                foundFiles.add(filename);
             }
         }
-
+        
         return blocks;
     }
 

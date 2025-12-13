@@ -1,25 +1,30 @@
 # Gemini-Kit Tasks
 
-## 📊 Current Status: v0.4.0 (Migrating to Gemini CLI)
+## 📊 Current Status: v0.4.0-alpha (Migrating to Gemini CLI)
 
 | Component | Count | Status |
 |-----------|-------|--------|
-| Agents | 15 | ✅ Backup, migrating to Gemini CLI |
-| Commands | 43+ | 🔄 Pending migration |
+| Agents | 15 | ✅ Rewritten as AgentDefinitions |
+| Commands | 43+ | 🔄 Pending (Phase 6) |
 | Provider | 1 | ✅ Gemini-only |
 | Tests | 9 | ✅ All passing |
 | Build | 199KB | ✅ |
 
 ---
 
-## 🔄 Migration Status: Gemini-Kit → Gemini CLI
+## 🔄 Migration Status: Complete Rewrite
 
-- [x] Clone Gemini CLI (4.87MB)
-- [x] Backup gemini-kit source
-- [x] Copy 15 agents to Gemini CLI structure
-- [ ] Adapt agents to Gemini CLI provider
-- [ ] Register agents as tools
-- [ ] Add /cook, /plan, /scout commands
+### Done ✅
+- [x] Phase 1: Core Infrastructure (registry, folder structure)
+- [x] Phase 2: Core Agents - planner, scout, coder, debugger, tester, code-reviewer
+- [x] Phase 3: Support Agents - git-manager, database-admin, docs-manager, project-manager
+- [x] Phase 4: Creative/Research - brainstormer, ui-ux-designer, copywriter, researcher, journal-writer
+
+### Pending 🔄
+- [ ] Phase 5: Context System (TeamContext, Session, ProjectContext)
+- [ ] Phase 6: Commands (24 commands - cook, plan, scout, etc.)
+- [ ] Phase 7: Skills (checkpoint, screenshot, assistants)
+- [ ] Phase 8: Integration & Testing
 
 
 ---
