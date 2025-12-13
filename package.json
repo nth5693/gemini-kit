@@ -1,7 +1,7 @@
 {
   "name": "gemini-kit",
-  "version": "0.3.1",
-  "description": "ClaudeKit-style AI Development Assistant with multi-model support (Gemini, Claude, OpenAI)",
+  "version": "0.4.0",
+  "description": "Gemini CLI-style AI Development Assistant powered by Google Gemini",
   "author": "hieu",
   "license": "MIT",
   "type": "module",
@@ -31,14 +31,11 @@
     "ai",
     "cli",
     "gemini",
-    "claude",
-    "openai",
+    "google",
     "development",
     "assistant",
     "agents",
-    "claudekit",
-    "team",
-    "context"
+    "coding"
   ],
   "repository": {
     "type": "git",
@@ -59,16 +56,18 @@
   },
   "packageManager": "pnpm@10.20.0",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.71.0",
     "@google/generative-ai": "^0.21.0",
+    "@modelcontextprotocol/sdk": "^1.24.3",
+    "@types/react": "^19.2.7",
     "boxen": "^8.0.1",
     "chalk": "^5.3.0",
     "cli-progress": "^3.12.0",
     "commander": "^12.1.0",
     "gradient-string": "^3.0.0",
+    "ink": "^6.5.1",
     "inquirer": "^12.0.0",
-    "openai": "^4.76.0",
-    "ora": "^8.1.1"
+    "ora": "^8.1.1",
+    "react": "^19.2.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

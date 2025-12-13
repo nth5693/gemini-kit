@@ -2,6 +2,25 @@
 
 All notable changes to Gemini-Kit will be documented in this file.
 
+## [0.4.0] - 2024-12-13
+
+### Changed
+- **Gemini-only Provider** - Removed Claude and OpenAI support
+  - Simplified ProviderManager
+  - Added GEMINI_API_KEY env var support
+  - Removed @anthropic-ai/sdk and openai dependencies
+
+### Added
+- **Migration to Gemini CLI** (in progress)
+  - Cloned google-gemini/gemini-cli as reference
+  - Backed up original source to `src-backup-gemini-kit/`
+  - Copied 15 agents to Gemini CLI structure
+
+### Removed
+- `src/providers/claude.ts`
+- `src/providers/openai.ts`
+- Multi-model support (Claude, OpenAI, CLIProxyAPI)
+
 ## [0.3.1] - 2024-12-13
 
 ### Added

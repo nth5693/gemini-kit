@@ -1,16 +1,25 @@
 # Gemini-Kit Tasks
 
-## 📊 Current Status: v0.3.1
+## 📊 Current Status: v0.4.0 (Migrating to Gemini CLI)
 
 | Component | Count | Status |
 |-----------|-------|--------|
-| Agents | 15 | ✅ 100% with Real Skills |
-| Commands | 43+ | ✅ Complete |
-| Multi-model | 4 | ✅ Gemini, Claude, OpenAI, CLIProxyAPI |
+| Agents | 15 | ✅ Backup, migrating to Gemini CLI |
+| Commands | 43+ | 🔄 Pending migration |
+| Provider | 1 | ✅ Gemini-only |
 | Tests | 9 | ✅ All passing |
-| Build | 183KB | ✅ |
-| AI Router | 1 | ✅ Auto Agent Selection |
-| Beautiful CLI | ✅ | Gradients, Spinners, Boxes |
+| Build | 199KB | ✅ |
+
+---
+
+## 🔄 Migration Status: Gemini-Kit → Gemini CLI
+
+- [x] Clone Gemini CLI (4.87MB)
+- [x] Backup gemini-kit source
+- [x] Copy 15 agents to Gemini CLI structure
+- [ ] Adapt agents to Gemini CLI provider
+- [ ] Register agents as tools
+- [ ] Add /cook, /plan, /scout commands
 
 
 ---
