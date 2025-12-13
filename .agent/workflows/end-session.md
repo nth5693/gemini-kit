@@ -2,84 +2,47 @@
 description: Kết thúc phiên làm việc với gemini-kit
 ---
 
-# Workflow: Kết thúc phiên làm việc
+# End Session Workflow
 
-## 📁 FILES PHẢI CẬP NHẬT
+> **BẮT BUỘC** chạy workflow này trước khi kết thúc phiên làm việc.
 
-| File | Bắt buộc | Khi nào |
-|------|----------|---------|
-| `SESSION_LOG.md` | ✅ LUÔN | Mọi session |
-| `TASKS.md` | ✅ LUÔN | Mọi session |
-| `CHANGELOG.md` | ⚠️ Có thể | Khi có version mới |
-| `IMPLEMENTATION_PLAN.md` | ⚠️ Có thể | Khi có thay đổi lớn |
-| `WORKFLOW.md` | ⚠️ Có thể | Khi cập nhật Current State |
+## Steps
 
----
+// turbo-all
 
-## Bước 1: CẬP NHẬT SESSION_LOG.md (BẮT BUỘC)
-
-Thêm vào cuối file (trước `<!-- Thêm session mới -->`):
+### 1. Cập nhật SESSION_LOG.md
+Thêm entry mới vào SESSION_LOG.md với format:
 
 ```markdown
-## Session [N] - [DATE TIME]
+## Session [N] - [YYYY-MM-DD]
 
-### 📌 Mục tiêu phiên
-- [Mục tiêu]
+### Mục tiêu
+- [Mục tiêu chính của phiên]
 
-### ✅ Đã hoàn thành
-- [Task 1]
-- [Task 2]
+### Đã hoàn thành
+- [x] Task 1
+- [x] Task 2
 
-### 📁 Files đã tạo/sửa
-- [file1.ts]
-- [file2.ts]
+### Files đã tạo/sửa
+- `path/to/file1.ts`
+- `path/to/file2.ts`
 
-### 📊 Stats
-- **Version**: x.x.x
-- **Build**: xxxKB
-- **Tests**: x/x ✅
+### Vấn đề còn lại
+- [ ] Issue 1
 
-### 🔜 Task tiếp theo
-- [Next task]
+### Next steps
+- [ ] Task tiếp theo
 ```
 
-## Bước 2: CẬP NHẬT TASKS.md (BẮT BUỘC)
+### 2. Cập nhật CHANGELOG.md (nếu có thay đổi lớn)
+Thêm version mới hoặc update version hiện tại.
 
-```
-- Mark completed tasks với [x]
-- Update version và build size
-- Thêm tasks mới nếu có
-```
-
-## Bước 3: CẬP NHẬT CHANGELOG.md (NẾU CÓ VERSION MỚI)
-
-```markdown
-## [x.x.x] - YYYY-MM-DD
-
-### Added
-- [Feature mới]
-
-### Changed
-- [Thay đổi]
-
-### Fixed
-- [Bug fix]
-```
-
-## Bước 4: COMMIT
-
+### 3. Git commit (nếu cần)
 ```bash
 git add -A
-git commit -m "docs: update session [N]"
+git commit -m "Session [N]: [Tóm tắt ngắn]"
 ```
 
-## Bước 5: XÁC NHẬN
-
-```
-✅ SESSION_LOG.md - Session [N]
-✅ TASKS.md - v[X.X.X]
-✅ CHANGELOG.md - v[X.X.X] (nếu có)
-✅ Committed: [hash]
-```
-
-## ⚠️ KHÔNG ĐƯỢC KẾT THÚC MÀ KHÔNG UPDATE FILES!
+### 4. Thông báo user
+- Tóm tắt những gì đã làm
+- Next steps cho phiên sau

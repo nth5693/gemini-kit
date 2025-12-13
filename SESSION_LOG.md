@@ -730,19 +730,105 @@ gemini-cli-reference/packages/core/src/gemini-kit/
 ```
 
 ### 📊 Stats
-- **New Code**: ~148KB across 28 files
+- **New Code**: ~172KB across 32 files
 - **Agents**: 15/15 complete
 - **Commands**: 11 (cook, plan, scout, fix, test, review, git, docs, brainstorm, research, look)
 - **Skills**: 2 (checkpoint, assistants)
+- **Core**: AI Provider, Executor (executeAgent, executeWorkflow)
 - **Version**: 0.4.0-alpha
 
 ### 🔜 Task tiếp theo
-- Install deps và fix import paths
-- Integrate với Gemini CLI main codebase
-- Test end-to-end
+- Test executor với real Gemini API
+- UI integration với Ink
+- End-to-end testing
+
+---
+
+## Session 5 - 2024-12-14
+
+### 📌 Mục tiêu phiên
+- Research Gemini CLI Extension System
+- Tạo gemini-kit extension với Option C (Full Extension + MCP + Hooks)
+- Migrate tất cả agents từ gemini-kit-old
+
+### ✅ Đã hoàn thành
+
+1. **Research & Planning**
+   - Đọc toàn bộ docs Gemini CLI về extensions, hooks, MCP servers
+   - Chọn Option C: Full Extension với MCP + Hooks
+   - Viết IMPLEMENTATION_PLAN.md chi tiết bằng tiếng Việt
+
+2. **Phase 1: Bootstrap Extension**
+   - Tạo thư mục `~/.gemini/extensions/gemini-kit/`
+   - Tạo `gemini-extension.json`, `package.json`, `tsconfig.json`
+   - Tạo `GEMINI.md` context cho AI
+   - Tạo `README.md`
+
+3. **Phase 2-3: TOML Commands (16 total)**
+   - cook, plan, scout, code, test, review, debug, git
+   - brainstorm, copywrite, design, research, journal, docs, project, db
+
+4. **Phase 4: MCP Server**
+   - `kit-server.ts` với 6 tools:
+     - kit_create_checkpoint, kit_restore_checkpoint
+     - kit_get_project_context, kit_handoff_agent
+     - kit_save_artifact, kit_list_checkpoints
+
+5. **Phase 5: Hooks**
+   - session-start.js, before-agent.js, before-tool.js
+   - after-tool.js, session-end.js
+   - settings.json
+
+6. **Phase 6: Build**
+   - `npm install` (90 packages)
+   - `npm run build` thành công (dist/kit-server.js 9.7KB)
+
+### 📁 Files đã tạo
+```
+~/.gemini/extensions/gemini-kit/
+├── gemini-extension.json
+├── package.json
+├── tsconfig.json
+├── GEMINI.md
+├── README.md
+├── settings.json
+├── commands/            # 16 TOML commands
+│   ├── cook.toml, plan.toml, scout.toml, code.toml
+│   ├── test.toml, review.toml, debug.toml, git.toml
+│   ├── brainstorm.toml, copywrite.toml, design.toml
+│   ├── research.toml, journal.toml, docs.toml
+│   ├── project.toml, db.toml
+├── src/
+│   └── kit-server.ts    # MCP Server
+├── dist/
+│   └── kit-server.js    # Built (9.7KB)
+├── hooks/               # 5 hooks
+│   ├── session-start.js, before-agent.js
+│   ├── before-tool.js, after-tool.js
+│   └── session-end.js
+└── node_modules/
+```
+
+### 📊 Stats
+- **Extension files**: 29 files
+- **Commands**: 16 TOML
+- **MCP Tools**: 6
+- **Hooks**: 5
+- **Build size**: 9.7KB
+
+### 🔜 Task tiếp theo
+- [ ] Link extension: `gemini extensions link $(pwd)`
+- [ ] Test các commands trong Gemini CLI
+- [ ] Test MCP tools
+- [ ] Test hooks
+
+### 📝 Notes
+- Kiến trúc chuyển từ TypeScript classes → TOML prompts (declarative)
+- MCP Server dùng `@modelcontextprotocol/sdk`
+- Hooks dùng JSON stdin/stdout protocol
+- Extension nằm ở `~/.gemini/extensions/` (global)
 
 ---
 
 <!-- Thêm session mới ở trên dòng này -->
-
 
