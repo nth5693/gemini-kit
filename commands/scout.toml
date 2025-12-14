@@ -1,56 +1,81 @@
-description = "Khám phá codebase với Keyword Search (Scout Agent)"
+description = "Khám phá codebase với Structure Analysis & Scale (Scout Agent)"
 
 prompt = """
-# 🔍 Scout Agent (với Keyword Search)
+# 🔍 SCOUT AGENT
 
-Khám phá codebase cho:
+Exploration task:
 
-**Task:** {{args}}
+**Query:** {{args}}
 
----
+## SCALE & SCOPE
+Default scale: 5 (Medium)
 
-## 🧠 Keyword Search (Recommended)
-
-Bạn có 2 tools mạnh mẽ để tìm kiếm:
-
-### 1. Index codebase (chạy 1 lần)
-```
-kit_index_codebase
-```
-Tạo index cho tất cả files. Chỉ cần chạy khi:
-- Lần đầu vào project
-- Sau khi có nhiều files mới
-
-### 2. Tìm kiếm theo keywords
-```
-kit_keyword_search(query: "authentication", limit: 5)
-```
-Tìm files liên quan theo keywords, function names, file names.
+| Scale | Files | Use Case |
+|-------|-------|----------|
+| **1-3** | <100 | Targeted search, small feature |
+| **4-6** | 100-500 | Feature discovery, debugging |
+| **7-10** | 500+ | Full architecture map, monorepo |
 
 ---
 
-## Traditional Reconnaissance
+## OUTPUT REPORT FORMAT
 
-Ngoài ra bạn có thể:
-1. Liệt kê files trong thư mục
-2. Đọc package.json, README.md
-3. Tìm kiếm grep patterns
+### 🗺️ Landscape Overview
+- **Domain:** [Affected business domain]
+- **Tech Stack:** [Languages/Frameworks detected]
+- **Scale:** [Number of files found]
+
+### 📂 Categorized Findings
+Organize files by role:
+
+#### 🏗️ Core Services / Logic
+- `src/services/...`
+- `src/lib/...`
+
+#### 🛣️ Middleware & Routes
+- `src/api/...`
+- `src/middleware/...`
+
+#### 💾 Data Layer
+- `src/models/...`
+- `src/db/...`
+
+#### ⚙️ Configuration
+- `config/...`
+- `package.json`
+
+#### 🧪 Tests
+- `tests/...`
 
 ---
 
-## Analysis Required
-
-1. **Relevant Files** - Files liên quan đến task (dùng semantic search!)
-2. **Patterns** - Coding patterns được sử dụng
-3. **Dependencies** - Internal và external deps
-4. **Integration Points** - Nơi code mới kết nối
-5. **Test Structure** - Cách tests được tổ chức
+### 🔗 Integration Points
+Identify files that connect different parts:
+- [File A] imports [File B]
+- [Service X] uses [Model Y]
 
 ---
 
-## Output
-Report có cấu trúc với:
-- File paths sorted by relevance score
-- Functions và classes liên quan
-- Recommended files to read first
+### 💡 Pro Tips for this Context
+- **Reading Order:** Start with [File A], then [File B].
+- **Key Patterns:** [Observed patterns e.g. Repository pattern, Adapter pattern]
+- **Dependencies:** [Key external libs used]
+
+---
+
+## USAGE TIPS
+- **Specific:** "auth middleware and JWT" (Better than "auth")
+- **Scale:** Append number 1-10 to control depth
+- **Constraint:** "only in src/api" to narrow down
+
+> **Key Takeaway:** Scout maps the terrain so you don't get lost. 5 minutes of scouting saves hours of debugging.
 """
+
+# ---
+# USAGE:
+# /scout "locate all auth files" 5
+# /scout "find Stripe webhook handling" 4
+# /scout "data models and migrations" 3
+# /scout "security related files" 8
+# ---
+

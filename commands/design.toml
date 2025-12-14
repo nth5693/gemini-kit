@@ -1,29 +1,93 @@
-description = "Thiết kế UI/UX, wireframes, component specs (UI/UX Designer Agent)"
+description = "Thiết kế UI/UX, Wireframes & Specs (Designer Agent)"
 
 prompt = """
-# 🎨 UI/UX Designer Agent
+# 🎨 DESIGNER AGENT
 
-Thiết kế cho:
+Design request:
 
 **Task:** {{args}}
 
-## Provide
+## MODE DETECTION
 
-1. **User Flow** - Các bước interaction
-2. **Component Structure** - React/Vue component hierarchy
-3. **Design Tokens**
-   - Color palette
-   - Spacing system
-   - Typography
-4. **Responsive Behavior**
-   - Mobile (< 640px)
-   - Tablet (640-1024px)
-   - Desktop (> 1024px)
-5. **Accessibility** - WCAG 2.1 considerations
-6. **CSS/Tailwind Classes** - Styling suggestions
+| Mode | Trigger | Focus |
+|------|---------|-------|
+| **UI** | "ui", "visual", "mockup" | Wireframes, colors, layout |
+| **UX** | "ux", "flow", "interaction" | User flows, states, transitions |
+| **AUDIT** | "audit", "review", "wcag" | Accessibility, consistency |
+| **SYSTEM** | "system", "tokens", "component" | Design system, props, variants |
 
-## Include
-- ASCII wireframes cho main layouts
-- Component props definitions
-- State management suggestions
+---
+
+## OUTPUT FORMAT
+
+### 📱 Visual Specs (UI Mode)
+```ascii
++-----------------------------------+
+|  [Logo]                 [Profile] |
+|-----------------------------------|
+|  Hero Title                       |
+|  [ CTA Button ]                   |
+|-----------------------------------|
+|  [Card 1]  [Card 2]  [Card 3]     |
++-----------------------------------+
+```
+**Layout:** Grid / Flex / Container
+**Spacing:** Tailwind scale (p-4, m-2, gap-4)
+
+---
+
+### 🔄 User Flow (UX Mode)
+```mermaid
+graph TD
+    A[Start] --> B{Condition}
+    B -- Yes --> C[Screen 1]
+    B -- No --> D[Screen 2]
+    C --> E[End]
+```
+**States:** Loading, Error, Empty, Success
+
+---
+
+### 🧩 Component Specs (System Mode)
+**Component:** `Button`
+```typescript
+interface ButtonProps {
+  variant: 'primary' | 'secondary' | 'ghost';
+  size: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
+  disabled?: boolean;
+  leftIcon?: ReactNode;
+}
+```
+**Tailwind Classes:**
+- Primary: `bg-blue-600 hover:bg-blue-700 text-white`
+- Secondary: `bg-gray-100 hover:bg-gray-200 text-gray-900`
+- Base: `inline-flex items-center justify-center rounded-md font-medium transition`
+
+---
+
+### ♿ Accessibility Audit (Audit Mode)
+- [ ] Color Contrast (AA/AAA)
+- [ ] Focus States (`focus-visible:ring`)
+- [ ] Semantic HTML (`<button>`, not `<div>`)
+- [ ] ARIA Labels where needed
+
+---
+
+## IMPLEMENTATION GUIDE
+1. **Design Tokens:** Define colors/typo in `tailwind.config.js`
+2. **Components:** Build base components first
+3. **Layout:** Assemble pages using grid/flex
+4. **Interactive:** Add Framer Motion / CSS transitions
+
+> **Key Takeaway:** Good design is consistent, accessible, and implementation-ready.
 """
+
+# ---
+# USAGE:
+# /design UI mockup for dashboard
+# /design UX flow for checkout process
+# /design Audit login page accessibility
+# /design System tokens for new theme
+# ---
+
