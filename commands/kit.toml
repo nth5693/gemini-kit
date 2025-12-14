@@ -1,0 +1,86 @@
+# Gemini-Kit Help
+# Usage: /kit [command]
+# - /kit → Show all commands
+# - /kit plan → Show help for /plan
+# - /kit tools → Show all MCP tools
+
+[command]
+trigger = "kit"
+
+[command.settings]
+runImmediately = true
+
+[command.user]
+content = """
+{{#if args}}
+Show detailed help for: {{args}}
+
+If {{args}} is a command name (like "plan", "cook", "scout"), explain:
+1. What the command does
+2. When to use it
+3. Example usage
+4. Related commands
+
+If {{args}} is "tools", list all 17 MCP tools with descriptions.
+If {{args}} is "hooks", explain the 5 lifecycle hooks.
+{{else}}
+# 🧰 Gemini-Kit Help
+
+## 📋 Available Commands (20)
+
+### 🔧 Core Workflow
+| Command | Description |
+|---------|-------------|
+| `/plan` | Create implementation plan with approval |
+| `/cook` | Execute changes with auto-checkpoint |
+| `/scout` | Search and analyze codebase |
+| `/code` | Implement features |
+| `/test` | Generate and run tests |
+| `/debug` | Diagnose and fix bugs |
+| `/review` | Code review |
+
+### 🔗 Integrations
+| Command | Description |
+|---------|-------------|
+| `/pr` | Create GitHub Pull Request |
+| `/review-pr` | Review PR in detail |
+| `/ticket` | Get Jira/GitHub issue |
+| `/git` | Git operations |
+
+### 📝 Content & Docs
+| Command | Description |
+|---------|-------------|
+| `/docs` | Generate documentation |
+| `/copywrite` | Content writing |
+| `/journal` | Dev journal |
+
+### 💡 Research & Design
+| Command | Description |
+|---------|-------------|
+| `/brainstorm` | Brainstorm ideas |
+| `/research` | Deep research |
+| `/design` | UI/UX design |
+| `/db` | Database operations |
+| `/project` | Project management |
+
+### 🛡️ Special
+| Command | Description |
+|---------|-------------|
+| `/code-preview` | Dry-run mode (preview only) |
+
+---
+
+## 🛠️ MCP Tools (17)
+Type `/kit tools` to see all tools.
+
+## 🔗 Hooks (5)
+Type `/kit hooks` to see lifecycle hooks.
+
+---
+
+**Usage:** `/kit <command>` for detailed help
+**Example:** `/kit plan` or `/kit cook`
+
+**GitHub:** https://github.com/nth5693/gemini-kit
+{{/if}}
+"""
