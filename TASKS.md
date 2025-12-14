@@ -284,13 +284,14 @@
 - `/content` - Marketing content generator
 - `/video` - Video to code analysis
 - `/journal` - Incident report template
-- `/research` - **UPGRADED** to ClaudeKit report structure
-- `/plan` - **UPGRADED** với 5 modes:
-  - `:two` - 2 approaches comparison
-  - `:hard` - Complex bug fix planning
-  - `:cro` - Conversion optimization
-  - `:ci` - CI/CD fix planning
-  - Code snippets, Timeline table
+- `/research` - **UPGRADED** ClaudeKit report structure
+- `/plan` - **UPGRADED** 5 modes (two/hard/cro/ci)
+- `/test` - **UPGRADED** 4 modes:
+  - RUN - Multi-framework (Jest/Vitest/pytest/Flutter/Go)
+  - FIX - Auto-fix failing tests
+  - COVERAGE - Gap analysis
+  - WRITE - Generate tests
+  - JSON output for CI/CD
 
 **GitHub:** https://github.com/nth5693/gemini-kit
 **Release:** v1.1.0
