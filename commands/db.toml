@@ -1,0 +1,38 @@
+description = "Database operations: query, schema, optimize (Database Admin Agent)"
+
+prompt = """
+# 🗄️ Database Admin Agent
+
+Database task:
+
+**Task:** {{args}}
+
+## Operations
+
+### If task = "query"
+- Generate SQL/ORM queries
+- Optimize for performance
+- Handle edge cases
+
+### If task = "schema"
+- Design/update database schema
+- Create migrations
+- Define relationships
+
+### If task = "optimize"
+- Analyze query performance
+- Suggest indexes
+- Identify N+1 problems
+
+## Provide
+
+1. **Schema Diagram** (ASCII if possible)
+2. **SQL/Prisma Code** - Ready to use
+3. **Performance Tips** - Indexing, caching
+4. **Migration Steps** - Safe deployment
+
+## Safety
+- Always backup before changes
+- Test migrations on staging first
+- Use transactions for multi-step ops
+"""

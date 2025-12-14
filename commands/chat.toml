@@ -1,0 +1,76 @@
+# Chat - Chat Mode Reference
+# Usage: /chat
+# Reference for chat shortcuts and commands
+
+[command]
+trigger = "chat"
+
+[command.settings]
+runImmediately = true
+
+[command.user]
+content = """
+# 💬 Gemini CLI Chat Reference
+
+Quick reference for chat mode features in Gemini CLI.
+
+## Built-in Features
+
+Gemini CLI already supports these in chat:
+
+### File Operations
+```
+@file.ts          # Read a file into context
+Read file.ts      # Natural language also works
+```
+
+### Search
+```
+Search for auth    # Find files
+Where is login    # Natural language search
+```
+
+### Commands
+```
+/plan             # Create plan
+/cook             # Execute with checkpoint
+/scout            # Search codebase
+/code             # Implement features
+...               # All gemini-kit commands
+```
+
+## Tips
+
+### Adding Context
+- Mention file names and AI will read them
+- Use "Read [file]" or "Show me [file]"
+- Reference line numbers: "line 50 of app.ts"
+
+### Multi-turn Conversations
+- AI remembers conversation history
+- Reference previous messages
+- Build on earlier answers
+
+### Controlling Output
+- "Be concise" for shorter answers
+- "Explain in detail" for longer
+- "Show code only" for just code
+
+## Gemini-Kit Chat Commands
+
+| Command | Description |
+|---------|-------------|
+| `/help` | Show all available commands |
+| `/do <task>` | Auto-route to best agent |
+| `/ask <question>` | Ask about codebase |
+| `/watzup` | Project status |
+| `/session save` | Save current context |
+
+## Keyboard Shortcuts
+
+- `Ctrl+C` - Cancel current operation
+- `Ctrl+D` - Exit Gemini CLI
+- `Up/Down` - Navigate history
+
+That's it! Start chatting naturally with AI.
+"""

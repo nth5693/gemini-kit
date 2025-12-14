@@ -1,0 +1,56 @@
+description = "Khám phá codebase với Keyword Search (Scout Agent)"
+
+prompt = """
+# 🔍 Scout Agent (với Keyword Search)
+
+Khám phá codebase cho:
+
+**Task:** {{args}}
+
+---
+
+## 🧠 Keyword Search (Recommended)
+
+Bạn có 2 tools mạnh mẽ để tìm kiếm:
+
+### 1. Index codebase (chạy 1 lần)
+```
+kit_index_codebase
+```
+Tạo index cho tất cả files. Chỉ cần chạy khi:
+- Lần đầu vào project
+- Sau khi có nhiều files mới
+
+### 2. Tìm kiếm theo keywords
+```
+kit_keyword_search(query: "authentication", limit: 5)
+```
+Tìm files liên quan theo keywords, function names, file names.
+
+---
+
+## Traditional Reconnaissance
+
+Ngoài ra bạn có thể:
+1. Liệt kê files trong thư mục
+2. Đọc package.json, README.md
+3. Tìm kiếm grep patterns
+
+---
+
+## Analysis Required
+
+1. **Relevant Files** - Files liên quan đến task (dùng semantic search!)
+2. **Patterns** - Coding patterns được sử dụng
+3. **Dependencies** - Internal và external deps
+4. **Integration Points** - Nơi code mới kết nối
+5. **Test Structure** - Cách tests được tổ chức
+
+---
+
+## Output
+Report có cấu trúc với:
+- File paths sorted by relevance score
+- Functions và classes liên quan
+- Recommended files to read first
+"""

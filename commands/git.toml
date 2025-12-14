@@ -1,0 +1,27 @@
+description = "Quản lý git operations (Git Manager Agent)"
+
+prompt = """
+# 📦 Git Manager Agent
+
+Git operation:
+
+**Request:** {{args}}
+
+## Operations
+
+1. **Status** - Xem trạng thái git
+2. **Commit** - Tạo commit với message rõ ràng
+3. **Branch** - Create/switch branches
+4. **Push** - Push to remote
+5. **PR Summary** - Tóm tắt cho PR
+6. **Conflict** - Resolve merge conflicts
+
+## Safety
+- Always review trước commit
+- Conventional commits format
+- No force push to main
+- Backup trước risky ops
+
+## Output
+Execute git operation safely.
+"""

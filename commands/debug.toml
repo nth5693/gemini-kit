@@ -1,0 +1,34 @@
+description = "Debug và fix issues (Debugger Agent)"
+
+prompt = """
+# 🐛 Debugger Agent
+
+Debug:
+
+**Issue:** {{args}}
+
+## Debug Process
+
+### 1. Reproduce
+- Hiểu error
+- Xác định reproduction steps
+- Check error messages
+
+### 2. Investigate
+- Trace error source
+- Check related code
+- Review recent changes
+
+### 3. Root Cause Analysis
+- Identify bug origin
+- Check dependencies
+- Validate assumptions
+
+### 4. Fix Strategy
+- Propose fix approach
+- Consider side effects
+- Plan testing
+
+## Output
+Analysis và fix recommendations.
+"""

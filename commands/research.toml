@@ -1,0 +1,119 @@
+description = "Deep research với 15+ sources và structured report (Researcher Agent)"
+
+prompt = """
+# 🔬 RESEARCHER AGENT
+
+Research topic:
+
+**Topic:** {{args}}
+
+---
+
+## OUTPUT FORMAT: Research Report
+
+### 📋 Executive Summary
+- **Recommendation:** [Primary recommendation]
+- **Confidence:** High / Medium / Low
+- **Critical Takeaways:**
+  1. [Takeaway 1]
+  2. [Takeaway 2]
+  3. [Takeaway 3]
+
+---
+
+### 🔄 Integration Approaches
+
+| Approach | Description | Best For |
+|----------|-------------|----------|
+| **Option A** | [Description] | [Use case] |
+| **Option B** | [Description] | [Use case] |
+| **Option C** | [Description] | [Use case] |
+
+**Pros/Cons Comparison:**
+| Criteria | Option A | Option B | Option C |
+|----------|----------|----------|----------|
+| Effort | ⭐⭐⭐ | ⭐⭐ | ⭐ |
+| Risk | ⭐ | ⭐⭐ | ⭐⭐⭐ |
+| Scalability | ⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ |
+
+**Recommendation:** [Which option and why]
+
+---
+
+### 🔒 Security Best Practices
+
+✅ **Critical Requirements:**
+- [Security requirement 1]
+- [Security requirement 2]
+- [Security requirement 3]
+
+⚠️ **Common Vulnerabilities:**
+- [Vulnerability 1] → [Mitigation]
+- [Vulnerability 2] → [Mitigation]
+
+🚨 **Known CVEs (if any):**
+- [CVE-XXXX-XXXX] - [Description]
+
+---
+
+### ⚡ Performance Considerations
+
+| Metric | Expected Value | Optimization |
+|--------|----------------|--------------|
+| Load time | [X ms] | [How to optimize] |
+| Memory | [X MB] | [How to optimize] |
+| Throughput | [X req/s] | [How to optimize] |
+
+---
+
+### 💻 Implementation Guide
+
+**Minimal Working Example:**
+```typescript
+// Production-ready example
+```
+
+**Step-by-step Setup:**
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+---
+
+### 📚 Sources (15+)
+
+| Type | Source | Description |
+|------|--------|-------------|
+| Official Docs | [URL] | [What it covers] |
+| GitHub Repo | [URL] | [Stars, last updated] |
+| Article | [URL] | [Key insight] |
+| Video | [URL] | [Duration, topic] |
+
+---
+
+### 🚀 Next Steps
+
+| Step | Action | Time Est. |
+|------|--------|-----------|
+| 1 | [Action item] | [X min] |
+| 2 | [Action item] | [X min] |
+| 3 | [Action item] | [X min] |
+| 4 | [Action item] | [X min] |
+| 5 | [Action item] | [X min] |
+
+**Total Estimated Time:** [X hours]
+
+```bash
+# Ready to implement? Run:
+/plan [implementation based on research]
+```
+"""
+
+# ---
+# USAGE:
+# /research Stripe integration with Next.js App Router
+# /research WebSocket best practices for real-time dashboard
+# /research OAuth2 vs Auth0 vs Clerk for SaaS auth
+# /research Redis caching strategies for high traffic API
+# ---
+

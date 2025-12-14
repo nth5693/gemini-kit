@@ -1,0 +1,74 @@
+{
+    "hooks": {
+        "SessionStart": [
+            {
+                "matcher": "startup",
+                "hooks": [
+                    {
+                        "name": "kit-init",
+                        "type": "command",
+                        "command": "node ${extensionPath}${/}hooks${/}session-start.js",
+                        "description": "Initialize Gemini-Kit",
+                        "timeout": 10000
+                    }
+                ]
+            }
+        ],
+        "BeforeAgent": [
+            {
+                "matcher": "*",
+                "hooks": [
+                    {
+                        "name": "kit-context",
+                        "type": "command",
+                        "command": "node ${extensionPath}${/}hooks${/}before-agent.js",
+                        "description": "Inject project context",
+                        "timeout": 10000
+                    }
+                ]
+            }
+        ],
+        "BeforeTool": [
+            {
+                "matcher": "WriteFile|Edit|RunShellCommand|write_file|edit|run_shell_command",
+                "hooks": [
+                    {
+                        "name": "kit-security",
+                        "type": "command",
+                        "command": "node ${extensionPath}${/}hooks${/}before-tool.js",
+                        "description": "Security validation (block secrets)",
+                        "timeout": 5000
+                    }
+                ]
+            }
+        ],
+        "AfterTool": [
+            {
+                "matcher": "WriteFile|Edit|write_file|edit",
+                "hooks": [
+                    {
+                        "name": "kit-autotest",
+                        "type": "command",
+                        "command": "node ${extensionPath}${/}hooks${/}after-tool.js",
+                        "description": "Auto-run tests after code changes",
+                        "timeout": 60000
+                    }
+                ]
+            }
+        ],
+        "SessionEnd": [
+            {
+                "matcher": "exit|logout",
+                "hooks": [
+                    {
+                        "name": "kit-cleanup",
+                        "type": "command",
+                        "command": "node ${extensionPath}${/}hooks${/}session-end.js",
+                        "description": "Save and cleanup session",
+                        "timeout": 10000
+                    }
+                ]
+            }
+        ]
+    }
+}

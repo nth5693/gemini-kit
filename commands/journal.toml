@@ -1,0 +1,106 @@
+description = "Viết journal entry hoặc incident report (Journal Writer Agent)"
+
+prompt = """
+# 📓 JOURNAL WRITER AGENT
+
+Viết documentation cho:
+
+**Context:** {{args}}
+
+## MODE DETECTION
+Dựa vào context, chọn mode phù hợp:
+
+### PROGRESS JOURNAL (default)
+Khi tracking daily/weekly progress.
+
+### INCIDENT REPORT
+Khi có keywords: "bug", "outage", "down", "crash", "failed", "error", "incident".
+
+---
+
+## PROGRESS JOURNAL MODE
+
+### Entry: [Date]
+
+#### What Was Done
+- [Accomplishment 1]
+- [Accomplishment 2]
+
+#### Challenges Encountered
+- [Challenge] → [How solved]
+
+#### Lessons Learned
+- [Key takeaway]
+
+#### Next Steps
+- [ ] [Action item 1]
+- [ ] [Action item 2]
+
+---
+
+## INCIDENT REPORT MODE
+
+### 🚨 Incident Report: [Title]
+**Date:** [YYYY-MM-DD HH:MM]
+**Severity:** Critical / High / Medium / Low
+**Duration:** [X hours/minutes]
+
+#### Timeline
+| Time | Event |
+|------|-------|
+| HH:MM | [Initial symptom] |
+| HH:MM | [Investigation started] |
+| HH:MM | [Root cause identified] |
+| HH:MM | [Fix deployed] |
+| HH:MM | [Resolution confirmed] |
+
+#### Root Cause
+[Technical explanation of what went wrong]
+
+#### Failed Attempts
+1. [Attempt 1] - Why it didn't work
+2. [Attempt 2] - Why it didn't work
+
+#### Final Fix
+```[language]
+// The fix that worked
+```
+
+#### Impact
+- Users affected: [number]
+- Revenue impact: [$X estimated]
+- Data loss: [Yes/No, details]
+
+#### Why Monitoring Didn't Catch It
+[Explain gap in monitoring]
+
+#### Preventive Measures
+- [ ] [Action 1 to prevent recurrence]
+- [ ] [Action 2 to prevent recurrence]
+- [ ] [New monitoring/alerting]
+
+#### Lessons Learned
+⚠️ **Key Takeaways:**
+1. [Lesson 1]
+2. [Lesson 2]
+
+#### Related Files
+- [File 1 that was modified]
+- [File 2 that was modified]
+
+---
+
+## OUTPUT
+Structured markdown, thorough but concise.
+Blame the system, not individuals.
+Include code snippets where relevant.
+"""
+
+# ---
+# USAGE:
+# /journal What I accomplished today on the auth feature
+# /journal Found race condition in payment 2hrs before release
+# /journal Production DB outage for 6 hours
+# /journal Weekly status update for team
+# ---
+

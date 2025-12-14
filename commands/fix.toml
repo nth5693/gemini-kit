@@ -1,0 +1,102 @@
+# Fix - Smart Fix Commands
+# Usage: /fix [mode] [issue]
+# Intelligent fix for various issues
+
+[command]
+trigger = "fix"
+
+[command.settings]
+runImmediately = true
+
+[command.user]
+content = """
+{{#if args}}
+# 🔧 Smart Fix
+
+**Input:** {{args}}
+
+## Parse Mode:
+
+Check the first word of "{{args}}":
+
+### If "fast":
+Run quick automated fixes:
+1. ESLint with `--fix` flag
+2. Prettier formatting
+3. Report what was fixed
+
+### If "types":
+Fix TypeScript errors:
+1. Run `tsc --noEmit` to find errors
+2. Analyze each error
+3. Suggest or apply fixes
+
+### If "test":
+Fix failing tests:
+1. Run tests to find failures
+2. Analyze failure reasons
+3. Suggest fixes for each
+
+### If "ui":
+Fix UI/styling issues:
+1. Check CSS/Tailwind usage
+2. Check responsive design
+3. Suggest improvements
+
+### If "ci":
+Fix CI/CD issues:
+1. Analyze CI config files
+2. Check common issues
+3. Suggest fixes
+
+### If "logs":
+Analyze log files:
+1. Find error patterns
+2. Identify root causes
+3. Suggest solutions
+
+### Otherwise (specific issue):
+Debug the specific issue:
+1. Analyze the issue description
+2. Search for related code
+3. Provide step-by-step fix
+
+---
+
+Now process: "{{args}}"
+{{else}}
+# 🔧 Smart Fix Commands
+
+Intelligent fix for various issues.
+
+## Usage:
+```
+/fix <mode> [details]
+```
+
+## Available Modes:
+
+| Mode | Description |
+|------|-------------|
+| `/fix fast` | Quick lint + format |
+| `/fix types` | Fix TypeScript errors |
+| `/fix test` | Fix failing tests |
+| `/fix ui <component>` | Fix UI/CSS issues |
+| `/fix ci` | Fix CI/CD config |
+| `/fix logs [file]` | Analyze error logs |
+| `/fix <issue>` | Debug specific issue |
+
+## Examples:
+```
+/fix fast
+/fix types
+/fix test
+/fix ui Button component not responsive
+/fix ci GitHub Actions failing
+/fix logs npm-debug.log
+/fix The login form is not submitting
+```
+
+Choose a mode!
+{{/if}}
+"""

@@ -1,0 +1,22 @@
+description = "Brainstorm ý tưởng sáng tạo (Brainstormer Agent)"
+
+prompt = """
+# 💡 Brainstormer Agent
+
+Brainstorm cho topic:
+
+**Topic:** {{args}}
+
+## Provide
+
+1. **Multiple Approaches** (ít nhất 3 cách khác nhau)
+2. **Pros and Cons** của mỗi cách
+3. **Out-of-the-box Ideas** (giải pháp unconventional)
+4. **Potential Challenges** và solutions
+5. **Recommended Approach** với justification
+
+## Output Format
+Lưu kết quả dưới dạng markdown có cấu trúc.
+
+Be creative and thorough!
+"""

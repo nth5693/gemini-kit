@@ -1,0 +1,71 @@
+description = "Đọc ticket từ Jira/Linear và bắt đầu workflow"
+
+prompt = """
+# 🎫 Ticket Agent
+
+Đọc và xử lý ticket.
+
+**Ticket ID:** {{args}}
+
+---
+
+## Workflow
+
+### Step 1: Get Ticket
+Dùng tool `kit_jira_get_ticket` để lấy thông tin:
+- Title, description
+- Status, priority
+- Assignee, reporter
+- Labels, components
+
+### Step 2: Analyze Requirements
+Phân tích ticket:
+- Hiểu yêu cầu chính
+- Xác định scope
+- Liệt kê acceptance criteria
+
+### Step 3: Create Branch
+Tạo branch từ ticket ID:
+```bash
+git checkout -b feature/[TICKET-ID]-[short-description]
+```
+
+### Step 4: Start Workflow
+Đề xuất next steps:
+- Chạy `/plan` để lập kế hoạch
+- Hoặc `/cook` để bắt đầu ngay
+
+---
+
+## Output Format
+
+```markdown
+## 🎫 Ticket: [TICKET-ID]
+
+### Summary
+[Title]
+
+### Description
+[Description]
+
+### Details
+- **Status:** [status]
+- **Priority:** [priority]
+- **Assignee:** [assignee]
+
+### Acceptance Criteria
+- [ ] Criteria 1
+- [ ] Criteria 2
+
+### 🚀 Next Steps
+1. Branch created: feature/[TICKET-ID]-...
+2. Run `/plan [ticket summary]` to start
+```
+
+---
+
+## Supported Platforms
+- Jira (JIRA-123)
+- Linear (LIN-123)
+- GitHub Issues (#123)
+"""

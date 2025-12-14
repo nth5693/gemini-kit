@@ -1,0 +1,101 @@
+# Session - Session Management
+# Usage: /session [action] [name/id]
+# Save, load, and manage work sessions
+
+[command]
+trigger = "session"
+
+[command.settings]
+runImmediately = true
+
+[command.user]
+content = """
+{{#if args}}
+# 💾 Session Management
+
+**Action:** {{args}}
+
+## Parse Action:
+
+Check the first word of "{{args}}":
+
+### If "save" or "s":
+Save current session:
+1. Capture current context:
+   - Current task/goal
+   - Files being worked on
+   - Recent changes
+   - Conversation context
+2. Generate session ID
+3. Save to `.gemini-kit/sessions/`
+4. Report success with session ID
+
+### If "load" or "l":
+Load a saved session:
+1. Find session by ID or name (second word)
+2. If no ID given, show list to choose
+3. Load and display session context
+4. Resume from where left off
+
+### If "list" or "ls":
+List all saved sessions:
+1. Read `.gemini-kit/sessions/`
+2. Display each session with:
+   - ID
+   - Name/Task
+   - Date
+   - Summary
+
+### If "info" or "i":
+Show current session info:
+1. Current task
+2. Files in context
+3. Progress
+4. Time elapsed
+
+### If "delete" or "rm":
+Delete a session:
+1. Find session by ID (second word)
+2. Confirm deletion
+3. Remove from storage
+
+---
+
+Now process: "{{args}}"
+{{else}}
+# 💾 Session Management
+
+Save and resume your work sessions.
+
+## Usage:
+```
+/session <action> [name/id]
+```
+
+## Actions:
+
+| Action | Description |
+|--------|-------------|
+| `/session` | Show current session info |
+| `/session save [name]` | Save current session |
+| `/session list` | List all saved sessions |
+| `/session load [id]` | Load a session |
+| `/session delete <id>` | Delete a session |
+
+## Examples:
+```
+/session save "Working on auth"
+/session list
+/session load abc123
+/session info
+/session delete abc123
+```
+
+## Use Cases:
+- Switching between tasks
+- Resuming work next day
+- Sharing context with team
+
+What would you like to do?
+{{/if}}
+"""

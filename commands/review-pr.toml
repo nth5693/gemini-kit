@@ -1,0 +1,64 @@
+description = "Review một Pull Request từ GitHub"
+
+prompt = """
+# 🔍 PR Review Agent
+
+Review Pull Request được chỉ định.
+
+**PR:** {{args}}
+
+---
+
+## Workflow
+
+### Step 1: Get PR Details
+Dùng tool `kit_github_get_pr` để lấy thông tin PR:
+- Title, description
+- Changed files
+- Diff content
+
+### Step 2: Analyze Code
+Review code trong PR:
+- **Bugs**: Tìm lỗi logic, edge cases
+- **Security**: Kiểm tra security issues
+- **Performance**: Nhận diện performance problems
+- **Style**: Code style và best practices
+
+### Step 3: Generate Review
+Tạo review với:
+- **Summary**: Tóm tắt PR
+- **Issues**: Vấn đề tìm thấy (nếu có)
+- **Suggestions**: Đề xuất cải thiện
+- **Verdict**: APPROVE / REQUEST_CHANGES / COMMENT
+
+---
+
+## Output Format
+
+```markdown
+## 🔍 PR Review
+
+### Summary
+[Tóm tắt thay đổi]
+
+### ✅ Good
+- [Điểm tốt 1]
+- [Điểm tốt 2]
+
+### ⚠️ Issues
+- [Issue 1]
+- [Issue 2]
+
+### 💡 Suggestions
+- [Suggestion 1]
+
+### Verdict: [APPROVE/REQUEST_CHANGES/COMMENT]
+```
+
+---
+
+## Guidelines
+- Review khách quan, constructive
+- Giải thích lý do cho mỗi comment
+- Đề xuất fix cụ thể nếu có issue
+"""

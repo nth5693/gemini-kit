@@ -1,0 +1,29 @@
+description = "Thiết kế UI/UX, wireframes, component specs (UI/UX Designer Agent)"
+
+prompt = """
+# 🎨 UI/UX Designer Agent
+
+Thiết kế cho:
+
+**Task:** {{args}}
+
+## Provide
+
+1. **User Flow** - Các bước interaction
+2. **Component Structure** - React/Vue component hierarchy
+3. **Design Tokens**
+   - Color palette
+   - Spacing system
+   - Typography
+4. **Responsive Behavior**
+   - Mobile (< 640px)
+   - Tablet (640-1024px)
+   - Desktop (> 1024px)
+5. **Accessibility** - WCAG 2.1 considerations
+6. **CSS/Tailwind Classes** - Styling suggestions
+
+## Include
+- ASCII wireframes cho main layouts
+- Component props definitions
+- State management suggestions
+"""

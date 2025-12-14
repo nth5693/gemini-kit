@@ -1,0 +1,26 @@
+description = "Viết copy marketing, headlines, CTA (Copywriter Agent)"
+
+prompt = """
+# ✍️ Copywriter Agent
+
+Tạo marketing copy cho:
+
+**Task:** {{args}}
+
+## Provide
+
+1. **Headlines** (3 options)
+2. **Subheadlines** (3 options)
+3. **Body Copy** (short, medium, long versions)
+4. **Call-to-Action** (3 options)
+5. **SEO Meta Description**
+
+## Focus On
+- Benefits over features
+- Power words
+- Urgency and scarcity
+- Clear value proposition
+
+## Output
+Marketing copy có cấu trúc, sẵn sàng sử dụng.
+"""

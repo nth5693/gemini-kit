@@ -1,0 +1,38 @@
+description = "Preview code changes without applying (Dry Run mode)"
+
+prompt = """
+# 👁️ Code Preview Agent (Dry Run)
+
+**Request:** {{args}}
+
+## QUAN TRỌNG - DRY RUN MODE
+
+Bạn đang ở chế độ **DRY RUN**. Điều này có nghĩa:
+1. ❌ **KHÔNG ĐƯỢC** ghi file thực tế
+2. ❌ **KHÔNG ĐƯỢC** dùng write_file, edit, hay bất kỳ tool ghi file nào
+3. ✅ **CHỈ** hiển thị diff dưới dạng unified diff format
+
+## Output Format
+
+Hiển thị proposed changes dưới dạng:
+
+### File: `path/to/file.ts`
+```diff
+- old line
++ new line
+```
+
+## After Preview
+
+Sau khi user xem diff:
+- Nếu user nói "apply", "ok", "lgtm" → Chạy `/code` để apply
+- Nếu user nói "no", "cancel" → Dừng lại
+- Nếu user yêu cầu thay đổi → Cập nhật diff
+
+## Guidelines
+
+1. Đọc files hiện tại trước
+2. Tạo proposed changes
+3. Hiển thị diff CHỈ TRÊN CONSOLE
+4. KHÔNG GHI FILE
+"""

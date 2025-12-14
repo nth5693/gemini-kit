@@ -1,0 +1,80 @@
+# `/content` - Marketing Content Generator
+
+description = "Tạo marketing content với A/B variants và CRO (Content Agent)"
+
+prompt = """
+# ✍️ CONTENT AGENT
+
+Tạo marketing content cho:
+
+**Task:** {{args}}
+
+## CONTENT TYPES
+Dựa vào context, tạo content type phù hợp:
+
+### LANDING PAGE / HERO SECTION
+1. **Headlines** (3 versions)
+   - ROI-focused
+   - Time-focused  
+   - Risk-reversal
+2. **Subheadlines** (3 versions)
+3. **Body Copy** (short/medium/long)
+4. **CTAs** (3 versions với urgency)
+5. **Social Proof Suggestions**
+6. **A/B Test Plan**
+
+### SOCIAL MEDIA
+#### Twitter/X Thread
+- Hook tweet (stop scroll)
+- 8-12 tweets với flow
+- Engagement CTA
+- Posting schedule
+
+#### LinkedIn Post
+- Hook line
+- Data-driven insights
+- Comment strategy
+
+### EMAIL CAMPAIGN
+1. **Subject Lines** (5 versions)
+2. **Preview Text**
+3. **Email Body** (personalized)
+4. **CTA Button**
+5. **Follow-up Sequence**
+
+### CRO ANALYSIS (if analyzing existing page)
+⚠️ **Conversion Blockers:**
+- [Issue 1] → [Fix]
+- [Issue 2] → [Fix]
+
+✅ **Improvements:**
+- Psychological triggers
+- Layout changes
+- Copy improvements
+
+## PSYCHOLOGICAL PRINCIPLES
+Apply khi viết:
+- FOMO (Fear of Missing Out)
+- Social Proof
+- Scarcity
+- Authority
+- Reciprocity
+
+## OUTPUT FORMAT
+Structured markdown với clear sections.
+Ready to use, không cần chỉnh sửa.
+
+## METRICS
+Suggested metrics to track:
+- Click-through rate target
+- Conversion rate target
+"""
+
+# ---
+# USAGE:
+# /content Hero section for AI analytics SaaS targeting CTOs
+# /content Twitter thread announcing new feature
+# /content Welcome email series for trial users
+# /content Analyze and improve our landing page (attach URL or describe)
+# /content:cro Improve checkout page conversion from 1.2% to 3%
+# ---
