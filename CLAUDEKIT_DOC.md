@@ -109,49 +109,186 @@ Multi-tier fallback:
 
 ## Agents
 
-ClaudeKit has **14 specialized agents**:
+ClaudeKit has **17 specialized agents**:
 
 ### Development & Implementation
 
-| Agent | Description |
-|-------|-------------|
-| **planner** | Creates implementation plans |
-| **fullstack-developer** | Implements features |
-| **scout** | Finds files in codebase |
-| **scout-external** | Researches external docs |
-| **debugger** | Investigates issues |
-| **tester** | Writes and runs tests |
+#### 📋 Planner Agent
+**When to Use:**
+- Before major features - Break down complex work
+- Technical decisions - Evaluate approaches
+- Large refactors - Map dependencies
+- CI/CD failures - Analyze and create fix plans
+
+**Commands:** `/plan`, `/plan:two`, `/plan:hard`, `/plan:cro`
+
+**Output:** `plans/[feature-name]-YYYYMMDD-HHMMSS.md`
+
+---
+
+#### 💻 Fullstack Developer Agent
+**When to Use:**
+- Implementing phases from `/plan:parallel`
+- Backend + Frontend work simultaneously
+- File-level isolation for parallel execution
+
+**Key Rules:**
+- NEVER modify files not in ownership list
+- STOP if conflict detected
+- Only read shared files, never write
+
+---
+
+#### 🔍 Scout Agent
+**When to Use:**
+- Feature work: Find files before implementation
+- Debugging: Locate integration points
+- Onboarding: Map project structure
+- Refactoring: Identify affected files
+
+**Scale Guidelines:**
+- 1-3: Small projects (<100 files)
+- 4-6: Medium (100-500 files)
+- 7-10: Large codebases (500+)
+
+**Command:** `/scout "query" [scale]`
+
+---
+
+#### 🌐 Scout External Agent
+- Researches external documentation
+- Gathers context before planning
+
+---
+
+#### 🐛 Debugger Agent
+**When to Use:**
+- API 500 errors
+- CI/CD pipeline failures
+- Database connection issues
+- Production incidents
+
+---
+
+#### 🧪 Tester Agent
+**When to Use:**
+- Pre-commit validation
+- CI/CD pipeline verification
+
+**Commands:** `/test`, `/fix:test`
+
+**Pro Tips:**
+- 80%+ coverage on critical paths
+- Zero flaky tests
+- Fail fast before starting new work
+
+---
 
 ### Quality & Review
 
-| Agent | Description |
-|-------|-------------|
-| **code-reviewer** | Reviews code quality |
-| **database-admin** | Database operations |
+#### 🔎 Code Reviewer Agent
+**When to Use:**
+- Pre-merge quality gates
+- Security vulnerability detection
+- Type safety validation
+- Performance analysis
+
+**Categories:**
+- **Critical**: Must fix (security, data loss)
+- **High**: Should fix (performance, types)
+- **Medium**: Recommended (maintainability)
+- **Low**: Optional (style)
+
+**Command:** `/review [scope]`
+
+---
+
+#### 🗄️ Database Admin Agent
+- Database operations
+- Schema validation
+- Query optimization
+
+---
 
 ### Documentation & Management
 
-| Agent | Description |
-|-------|-------------|
-| **docs-manager** | Documentation |
-| **project-manager** | Project oversight |
-| **journal-writer** | Dev journal |
-| **git-manager** | Git operations |
+#### 📚 Docs Manager Agent
+**When to Use:**
+- After implementing new features
+- Initial project setup (`/docs:init`)
+- Syncing docs with code (`/docs:update`)
+
+---
+
+#### 📊 Project Manager Agent
+- Project oversight
+- Task coordination
+
+---
+
+#### 📓 Journal Writer Agent
+- Dev journal entries
+- Progress tracking
+
+**Command:** `/journal`
+
+---
+
+#### 🔧 Git Manager Agent
+**When to Use:**
+- Auto-generate semantic commits
+- Prevent secrets leaking
+- Create pull requests
+
+**Commands:** `/git:cm`, `/git:cp`, `/git:pr`
+
+---
 
 ### Creative & Research
 
-| Agent | Description |
-|-------|-------------|
-| **ui-ux-designer** | UI/UX design |
-| **copywriter** | Content writing |
-| **brainstormer** | Ideation |
-| **researcher** | Research |
+#### 🎨 UI/UX Designer Agent
+**When to Use:**
+- Landing pages, dashboards, web apps
+- Recreating from screenshots/videos
+- 3D with Three.js/WebGL
+- Design systems with CSS tokens
+
+**Commands:** `/design:fast`, `/design:good`, `/design:3d`, `/design:screenshot`, `/design:video`
+
+---
+
+#### ✍️ Copywriter Agent
+- Content creation
+- Marketing copy
+
+**Commands:** `/content:fast`, `/content:good`, `/content:cro`
+
+---
+
+#### 💡 Brainstormer Agent
+- Feature ideation
+- Feasibility exploration
+
+**Command:** `/brainstorm`
+
+---
+
+#### 🔬 Researcher Agent
+**When to Use:**
+- New tech evaluation before adopting
+- Pre-implementation research
+- Technical comparison
+- Deep dive validation (10+ sources)
+
+**Output:** Structured markdown report with 15+ cited sources
+
+---
 
 ### Integration
 
-| Agent | Description |
-|-------|-------------|
-| **mcp-manager** | MCP server management |
+#### 🔌 MCP Manager Agent
+- MCP server management
+- Tool integration
 
 ---
 
