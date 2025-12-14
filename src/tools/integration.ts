@@ -173,15 +173,37 @@ Get API token from: https://id.atlassian.com/manage-profile/security/api-tokens`
 
                 const auth = Buffer.from(`${email}:${apiToken}`).toString('base64');
 
-                // FIX: Use execFileSync with args array instead of command string
-                const { execFileSync } = await import('child_process');
-                const result = execFileSync('curl', [
-                    '-s',
-                    '-H', `Authorization: Basic ${auth}`,
-                    '-H', 'Content-Type: application/json',
-                    `${baseUrl}/rest/api/3/issue/${safeTicketId}`
-                ], { encoding: 'utf8', timeout: 30000 });
-                const ticket = JSON.parse(result);
+                // FIX: Use Node.js native fetch instead of curl for cross-platform compatibility
+                const response = await fetch(`${baseUrl}/rest/api/3/issue/${safeTicketId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Basic ${auth}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    return {
+                        content: [{
+                            type: 'text' as const,
+                            text: `❌ Failed to fetch ticket: ${response.status} ${response.statusText}`
+                        }]
+                    };
+                }
+
+                const ticket = await response.json() as {
+                    errorMessages?: string[];
+                    fields: {
+                        summary: string;
+                        status?: { name: string };
+                        priority?: { name: string };
+                        assignee?: { displayName: string };
+                        reporter?: { displayName: string };
+                        issuetype?: { name: string };
+                        description?: { content?: Array<{ content?: Array<{ text?: string }> }> } | string;
+                        labels?: string[];
+                    };
+                };
 
                 if (ticket.errorMessages) {
                     return {
@@ -201,7 +223,9 @@ Get API token from: https://id.atlassian.com/manage-profile/security/api-tokens`
 **Type:** ${ticket.fields.issuetype?.name || 'Unknown'}
 
 ### Description
-${ticket.fields.description?.content?.[0]?.content?.[0]?.text || ticket.fields.description || 'No description'}
+${typeof ticket.fields.description === 'string'
+                        ? ticket.fields.description
+                        : (ticket.fields.description?.content?.[0]?.content?.[0]?.text || 'No description')}
 
 ### Labels
 ${ticket.fields.labels?.join(', ') || 'None'}`;
