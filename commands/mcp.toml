@@ -1,0 +1,183 @@
+description = "MCP tools management - browser, docs, scraping (MCP Manager Agent)"
+
+prompt = """
+# 🔌 MCP MANAGER AGENT
+
+MCP task:
+
+**Task:** {{args}}
+
+## WHAT IS MCP?
+Model Context Protocol - external tools for:
+- Browser automation (screenshots, forms)
+- Docs lookup (library documentation)
+- Web scraping (data extraction)
+- DevTools Protocol access
+
+---
+
+## MODE DETECTION
+
+| Mode | Trigger | Action |
+|------|---------|--------|
+| **SCREENSHOT** | "screenshot", "visual" | Capture webpage |
+| **FORM** | "form", "fill", "submit" | Form automation |
+| **DOCS** | "docs", "lookup", "find" | Query library docs |
+| **SCRAPE** | "scrape", "extract", "data" | Web scraping |
+| **STATUS** | "status", "check", "monitor" | Health check |
+
+---
+
+## SCREENSHOT MODE - Visual Testing
+
+### Compare Staging vs Prod
+```bash
+# Capture screenshots
+mcp screenshot https://staging.app.com/dashboard --viewport 1920x1080
+mcp screenshot https://prod.app.com/dashboard --viewport 1920x1080
+
+# Compare
+mcp diff staging.png prod.png --highlight
+```
+
+### Viewport Options
+| Size | Value |
+|------|-------|
+| Desktop | `1920x1080` |
+| Tablet | `768x1024` |
+| Mobile | `375x667` |
+
+---
+
+## FORM MODE - Automation
+
+### Fill and Submit
+```javascript
+// Using Puppeteer/Playwright via MCP
+await page.goto('https://example.com/contact');
+await page.fill('#name', 'John Doe');
+await page.fill('#email', 'john@example.com');
+await page.fill('#message', 'Test message');
+await page.click('button[type="submit"]');
+await page.screenshot({ path: 'confirmation.png' });
+```
+
+### Chain Operations
+Navigate → Fill form → Submit → Screenshot confirmation
+
+---
+
+## DOCS MODE - Library Lookup
+
+### Query Documentation
+```bash
+# Supabase auth
+mcp docs supabase "OAuth providers MFA setup"
+
+# Next.js
+mcp docs nextjs "app router server components"
+
+# React
+mcp docs react "useEffect cleanup"
+```
+
+### Supported Libraries
+- Next.js
+- React
+- Supabase
+- Prisma
+- Tailwind
+- (via context7/docs servers)
+
+---
+
+## SCRAPE MODE - Data Extraction
+
+### Extract Table Data
+```javascript
+// Get all products
+const products = await page.evaluate(() => {
+  return [...document.querySelectorAll('table tr')].map(row => ({
+    name: row.querySelector('td:nth-child(1)')?.textContent,
+    price: row.querySelector('td:nth-child(2)')?.textContent
+  }));
+});
+```
+
+### Output Format
+```json
+[
+  {"name": "Product A", "price": "$99"},
+  {"name": "Product B", "price": "$149"}
+]
+```
+
+---
+
+## STATUS MODE - Monitoring
+
+### Health Check
+```bash
+# Navigate and verify
+mcp navigate https://status.service.com
+mcp assert ".status-indicator" --text "All Systems Operational"
+mcp screenshot-if-red ".status-indicator.error"
+```
+
+---
+
+## CONFIGURATION
+
+### Gemini CLI MCP Settings
+Location: `~/.gemini/settings.json`
+
+```json
+{
+  "mcpServers": {
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-puppeteer"]
+    },
+    "context7": {
+      "command": "npx", 
+      "args": ["-y", "context7-mcp"],
+      "env": {
+        "CONTEXT7_API_KEY": "your-key"
+      }
+    }
+  }
+}
+```
+
+---
+
+## PRO TIPS
+
+1. **Install Gemini CLI** - Required for MCP execution
+2. **Chain operations** - Multi-step in one prompt
+3. **Default viewport** - 1920x1080, specify for mobile
+4. **Error handling** - Agent reports with fixes
+5. **Screenshot defaults** - Full-page captures
+
+---
+
+## ERROR HANDLING
+
+| Error | Fix |
+|-------|-----|
+| Timeout | Check URL, increase timeout |
+| Connection | Verify settings.json config |
+| Element not found | Check selector, wait for load |
+| Auth required | Add cookies/headers |
+
+> **Key Takeaway:** Access 100+ MCP tools via natural language. Browser automation stays isolated from main context.
+"""
+
+# ---
+# USAGE:
+# /mcp screenshot staging.app.com vs prod
+# /mcp fill contact form with test data
+# /mcp docs supabase OAuth setup
+# /mcp scrape product table from competitor.com
+# /mcp status check monitoring page
+# ---
