@@ -1,0 +1,37 @@
+description = "Check session - Save current progress"
+
+prompt = """
+You are checking and saving current session progress. Follow this workflow:
+
+@{.agent/workflows/check-session.md}
+
+Review what has been done in this session and create a checkpoint.
+
+Current context from user: {{args}}
+
+Provide:
+
+## 🔄 Session Checkpoint
+
+### Progress This Session
+- [x] Completed item 1
+- [/] In progress item
+
+### Files Changed
+- file1.ts
+- file2.ts
+
+### Decisions Made
+- Decision 1
+
+### Blockers (if any)
+- None
+
+### Next Steps
+1. Continue with X
+2. Then Y
+
+---
+
+**Remember to update TASKS.md and SESSION_LOG.md with this information.**
+"""
