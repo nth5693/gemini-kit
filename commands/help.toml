@@ -1,13 +1,14 @@
 # Gemini-Kit Help
-# Usage: /kit [command]
-# - /kit → Show all commands
-# - /kit plan → Show help for /plan
-# - /kit tools → Show all MCP tools
+# Usage: /help [command]
+# - /help → Show all commands
+# - /help plan → Show help for /plan
+# - /help tools → Show all MCP tools
 
 [command]
-trigger = "kit"
+trigger = "help"
 
 [command.settings]
+
 runImmediately = true
 
 [command.user]

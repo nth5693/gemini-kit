@@ -1,0 +1,68 @@
+# Screenshot to Code
+# Usage: /screenshot <image-path> [framework]
+# Convert UI screenshot to HTML/CSS code
+
+[command]
+trigger = "screenshot"
+
+[command.settings]
+runImmediately = true
+
+[command.user]
+content = """
+{{#if args}}
+# 📸 Screenshot to Code
+
+Convert this UI screenshot to code:
+
+**Image:** {{args}}
+
+## Instructions:
+
+1. FIRST, read the image file using your vision capabilities
+2. Analyze the UI elements, layout, colors, spacing
+3. Generate clean, responsive code
+
+## Requirements:
+- Framework: HTML + Tailwind CSS (default) 
+- Make it responsive (mobile-first)
+- Use semantic HTML5 elements
+- Match colors, fonts, spacing as closely as possible
+- Include all visible elements (buttons, text, images, etc.)
+
+## Output Format:
+1. Brief description of what you see
+2. Complete HTML code with inline Tailwind classes
+3. Save to `generated/<filename>.html`
+
+Start by analyzing the image, then generate the complete code.
+{{else}}
+# 📸 Screenshot to Code
+
+Convert any UI screenshot to HTML/CSS code.
+
+## Usage:
+```
+/screenshot <image-path> [framework]
+```
+
+## Examples:
+```
+/screenshot landing-page.png
+/screenshot mockup.jpg react
+/screenshot ~/Desktop/design.png vue
+```
+
+## Supported Frameworks:
+- `html` (default) - HTML + Tailwind CSS
+- `react` - React + Tailwind
+- `vue` - Vue 3 + Tailwind
+
+## Tips:
+- Use clear, high-resolution screenshots
+- Crop to just the UI you want to convert
+- Simpler UIs convert better
+
+Provide an image path to get started!
+{{/if}}
+"""
