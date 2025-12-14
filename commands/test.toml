@@ -40,12 +40,19 @@ Tự động detect và chạy theo project:
 ```
 
 ### 2. Coverage Report
-| Metric | Value | Target |
-|--------|-------|--------|
-| Statements | X% | 80% |
-| Branches | X% | 75% |
-| Functions | X% | 80% |
-| Lines | X% | 80% |
+| Metric | Value | Default Target | Critical Code Target |
+|--------|-------|----------------|---------------------|
+| Statements | X% | 80% | 90% |
+| Branches | X% | 75% | 85% |
+| Functions | X% | 80% | 90% |
+| Lines | X% | 80% | 90% |
+
+**Target Guidelines:**
+- **Standard code:** 80%
+- **Payment/Finance:** 90%+
+- **Security/Auth:** 90%+
+- **Core business logic:** 85%+
+- **UI components:** 60-70%
 
 ### 3. Test Results
 ```
