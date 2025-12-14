@@ -111,15 +111,46 @@
 
 ---
 
+### Phase 8: Security & Code Quality �
+> Thời gian: 3-4h | Độ khó: Cao | **IN PROGRESS**
+
+#### 8.1 Command Injection Fix (P0) ✅
+- [x] **8.1.1** Thêm security helpers (sanitize, safeGit, safeGh, commandExists) ✅
+- [x] **8.1.2** Refactor Tool 1, 2 (checkpoint) dùng safeGit ✅
+- [x] **8.1.3** Refactor Tool 11 (auto-rollback) dùng safeGit ✅
+- [x] **8.1.4** Refactor Tool 14, 15 (github PR) dùng safeGh ✅
+- [x] **8.1.5** Thêm Zod regex validation cho checkpointId, ticketId ✅
+- [x] **8.1.6** Build thành công ✅
+
+#### 8.2 Diff Library (P1) ✅
+- [x] **8.2.1** Install `diff` npm package ✅
+- [x] **8.2.2** Sửa `kit_store_diff` dùng Diff.createPatch ✅
+
+#### 8.3 Code Modularization (P2) ✅
+- [x] **8.3.1** Tách `src/tools/security.ts` ✅
+- [x] **8.3.2** Tách `src/tools/git.ts` ✅
+- [x] **8.3.3** Tách `src/tools/knowledge.ts` ✅
+- [x] **8.3.4** Tách `src/tools/integration.ts` ✅
+- [x] **8.3.5** Cập nhật `kit-server.ts` imports ✅
+
+
+#### 8.4 Naming & Validation (P3) ✅
+- [x] **8.4.1** Rename `kit_semantic_search` → `kit_keyword_search` ✅
+- [x] **8.4.2** Cập nhật scout.toml ✅
+
+---
+
 ## 📊 TỔNG KẾT
 
 | Thành phần | Số lượng | Trạng thái |
 |------------|----------|------------|
 | Config files | 5 | ✅ |
-| TOML Commands | 17 | ✅ |
-| MCP Tools | 13 (+5 planned) | ✅ |
+| TOML Commands | 20 | ✅ |
+| MCP Tools | 17 | ✅ |
 | Hooks | 5 | ✅ |
-| GitHub Integration | 0 | 🔜 Phase 6 |
+| Security Fixes | 12/12 | ✅ 100% |
+| Tool Modules | 4 | ✅ |
+
 
 ---
 
@@ -128,12 +159,6 @@
 | Session | Tasks | Status |
 |---------|-------|--------|
 | 1-5 | Foundation | ✅ |
-| 6 | Phase 1-4 (Advanced) | ✅ |
-| 6+ | Phase 5 (Vector Learnings) | 🔜 Now |
-| 7 | Phase 6 (GitHub) | 🔜 |
-| 8 | Phase 7 (Jira) | ⏳ Optional |
-
-| 6 | Link & Test | ✅ |
-| 7 | Phase 1: LEARNINGS.md | 🔜 Next |
-| 8 | Phase 2 + 3: Dry Run + Rollback | ⏳ |
-| 9-10 | Phase 4: RAG | ⏳ |
+| 6 | Phase 1-7 (All Features) | ✅ |
+| 6+ | Phase 8 (Security - P0) | ✅ Done |
+| 7 | Phase 8 (P1-P3) | 🔜 Optional |
