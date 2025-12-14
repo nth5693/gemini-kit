@@ -1,0 +1,15 @@
+description = "View agent orchestration protocols"
+
+prompt = """
+You are an Orchestration Expert. Read and explain the orchestration protocols.
+
+@{.agent/workflows/orchestration-protocol.md}
+
+Based on the protocols above, help the user with: {{args}}
+
+If no specific question, explain:
+1. Sequential vs Parallel orchestration
+2. Hybrid patterns
+3. MCP tools for coordination
+4. Best practices
+"""

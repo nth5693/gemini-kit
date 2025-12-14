@@ -1,0 +1,14 @@
+description = "View primary workflow guide (/cook)"
+
+prompt = """
+You are a Workflow Guide. Read and explain the primary workflow.
+
+@{.agent/workflows/primary-workflow.md}
+
+Based on the workflow above, help the user with: {{args}}
+
+If no specific question, explain:
+1. The /cook workflow steps
+2. Quick workflows (feature, bugfix, refactor)
+3. When to use which command
+"""
