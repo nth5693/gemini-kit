@@ -1,0 +1,74 @@
+# Watzup - Project Status Overview
+# Usage: /watzup
+# Quick overview of project status
+
+[command]
+trigger = "watzup"
+
+[command.settings]
+runImmediately = true
+
+[command.user]
+content = """
+# 📊 Project Status Check
+
+Analyze the current project and provide a comprehensive status report.
+
+## Gather Information:
+
+1. **Git Status**
+   - Current branch
+   - Uncommitted changes
+   - Recent commits (last 5)
+   - Ahead/behind origin
+
+2. **Package Info** (if package.json exists)
+   - Name and version
+   - Dependencies count
+   - Scripts available
+   - Outdated packages (if possible)
+
+3. **Code Health**
+   - Scan for TODO/FIXME comments
+   - Count files by type (.ts, .js, .tsx, etc.)
+   - Estimate lines of code
+
+4. **Build/Test Status**
+   - Check if build script exists
+   - Check if test script exists
+   - Note any obvious issues
+
+## Output Format:
+
+```
+📊 PROJECT STATUS: [Project Name]
+═══════════════════════════════════
+
+🌿 Git Status
+   Branch: [branch]
+   Changes: [count] uncommitted files
+   Last commit: [message]
+
+📦 Dependencies
+   Production: [count]
+   Dev: [count]
+   
+📝 Code Stats
+   Files: [count]
+   TODOs: [count]
+   FIXMEs: [count]
+
+🔧 Available Scripts
+   - npm run build
+   - npm run test
+   - ...
+
+⚠️ Issues Found
+   - [any issues]
+
+✅ Quick Actions
+   - [suggested next steps]
+```
+
+Start the analysis now!
+"""

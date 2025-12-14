@@ -1,0 +1,15 @@
+{
+    "name": "gemini-kit",
+    "version": "1.0.0",
+    "description": "Super Engineer - Team of AI Agents for software development",
+    "contextFileName": "GEMINI.md",
+    "mcpServers": {
+        "kit-agents": {
+            "command": "node",
+            "args": [
+                "${extensionPath}${/}dist${/}kit-server.js"
+            ],
+            "cwd": "${extensionPath}"
+        }
+    }
+}

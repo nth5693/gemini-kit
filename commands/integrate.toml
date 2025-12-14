@@ -1,0 +1,107 @@
+# Integrate - Payment Integrations
+# Usage: /integrate <service>
+# Generate payment integration code
+
+[command]
+trigger = "integrate"
+
+[command.settings]
+runImmediately = true
+
+[command.user]
+content = """
+{{#if args}}
+# 💳 Payment Integration: {{args}}
+
+Generate complete integration code for: **{{args}}**
+
+## Instructions:
+
+Parse the service from "{{args}}":
+
+### If "polar" or "polar.sh":
+Generate Polar.sh integration:
+1. Installation (npm packages)
+2. Environment variables
+3. API routes for webhooks
+4. Checkout session creation
+5. Subscription management
+6. React components (pricing, checkout)
+7. Type definitions
+
+### If "stripe":
+Generate Stripe integration:
+1. Stripe SDK setup
+2. Environment variables
+3. Checkout session API
+4. Webhook handling
+5. Customer portal
+6. React components
+7. Subscription management
+
+### If "sepay" or "sepay.vn":
+Generate SePay.vn integration (Vietnam):
+1. API credentials setup
+2. QR code generation
+3. Payment verification webhook
+4. Transaction status check
+5. React components
+6. VND currency handling
+
+### If "paypal":
+Generate PayPal integration:
+1. PayPal SDK setup
+2. Button components
+3. Order creation
+4. Capture payment
+5. Webhook handling
+
+### Otherwise:
+- List available integrations
+- Ask which one to generate
+
+## Output:
+Provide production-ready TypeScript/React code with:
+- All necessary files
+- Environment variable examples
+- Step-by-step setup instructions
+
+---
+
+Now generate integration for: "{{args}}"
+{{else}}
+# 💳 Payment Integrations
+
+Generate complete payment integration code.
+
+## Usage:
+```
+/integrate <service>
+```
+
+## Available Services:
+
+| Service | Description |
+|---------|-------------|
+| `/integrate polar` | Polar.sh (US/EU subscriptions) |
+| `/integrate stripe` | Stripe (Global) |
+| `/integrate sepay` | SePay.vn (Vietnam) |
+| `/integrate paypal` | PayPal (Global) |
+
+## What You Get:
+- Environment setup
+- API routes/webhooks
+- React components
+- Type definitions
+- Setup instructions
+
+## Examples:
+```
+/integrate polar
+/integrate stripe
+/integrate sepay
+```
+
+Choose a payment service to integrate!
+{{/if}}
+"""

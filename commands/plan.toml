@@ -1,0 +1,174 @@
+description = "Tạo kế hoạch triển khai chi tiết (Planner Agent)"
+
+prompt = """
+# 📋 PLANNER AGENT
+
+Tạo kế hoạch triển khai cho:
+
+**Task:** {{args}}
+
+## MODE DETECTION
+Dựa vào input, chọn mode phù hợp:
+
+| Mode | Trigger | Mô tả |
+|------|---------|-------|
+| **STANDARD** | default | Basic planning |
+| **TWO** | "two", "vs", "or", "compare" | 2 approaches comparison |
+| **HARD** | "hard", "complex", "bug", "race", "memory" | Complex fix planning |
+| **CRO** | "cro", "conversion", "signup", "checkout" | Conversion optimization |
+| **CI** | "ci", "github", "actions", "pipeline" | CI/CD fix planning |
+
+---
+
+## STANDARD PLAN OUTPUT
+
+### # Implementation Plan: [Feature Name]
+
+### ## Approach
+- Why this solution
+- Alternatives considered
+
+### ## Steps
+1. **Install Dependencies** (5 min)
+   ```bash
+   npm install [packages]
+   ```
+
+2. **Core Implementation** (20 min)
+   - Files to create: `src/feature/service.ts`
+   - Files to modify: `src/server.ts`
+   ```typescript
+   // Code snippet showing structure
+   ```
+
+3. **Integration** (15 min)
+   - Where to hook into existing code
+
+4. **Testing** (20 min)
+   - Test files to create
+   - Coverage requirements
+
+### ## Timeline
+| Phase | Duration |
+|-------|----------|
+| Dependencies | 5 min |
+| Implementation | 20 min |
+| Integration | 15 min |
+| Testing | 20 min |
+| **Total** | **1 hour** |
+
+### ## Rollback Plan
+Step-by-step recovery if issues occur.
+
+### ## Security Checklist
+- [ ] Input validation
+- [ ] Auth checks
+- [ ] Rate limiting
+- [ ] Error handling
+
+---
+
+## HARD MODE (Complex Bug Fix)
+Khi cần fix bug phức tạp:
+
+### Root Cause Analysis
+1. Symptom description
+2. Reproduction steps
+3. Affected components
+
+### Investigation Steps
+1. [Step 1] - What to check
+2. [Step 2] - What to verify
+
+### Fix Plan
+- Files to modify
+- Code changes with snippets
+- Test cases to add
+
+---
+
+## CRO MODE (Conversion Optimization)
+
+### Current State
+- Metric: [Current conversion %]
+- User flow analysis
+
+### Improvements
+| Change | Expected Impact | Effort |
+|--------|-----------------|--------|
+| [Change 1] | +X% | Low |
+| [Change 2] | +Y% | Medium |
+
+### A/B Test Plan
+- Control vs Variant
+- Sample size
+- Duration
+
+### Tracking Implementation
+- Events to track
+- Analytics setup
+
+---
+
+## CI MODE (CI/CD Fix)
+
+### Log Analysis
+```
+[Key error lines from logs]
+```
+
+### Root Cause
+[Why it failed]
+
+### Fix Steps
+1. [Fix step 1]
+2. [Fix step 2]
+
+### Prevention
+- [ ] Add test case
+- [ ] Update workflow
+
+---
+
+## TWO APPROACHES MODE
+
+### Approach A: [Name]
+[Standard plan sections]
+
+### Approach B: [Name]
+[Standard plan sections]
+
+### Comparison Table
+| Criteria | Approach A | Approach B |
+|----------|------------|------------|
+| Effort | ⭐⭐⭐ | ⭐⭐ |
+| Risk | ⭐ | ⭐⭐ |
+| Scalability | ⭐⭐ | ⭐⭐⭐ |
+
+### Recommendation
+[Which to choose and why]
+
+---
+
+## OUTPUT
+Save to: `plans/[feature-name]-YYYYMMDD.md`
+
+## NEXT STEPS
+```bash
+# Ready? Run:
+/cook @plans/[your-plan].md
+```
+
+> **Key Takeaway:** Planning prevents waste. 10 minutes of analysis saves hours of refactoring.
+"""
+
+# ---
+# USAGE:
+# /plan Add user authentication
+# /plan:two REST vs GraphQL for mobile app  
+# /plan:hard Fix checkout race condition causing double charges
+# /plan:cro Improve signup conversion rate
+# /plan:ci Fix failing GitHub Actions workflow
+# ---
+
+

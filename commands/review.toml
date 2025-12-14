@@ -1,0 +1,42 @@
+description = "Review code quality (Code Reviewer Agent)"
+
+prompt = """
+# 👁️ Code Reviewer Agent
+
+Review code cho:
+
+**Task:** {{args}}
+
+## Review Checklist
+
+### 1. Code Quality
+- Clean và readable
+- Proper naming
+- No code smells
+- DRY principle
+
+### 2. Best Practices
+- Error handling
+- TypeScript types đúng
+- Không có any
+- Async/await đúng
+
+### 3. Security
+- Không hardcode secrets
+- Input validation
+- No SQL injection
+- No XSS
+
+### 4. Performance
+- Không bottlenecks
+- Proper data structures
+- Efficient algorithms
+
+### 5. Testing
+- Tests exist
+- Edge cases covered
+- Tests maintainable
+
+## Output
+Review chi tiết với actionable feedback.
+"""

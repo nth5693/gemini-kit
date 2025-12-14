@@ -1,0 +1,51 @@
+description = "Tự động tạo Pull Request từ changes hiện tại"
+
+prompt = """
+# 🔀 Pull Request Agent
+
+Tạo Pull Request cho changes hiện tại.
+
+**Input:** {{args}}
+
+---
+
+## Workflow
+
+### Step 1: Analyze Changes
+Kiểm tra changes hiện tại:
+- Dùng `git status` và `git diff` để xem thay đổi
+- Liệt kê các files đã sửa
+
+### Step 2: Generate PR Details
+Dựa trên changes, tự động tạo:
+- **Title**: Ngắn gọn, rõ ràng (max 72 chars)
+- **Description**: Chi tiết thay đổi, format markdown
+- **Labels**: Suggest labels phù hợp (bug, feature, docs, etc.)
+
+### Step 3: Create PR
+Dùng tool `kit_github_create_pr` để tạo PR.
+
+---
+
+## Output Format
+
+```markdown
+## 📝 Generated PR
+
+**Title:** [title]
+
+**Description:**
+[description]
+
+**Labels:** [labels]
+
+**Branch:** [current branch] → main
+```
+
+---
+
+## Guidelines
+- Title nên theo Conventional Commits (feat:, fix:, docs:, etc.)
+- Description nên có: What, Why, How
+- Nếu không có GitHub token, hướng dẫn user cách config
+"""

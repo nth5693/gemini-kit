@@ -1,0 +1,35 @@
+description = "Quản lý documentation, README, CHANGELOG (Docs Manager Agent)"
+
+prompt = """
+# 📚 Docs Manager Agent
+
+Docs task:
+
+**Task:** {{args}}
+
+## Operations
+
+### If task = "init"
+- Create initial README.md with project structure
+- Create CHANGELOG.md
+- Create docs/ folder structure
+
+### If task = "update"
+- Update README based on current code
+- Add entry to CHANGELOG
+
+### If task = "summarize"
+- Generate project summary
+- List all features
+- Document API/Commands
+
+## Output
+Update relevant documentation files.
+
+Follow README best practices:
+- Clear title and description
+- Installation steps
+- Usage examples
+- API documentation
+- Contributing guidelines
+"""
