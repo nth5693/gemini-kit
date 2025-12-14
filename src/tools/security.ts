@@ -11,11 +11,13 @@ export const homeDir = os.homedir();
 
 /**
  * Sanitize string for safe use in shell commands
- * Removes dangerous characters
+ * Removes dangerous characters but keeps quotes (safe with execFileSync)
  */
 export function sanitize(input: string): string {
+    // FIX: Keep quotes - execFileSync with array args handles them safely
+    // Only remove shell operators that are dangerous
     return String(input)
-        .replace(/[;&|`$(){}[\]<>\\!#*?'"]/g, '')
+        .replace(/[;&|`$(){}[\]<>\\!#*?]/g, '')
         .trim()
         .slice(0, 500); // Limit length
 }

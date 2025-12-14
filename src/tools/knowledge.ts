@@ -338,69 +338,82 @@ Your changes would be lost if applied.
                     lineCount: number;
                 }> = [];
 
-                for (const file of files) {
-                    try {
-                        const fullPath = path.join(projectDir, file);
-                        const content = fs.readFileSync(fullPath, 'utf8');
-                        const lines = content.split('\n');
+                // FIX: Use async file reading with concurrency limit for better performance
+                const fsPromises = await import('fs/promises');
+                const BATCH_SIZE = 10; // Process files in batches
 
-                        const words = content.toLowerCase().match(/\b[a-z][a-z0-9_]{2,}\b/g) || [];
-                        const wordFreq: Record<string, number> = {};
-                        words.forEach(w => { wordFreq[w] = (wordFreq[w] || 0) + 1; });
-                        const keywords = Object.entries(wordFreq)
-                            .sort((a, b) => b[1] - a[1])
-                            .slice(0, 20)
-                            .map(([word]) => word);
+                for (let i = 0; i < files.length; i += BATCH_SIZE) {
+                    const batch = files.slice(i, i + BATCH_SIZE);
+                    const results = await Promise.all(batch.map(async (file) => {
+                        try {
+                            const fullPath = path.join(projectDir, file);
+                            const content = await fsPromises.readFile(fullPath, 'utf8');
+                            const lines = content.split('\n');
 
-                        // FIX 9.4: Enhanced function patterns
-                        const functionPatterns = [
-                            // Standard functions
-                            /(?:async\s+)?function\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:<[^>]*>)?\s*\(/g,
-                            // Arrow functions with const/let/var
-                            /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\(/g,
-                            /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>/g,
-                            // TypeScript generics: const foo = <T>() =>
-                            /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?<[^>]*>\s*\(/g,
-                            // Method shorthand in object/class
-                            /^\s*(?:async\s+)?([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:<[^>]*>)?\s*\([^)]*\)\s*{/gm,
-                            // Class arrow property
-                            /^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>/gm,
-                            // Export function
-                            /export\s+(?:async\s+)?function\s+([a-zA-Z_][a-zA-Z0-9_]*)/g,
-                            /export\s+(?:const|let)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=/g,
-                            // React FC: const MyComponent: FC = 
-                            /(?:const|let)\s+([A-Z][a-zA-Z0-9_]*)\s*:\s*(?:React\.)?FC/g,
-                            // React forwardRef
-                            /(?:const|let)\s+([A-Z][a-zA-Z0-9_]*)\s*=\s*(?:React\.)?forwardRef/g,
-                        ];
+                            const words = content.toLowerCase().match(/\b[a-z][a-z0-9_]{2,}\b/g) || [];
+                            const wordFreq: Record<string, number> = {};
+                            words.forEach(w => { wordFreq[w] = (wordFreq[w] || 0) + 1; });
+                            const keywords = Object.entries(wordFreq)
+                                .sort((a, b) => b[1] - a[1])
+                                .slice(0, 20)
+                                .map(([word]) => word);
 
-                        const allFunctions: string[] = [];
-                        for (const pattern of functionPatterns) {
-                            const matches = content.match(pattern) || [];
-                            for (const match of matches) {
-                                const nameMatch = match.match(/([a-zA-Z_][a-zA-Z0-9_]*)/);
-                                if (nameMatch && !['function', 'async', 'const', 'let', 'var', 'export', 'React', 'FC', 'forwardRef'].includes(nameMatch[1])) {
-                                    allFunctions.push(nameMatch[1]);
+                            // FIX 9.4: Enhanced function patterns
+                            const functionPatterns = [
+                                // Standard functions
+                                /(?:async\s+)?function\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:<[^>]*>)?\s*\(/g,
+                                // Arrow functions with const/let/var
+                                /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\(/g,
+                                /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>/g,
+                                // TypeScript generics: const foo = <T>() =>
+                                /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?<[^>]*>\s*\(/g,
+                                // Method shorthand in object/class
+                                /^\s*(?:async\s+)?([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:<[^>]*>)?\s*\([^)]*\)\s*{/gm,
+                                // Class arrow property
+                                /^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>/gm,
+                                // Export function
+                                /export\s+(?:async\s+)?function\s+([a-zA-Z_][a-zA-Z0-9_]*)/g,
+                                /export\s+(?:const|let)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=/g,
+                                // React FC: const MyComponent: FC = 
+                                /(?:const|let)\s+([A-Z][a-zA-Z0-9_]*)\s*:\s*(?:React\.)?FC/g,
+                                // React forwardRef
+                                /(?:const|let)\s+([A-Z][a-zA-Z0-9_]*)\s*=\s*(?:React\.)?forwardRef/g,
+                            ];
+
+                            const allFunctions: string[] = [];
+                            for (const pattern of functionPatterns) {
+                                const matches = content.match(pattern) || [];
+                                for (const match of matches) {
+                                    const nameMatch = match.match(/([a-zA-Z_][a-zA-Z0-9_]*)/);
+                                    if (nameMatch && !['function', 'async', 'const', 'let', 'var', 'export', 'React', 'FC', 'forwardRef'].includes(nameMatch[1])) {
+                                        allFunctions.push(nameMatch[1]);
+                                    }
                                 }
                             }
+                            const functions = [...new Set(allFunctions)].slice(0, 15);
+
+                            const classes = (content.match(/class\s+([a-zA-Z_][a-zA-Z0-9_]*)/g) || [])
+                                .map(m => m.replace('class ', ''));
+
+                            const imports = (content.match(/(?:import|from|require)\s*[('"]([^'"]+)['"]/g) || [])
+                                .slice(0, 10);
+
+                            index.push({
+                                file: file.replace(/^\.\//, ''),
+                                keywords,
+                                functions: [...new Set(functions)].slice(0, 10),
+                                classes,
+                                imports,
+                                lineCount: lines.length,
+                            });
+                        } catch {
+                            return null; // Skip failed files
                         }
-                        const functions = [...new Set(allFunctions)].slice(0, 15);
-
-                        const classes = (content.match(/class\s+([a-zA-Z_][a-zA-Z0-9_]*)/g) || [])
-                            .map(m => m.replace('class ', ''));
-
-                        const imports = (content.match(/(?:import|from|require)\s*[('"]([^'"]+)['"]/g) || [])
-                            .slice(0, 10);
-
-                        index.push({
-                            file: file.replace(/^\.\//, ''),
-                            keywords,
-                            functions: [...new Set(functions)].slice(0, 10),
-                            classes,
-                            imports,
-                            lineCount: lines.length,
-                        });
-                    } catch { }
+                    }));
+                    // Filter and add valid results to index
+                    results.filter(Boolean).forEach(result => {
+                        if (result) index.push(result);
+                    });
                 }
 
                 const indexFile = path.join(indexDir, 'codebase-index.json');
