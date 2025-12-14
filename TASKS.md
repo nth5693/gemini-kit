@@ -283,15 +283,14 @@
 ### Phase 12 New:
 - `/content` - Marketing content generator
 - `/video` - Video to code analysis
-- `/plan:two` - 2 approaches comparison
 - `/journal` - Incident report template
-- `/research` - **UPGRADED** to ClaudeKit report structure:
-  - Executive Summary với confidence level
-  - Multi-approach comparison table
-  - Security/CVE section
-  - Performance metrics
-  - 15+ sources table
-  - 5-step action plan
+- `/research` - **UPGRADED** to ClaudeKit report structure
+- `/plan` - **UPGRADED** với 5 modes:
+  - `:two` - 2 approaches comparison
+  - `:hard` - Complex bug fix planning
+  - `:cro` - Conversion optimization
+  - `:ci` - CI/CD fix planning
+  - Code snippets, Timeline table
 
 **GitHub:** https://github.com/nth5693/gemini-kit
 **Release:** v1.1.0
