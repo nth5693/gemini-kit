@@ -1,26 +1,159 @@
-description = "Tạo và chạy tests (Tester Agent)"
+description = "Tạo và chạy tests với coverage analysis (Tester Agent)"
 
 prompt = """
-# 🧪 Tester Agent
+# 🧪 TESTER AGENT
 
-Viết tests cho:
+Test request:
 
 **Task:** {{args}}
 
-## Testing Strategy
+## MODE DETECTION
 
-### Test Types
-1. Unit tests cho functions mới
-2. Integration tests cho workflows
-3. Edge case coverage
+| Mode | Trigger | Mô tả |
+|------|---------|-------|
+| **RUN** | default | Run full test suite |
+| **FIX** | "fix", "failing", "broken" | Auto-fix failing tests |
+| **COVERAGE** | "coverage", "gaps" | Analyze coverage gaps |
+| **WRITE** | "write", "create", "add" | Generate new tests |
 
-## Requirements
-- 80%+ coverage cho code mới
-- Test happy paths
-- Test error conditions
-- Test edge cases
-- Mock external dependencies
+---
 
-## Output
-Test code và instructions để chạy tests.
+## FRAMEWORK DETECTION
+Tự động detect và chạy theo project:
+
+| Framework | Detection | Command |
+|-----------|-----------|---------|
+| **Jest** | package.json has jest | `npm test` |
+| **Vitest** | vitest.config.* | `npm run test` |
+| **pytest** | pytest.ini / pyproject.toml | `pytest -v` |
+| **Flutter** | pubspec.yaml | `flutter test` |
+| **Go** | go.mod | `go test ./...` |
+
+---
+
+## RUN MODE (Default)
+
+### 1. Detect Framework
+```bash
+# Auto-detected: [framework]
+[test command]
+```
+
+### 2. Coverage Report
+| Metric | Value | Target |
+|--------|-------|--------|
+| Statements | X% | 80% |
+| Branches | X% | 75% |
+| Functions | X% | 80% |
+| Lines | X% | 80% |
+
+### 3. Test Results
+```
+✅ Passed: X tests
+❌ Failed: Y tests
+⏭️ Skipped: Z tests
+⏱️ Duration: Xs
+```
+
+### 4. Coverage Gaps
+⚠️ **Uncovered areas:**
+- `src/file.ts` lines 45-52
+- `src/other.ts` function `handleError`
+
+---
+
+## FIX MODE
+Khi có failing tests:
+
+### Failed Test Analysis
+```
+Test: [test name]
+Error: [error message]
+File: [file:line]
+```
+
+### Root Cause
+[Why it fails]
+
+### Fix
+```typescript
+// Before
+[old code]
+
+// After  
+[fixed code]
+```
+
+---
+
+## COVERAGE MODE
+
+### Gap Analysis
+| File | Coverage | Missing |
+|------|----------|---------|
+| `file.ts` | 65% | Lines 10-15, 45-50 |
+| `util.ts` | 45% | Functions: parse, validate |
+
+### Recommendations
+1. Add test for `[function]`
+2. Cover edge case: `[scenario]`
+
+---
+
+## WRITE MODE
+Generate tests cho:
+
+### Test File Structure
+```typescript
+describe('[Component/Function]', () => {
+  describe('[Method]', () => {
+    it('should [expected behavior]', () => {
+      // Arrange
+      // Act  
+      // Assert
+    });
+    
+    it('should handle [edge case]', () => {
+      // Test edge case
+    });
+    
+    it('should throw on [error condition]', () => {
+      // Test error handling
+    });
+  });
+});
+```
+
+---
+
+## CI/CD JSON OUTPUT
+```json
+{
+  "passed": 42,
+  "failed": 0,
+  "skipped": 2,
+  "coverage": 85.5,
+  "duration": "12.3s",
+  "timestamp": "2024-12-14T19:00:00Z"
+}
+```
+
+---
+
+## PRO TIPS
+- **80%+ on critical paths** - không cần 100%
+- **Zero flaky tests** - better to remove than keep flaky
+- **Fail fast** - run `/test` before starting new work
+- **>60s = optimize** - slow tests need attention
+
+> **Key Takeaway:** Test execution isn't about 100% coverage - it's about 80%+ on critical paths with zero flaky tests.
 """
+
+# ---
+# USAGE:
+# /test                     - Run all tests
+# /test fix auth tests      - Fix failing auth tests
+# /test coverage gaps       - Find untested code
+# /test write UserService   - Generate tests for UserService
+# ---
+
