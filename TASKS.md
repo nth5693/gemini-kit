@@ -222,15 +222,44 @@
 
 ---
 
-## 🎉 EXTENSION HOÀN THÀNH!
+### Phase 11: Advanced Orchestration 🔜
+> Thời gian: ~2.5h | Team workflow như dev thực thụ
+
+#### 11.1 Core Infrastructure
+- [ ] **11.1.1** `src/tools/orchestrator.ts` - OrchestratorEngine class
+- [ ] **11.1.2** `src/tools/team-state.ts` - TeamState management
+- [ ] **11.1.3** `src/tools/workflows.ts` - Workflow definitions
+
+#### 11.2 Orchestration Patterns
+- [ ] **11.2.1** Auto-Retry Loop (Tester fail → Debugger → Coder → retry)
+- [ ] **11.2.2** Parallel Agents (Multi-scout chạy song song)
+- [ ] **11.2.3** Smart Routing (Auto-select workflow)
+- [ ] **11.2.4** Team Session State (Shared context)
+- [ ] **11.2.5** Conditional Workflow (Rẽ nhánh theo kết quả)
+- [ ] **11.2.6** Agent Collaboration (Hỏi ý kiến nhau)
+
+#### 11.3 MCP Tools
+- [ ] **11.3.1** `kit_team_start` - Start team session
+- [ ] **11.3.2** `kit_team_status` - Get session status
+- [ ] **11.3.3** `kit_team_end` - End and save summary
+- [ ] **11.3.4** `kit_run_workflow` - Execute complete workflow
+
+#### 11.4 Command
+- [ ] **11.4.1** `/team` command - UI cho team orchestration
+
+---
+
+## 📊 TỔNG KẾT (sau Phase 11)
 
 | Metric | Count |
 |--------|-------|
-| **TOML Commands** | **30** |
-| MCP Tools | 17 |
+| **TOML Commands** | **31** |
+| MCP Tools | **21** |
 | Hooks | 5 |
-| Security Fixes | 100% |
-| Bug Fixes | 100% |
+| Orchestration Patterns | 6 |
 
 **GitHub:** https://github.com/nth5693/gemini-kit
 
+---
+
+**📍 Current: Phase 11 - Advanced Orchestration**
