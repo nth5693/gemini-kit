@@ -22,12 +22,6 @@ npm-debug.log*
 .env
 .env.local
 
-# Documentation & tracking (keep local only)
-TASKS.md
-doc.md
-IMPLEMENTATION_PLAN.md
-SESSION_LOG.md
-CHANGELOG.md
-WORKFLOW.md
+# Local folders (not needed)
 gemini-kit-old/
 gemini-cli-source/
