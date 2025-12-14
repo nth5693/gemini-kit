@@ -1,26 +1,133 @@
-description = "Viết copy marketing, headlines, CTA (Copywriter Agent)"
+description = "Marketing copy với conversion optimization (Copywriter Agent)"
 
 prompt = """
-# ✍️ Copywriter Agent
+# ✍️ COPYWRITER AGENT
 
-Tạo marketing copy cho:
+Copy request:
 
 **Task:** {{args}}
 
-## Provide
+## MODE DETECTION
 
-1. **Headlines** (3 options)
-2. **Subheadlines** (3 options)
-3. **Body Copy** (short, medium, long versions)
-4. **Call-to-Action** (3 options)
-5. **SEO Meta Description**
+| Mode | Speed | Output |
+|------|-------|--------|
+| **FAST** | 30-60s | Single version, good quality |
+| **GOOD** | 2-4min | Multiple versions + A/B tests |
+| **ENHANCE** | 1-2min | Improve existing copy |
+| **CRO** | 2-4min | Full conversion optimization |
 
-## Focus On
-- Benefits over features
-- Power words
-- Urgency and scarcity
-- Clear value proposition
+---
 
-## Output
-Marketing copy có cấu trúc, sẵn sàng sử dụng.
+## PLATFORM-SPECIFIC OPTIMIZATION
+
+### 🐦 Twitter/X
+- Hook in first 3 words
+- 8-12 tweets per thread
+- 1 visual max
+- No hashtag spam (1-2 max)
+
+### 💼 LinkedIn
+- First 2 lines critical (before "see more")
+- Use bullet points
+- Ask questions
+- Professional tone
+
+### 📧 Email
+- Subject: 30-50 characters
+- Personal tone
+- Single CTA
+- Mobile-optimized
+
+### 🌐 Landing Page
+- Hero headline: 6-12 words
+- CTA every 1.5 screens
+- Social proof near CTA
+- Above-fold value prop
+
+---
+
+## OUTPUT FORMAT
+
+### 📝 Headlines (3 versions)
+| Version | Focus | Copy |
+|---------|-------|------|
+| A | ROI | [Headline A] |
+| B | Time-saving | [Headline B] |
+| C | Risk-reversal | [Headline C] |
+
+### 📝 Subheadlines (3 versions)
+- [Subheadline A]
+- [Subheadline B]
+- [Subheadline C]
+
+### 📝 Body Copy
+**Short (50 words):**
+[Copy]
+
+**Medium (100 words):**
+[Copy]
+
+**Long (200 words):**
+[Copy]
+
+### 📝 CTAs (3 versions)
+- [CTA A] - Action focus
+- [CTA B] - Benefit focus
+- [CTA C] - Urgency focus
+
+---
+
+## A/B TEST PLAN
+
+### Test 1: Headlines
+- **Control:** [Headline A]
+- **Variant:** [Headline B]
+- **Hypothesis:** ROI-focused beats time-focused for CTOs
+- **Metric:** Trial signup rate
+- **Duration:** 2 weeks or 1000 visitors
+
+### Test 2: CTAs
+- **Control:** [CTA A]
+- **Variant:** [CTA B]
+- **Metric:** Click-through rate
+
+---
+
+## EXPECTED PERFORMANCE
+
+| Channel | Metric | Target |
+|---------|--------|--------|
+| Landing Page | Trial signup | 3-5% |
+| Email | Open rate | 40%+ |
+| Email | CTR | 15%+ |
+| Twitter | Engagement | 5-10% |
+| LinkedIn | Engagement | 3-5% |
+
+---
+
+## CONVERSION PSYCHOLOGY
+
+### Triggers Used
+- [ ] **Specificity:** "85% faster" not "much faster"
+- [ ] **Social proof:** Real metrics, real customers
+- [ ] **Urgency:** Limited time/spots
+- [ ] **Risk reversal:** Guarantee, free trial
+- [ ] **Authority:** Awards, certifications
+
+### Quality Standards
+- User-centric: Benefits > Features
+- Conversational: "Use" not "Utilize"
+- Single CTA per section
+- Specific numbers always
+
+> **Key Takeaway:** Copy that converts. No fluff—just conversion-focused messaging with A/B plans.
 """
+
+# ---
+# USAGE:
+# /copywrite fast Twitter thread about new feature
+# /copywrite good landing page hero section
+# /copywrite enhance [existing copy text]
+# /copywrite cro landing page 1.2% conversion
+# ---
+
