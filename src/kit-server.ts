@@ -167,7 +167,10 @@ server.tool(
             const artifactDir = path.join(process.cwd(), '.gemini-kit', 'artifacts', type);
             fs.mkdirSync(artifactDir, { recursive: true });
 
-            const safeName = String(name).replace(/\s+/g, '-');
+            // FIX: Use path.basename and allow only safe characters to prevent path traversal
+            const safeName = path.basename(String(name))
+                .replace(/[^a-zA-Z0-9-_]/g, '-')  // Only alphanumeric, dash, underscore
+                .slice(0, 50);  // Limit length
             const filename = `${safeName}-${Date.now()}.md`;
             const filepath = path.join(artifactDir, filename);
             fs.writeFileSync(filepath, content);

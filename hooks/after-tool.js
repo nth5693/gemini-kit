@@ -56,10 +56,13 @@ async function main(input) {
 
     // Run tests
     try {
-        execSync(`npm test -- ${testFile} --silent 2>&1`, {
+        // FIX: Use execFileSync with args array to prevent command injection
+        const { execFileSync } = await import('child_process');
+        execFileSync('npm', ['test', '--', testFile, '--silent'], {
             cwd: projectDir,
             encoding: 'utf8',
             timeout: 30000,
+            stdio: 'pipe', // Don't block on output
         });
 
         console.log(JSON.stringify({

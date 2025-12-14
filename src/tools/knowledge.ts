@@ -20,6 +20,18 @@ import { sanitize, homeDir, findFiles } from './security.js';
 const LEARNING_START = '<!-- LEARNING_START';
 const LEARNING_END = '<!-- LEARNING_END -->';
 
+/**
+ * FIX: Validate file path to prevent path traversal attacks
+ * Ensures the resolved path stays within the project directory
+ */
+function validatePath(filePath: string, baseDir: string = process.cwd()): string {
+    const resolved = path.resolve(baseDir, filePath);
+    if (!resolved.startsWith(path.resolve(baseDir))) {
+        throw new Error(`Path traversal detected: ${filePath}`);
+    }
+    return resolved;
+}
+
 export function registerKnowledgeTools(server: McpServer): void {
     // TOOL 7: SAVE LEARNING (FIX 9.5 - unique delimiter)
     server.tool(
@@ -184,9 +196,13 @@ ${LEARNING_END}
                 fs.mkdirSync(diffDir, { recursive: true });
 
                 const diffId = `diff-${Date.now()}`;
+
+                // FIX: Validate path to prevent traversal attacks
+                const validatedFile = validatePath(file);
+
                 const diffData = {
                     id: diffId,
-                    file: sanitize(file),
+                    file: validatedFile,
                     originalContent,
                     newContent,
                     description: description || '',
