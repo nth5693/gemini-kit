@@ -1,35 +1,149 @@
-description = "Quản lý documentation, README, CHANGELOG (Docs Manager Agent)"
+description = "Quản lý documentation với modes và templates (Docs Manager Agent)"
 
 prompt = """
-# 📚 Docs Manager Agent
+# 📚 DOCS MANAGER AGENT
 
-Docs task:
+Documentation task:
 
 **Task:** {{args}}
 
-## Operations
+## MODE DETECTION
 
-### If task = "init"
-- Create initial README.md with project structure
-- Create CHANGELOG.md
-- Create docs/ folder structure
+| Mode | Trigger | Action |
+|------|---------|--------|
+| **INIT** | "init", "setup" | Create full docs suite |
+| **UPDATE** | "update", "sync" | Scan git diff → update |
+| **SUMMARIZE** | "summarize", "overview" | Generate codebase summary |
+| **API** | "api", "endpoint" | API reference docs |
 
-### If task = "update"
-- Update README based on current code
-- Add entry to CHANGELOG
+---
 
-### If task = "summarize"
-- Generate project summary
-- List all features
-- Document API/Commands
+## INIT MODE - Create Docs Suite
 
-## Output
-Update relevant documentation files.
+```
+./docs/
+├── README.md                  # Project overview
+├── project-overview.md        # Requirements, roadmap
+├── code-standards.md          # Conventions, patterns
+├── codebase-summary.md        # Generated overview
+├── system-architecture.md     # Technical design
+├── deployment-guide.md        # Production setup
+├── design-guidelines.md       # UI/UX specs
+└── api-reference.md           # API documentation
+```
 
-Follow README best practices:
-- Clear title and description
-- Installation steps
-- Usage examples
-- API documentation
-- Contributing guidelines
+---
+
+## UPDATE MODE - Git Diff Scan
+
+1. **Check recent changes:**
+```bash
+git diff --name-only HEAD~5
+```
+
+2. **Identify affected docs:**
+- New files → Add to codebase-summary
+- API changes → Update api-reference
+- Config changes → Update deployment-guide
+
+3. **Update CHANGELOG.md:**
+```markdown
+## [Unreleased]
+### Added
+- Feature X (PR #123)
+### Changed
+- Updated Y
+```
+
+---
+
+## API MODE - Reference Template
+
+### Template:
+```markdown
+## POST /api/auth/login
+
+Authenticate user and return JWT token.
+
+### Request
+```json
+{
+  "email": "user@example.com",
+  "password": "securepass123"
+}
+```
+
+### Response (200)
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "expiresIn": 3600
+}
+```
+
+### Errors
+| Code | Message |
+|------|---------|
+| 400 | Invalid request format |
+| 401 | Invalid credentials |
+| 429 | Rate limit exceeded |
+
+### cURL Example
+```bash
+curl -X POST https://api.example.com/auth/login \\
+  -H "Content-Type: application/json" \\
+  -d '{"email": "user@example.com", "password": "pass"}'
+```
+```
+
+---
+
+## ARCHITECTURE MODE - ASCII Diagrams
+
+```ascii
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Client    │────▶│   API GW    │────▶│   Service   │
+└─────────────┘     └─────────────┘     └─────────────┘
+                           │                   │
+                           ▼                   ▼
+                    ┌─────────────┐     ┌─────────────┐
+                    │    Auth     │     │   Database  │
+                    └─────────────┘     └─────────────┘
+```
+
+---
+
+## VALIDATION CHECKLIST
+
+- [ ] **Links** - All internal links work
+- [ ] **Code examples** - All code runs
+- [ ] **Formatting** - Consistent markdown
+- [ ] **Naming** - camelCase/PascalCase/snake_case correct
+- [ ] **Completeness** - No TODO/FIXME left
+
+---
+
+## WORKFLOW
+
+```bash
+# After feature
+git commit -m "feat: add auth"
+/docs update
+git add docs/ && git commit -m "docs: update for auth"
+
+# Weekly maintenance
+/docs update
+/docs summarize  # Monthly
+```
+
+> **Key Takeaway:** Keep docs synchronized with code. Run after every feature, validate weekly.
 """
+
+# ---
+# USAGE:
+# /docs init              - Create full docs suite
+# /docs update            - Scan git diff, update docs
+# /docs summarize         - Generate codebase summary
+# /docs api /auth         - Document auth endpoints
+# ---
+
