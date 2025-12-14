@@ -34,15 +34,21 @@ Thêm entry mới vào SESSION_LOG.md với format:
 - [ ] Task tiếp theo
 ```
 
-### 2. Cập nhật CHANGELOG.md (nếu có thay đổi lớn)
+### 2. Cập nhật TASKS.md
+Đánh dấu [x] các tasks đã hoàn thành.
+
+### 3. Cập nhật doc.md (nếu có thay đổi về extension)
+Cập nhật nếu có thay đổi liên quan đến Gemini CLI extension.
+
+### 4. Cập nhật CHANGELOG.md (nếu có thay đổi lớn)
 Thêm version mới hoặc update version hiện tại.
 
-### 3. Git commit (nếu cần)
+### 5. Git commit (nếu cần)
 ```bash
 git add -A
 git commit -m "Session [N]: [Tóm tắt ngắn]"
 ```
 
-### 4. Thông báo user
+### 6. Thông báo user
 - Tóm tắt những gì đã làm
 - Next steps cho phiên sau

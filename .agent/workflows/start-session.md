@@ -20,17 +20,27 @@ view_file /Users/hieu/Dev/gemini-kit/WORKFLOW.md
 view_file /Users/hieu/Dev/gemini-kit/SESSION_LOG.md
 ```
 
-### 3. Đọc GEMINI.md từ gemini-cli-source (coding rules)
+### 3. Đọc doc.md (Gemini CLI docs reference)
+```
+view_file /Users/hieu/Dev/gemini-kit/doc.md
+```
+
+### 4. Đọc GEMINI.md từ gemini-cli-source (coding rules)
 ```
 view_file /Users/hieu/Dev/gemini-kit/gemini-cli-source/GEMINI.md
 ```
 
-### 4. Kiểm tra cấu trúc dự án
+### 5. Kiểm tra cấu trúc dự án
 ```
 ls -la /Users/hieu/Dev/gemini-kit/
 ```
 
-### 5. Thông báo sẵn sàng
+### 6. Kiểm tra extension
+```
+ls ~/.gemini/extensions/gemini-kit/
+```
+
+### 7. Thông báo sẵn sàng
 Sau khi đọc xong, thông báo cho user:
 - Tóm tắt phiên trước làm gì
 - Task tiếp theo là gì

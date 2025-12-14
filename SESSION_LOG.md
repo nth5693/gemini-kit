@@ -830,5 +830,73 @@ gemini-cli-reference/packages/core/src/gemini-kit/
 
 ---
 
+## Session 6 - 2024-12-14
+
+### 📌 Mục tiêu phiên
+- Test extension đã tạo
+- Implement 4 Advanced Features theo gợi ý từ Gemini AI
+
+### ✅ Đã hoàn thành
+
+#### Testing & Fixes
+- [x] Link extension thành công
+- [x] Test `/plan`, `/brainstorm` - hoạt động
+- [x] Sửa 16 TOML commands (xóa `!{...}` vì shell bị disabled globally)
+- [x] Tạo `doc.md` từ geminicli.com docs
+- [x] Cập nhật workflows với doc.md
+
+#### Phase 1: LEARNINGS.md - Context Learning ✅
+- [x] Thêm `kit_save_learning` tool
+- [x] Thêm `kit_get_learnings` tool
+- [x] Cập nhật `before-agent.js` inject learnings
+- [x] Cập nhật `GEMINI.md` với learning instructions
+
+#### Phase 2: Dry Run Mode ✅
+- [x] Tạo `/code-preview` command
+- [x] Thêm `kit_store_diff` tool
+- [x] Thêm `kit_apply_stored_diff` tool
+
+#### Phase 3: Auto-Rollback ✅
+- [x] Cập nhật `/cook` với Step 0 checkpoint
+- [x] Thêm rollback rules trong cook.toml
+- [x] Thêm `kit_auto_rollback` tool
+
+#### Phase 4: RAG/Semantic Search ✅
+- [x] Thêm `kit_index_codebase` tool
+- [x] Thêm `kit_semantic_search` tool
+- [x] Cập nhật `/scout` với semantic search
+
+### 📁 Files đã tạo/sửa
+
+**Extension files:**
+- `~/.gemini/extensions/gemini-kit/src/kit-server.ts` - 13 MCP tools
+- `~/.gemini/extensions/gemini-kit/hooks/before-agent.js` - Inject learnings
+- `~/.gemini/extensions/gemini-kit/GEMINI.md` - Learning instructions
+- `~/.gemini/extensions/gemini-kit/commands/cook.toml` - Auto checkpoint + rollback
+- `~/.gemini/extensions/gemini-kit/commands/scout.toml` - Semantic search
+- `~/.gemini/extensions/gemini-kit/commands/code-preview.toml` - Dry run
+
+**Project files:**
+- `/Users/hieu/Dev/gemini-kit/doc.md` - Gemini CLI docs summary
+- `/Users/hieu/Dev/gemini-kit/TASKS.md` - Updated với 4 phases
+- `/Users/hieu/Dev/gemini-kit/.agent/workflows/gemini-cli-docs.md` - New workflow
+
+### 📊 Stats
+- **MCP Tools**: 6 → 13 (+7 tools)
+- **New commands**: 1 (code-preview)
+- **Build size**: ~20KB
+
+### 🔜 Task tiếp theo
+- [ ] Test tất cả 13 MCP tools
+- [ ] Test semantic search với codebase lớn
+- [ ] Publish extension lên GitHub (optional)
+
+### 📝 Notes
+- Shell commands trong TOML bị disabled globally (security)
+- Dùng lightweight semantic search thay vì vector DB (giữ extension nhẹ)
+- 4 phases hoàn thành trong 1 session (~40 phút)
+
+---
+
 <!-- Thêm session mới ở trên dòng này -->
 

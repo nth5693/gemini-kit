@@ -1,91 +1,82 @@
 # GEMINI-KIT TASKS
 ## Extension Native Integration (Option C)
 
-> **Thời gian ước tính:** 5-6 giờ
-> **Plan chi tiết:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)
 > **Extension tại:** `~/.gemini/extensions/gemini-kit/`
+> **Plan nâng cao:** [implementation_plan.md](../../../.gemini/antigravity/brain/61d724a8-61a6-4334-b43c-d912b8fc6234/implementation_plan.md)
 
 ---
 
-## ✅ GIAI ĐOẠN 1: KHỞI TẠO - HOÀN THÀNH
+## ✅ FOUNDATION - HOÀN THÀNH
 
-- [x] Tạo thư mục `~/.gemini/extensions/gemini-kit/`
-- [x] Tạo các thư mục con: `commands/`, `src/`, `hooks/`, `dist/`
-- [x] Tạo `gemini-extension.json` (file config chính)
-- [x] Tạo `package.json` (dependencies + devDependencies)
-- [x] Tạo `tsconfig.json` (TypeScript config)
-- [x] Tạo `README.md` (hướng dẫn cài đặt extension)
+<details>
+<summary>Giai đoạn 1-6 (Click để xem)</summary>
 
----
+- [x] Giai đoạn 1: Khởi tạo extension
+- [x] Giai đoạn 2: GEMINI.md context
+- [x] Giai đoạn 3: 16 TOML commands
+- [x] Giai đoạn 4: MCP Server (6 tools)
+- [x] Giai đoạn 5: 5 Hooks
+- [x] Giai đoạn 6: Build thành công
 
-## ✅ GIAI ĐOẠN 2: GEMINI.MD - HOÀN THÀNH
-
-- [x] Tạo `GEMINI.md` với hướng dẫn cho AI về các agents
-
----
-
-## ✅ GIAI ĐOẠN 3: TOML COMMANDS - HOÀN THÀNH (16 commands)
-
-**Core Commands:**
-- [x] cook.toml - Workflow đầy đủ
-- [x] plan.toml - Agent lập kế hoạch
-- [x] scout.toml - Agent khám phá
-- [x] code.toml - Agent viết code
-- [x] test.toml - Agent test
-- [x] review.toml - Agent review
-- [x] debug.toml - Agent debug
-- [x] git.toml - Agent git
-
-**Extended Commands (migrated from gemini-kit-old):**
-- [x] brainstorm.toml - Brainstormer Agent
-- [x] copywrite.toml - Copywriter Agent
-- [x] design.toml - UI/UX Designer Agent
-- [x] research.toml - Researcher Agent
-- [x] journal.toml - Journal Writer Agent
-- [x] docs.toml - Docs Manager Agent
-- [x] project.toml - Project Manager Agent
-- [x] db.toml - Database Admin Agent
+</details>
 
 ---
 
-## ✅ GIAI ĐOẠN 4: MCP SERVER - HOÀN THÀNH
+## ✅ GIAI ĐOẠN 7: LINK & TEST - HOÀN THÀNH
 
-- [x] Tạo `src/kit-server.ts` với 6 tools:
-  - [x] `kit_create_checkpoint` - Tạo checkpoint (git tag)
-  - [x] `kit_restore_checkpoint` - Khôi phục checkpoint
-  - [x] `kit_get_project_context` - Lấy context dự án
-  - [x] `kit_handoff_agent` - Chuyển giao giữa agents
-  - [x] `kit_save_artifact` - Lưu artifact
-  - [x] `kit_list_checkpoints` - Liệt kê checkpoints
-
----
-
-## ✅ GIAI ĐOẠN 5: HOOKS - HOÀN THÀNH
-
-- [x] Tạo `hooks/session-start.js` - Khởi tạo thư mục, đếm phiên
-- [x] Tạo `hooks/before-agent.js` - Inject context từ handoffs
-- [x] Tạo `hooks/before-tool.js` - Kiểm tra bảo mật (chặn secrets)
-- [x] Tạo `hooks/after-tool.js` - Auto-test sau khi sửa code
-- [x] Tạo `hooks/session-end.js` - Cleanup, lưu logs
-- [x] Tạo `settings.json` - Cấu hình hooks
+- [x] Extension đã link và enabled
+- [x] Test `/plan` - ✅ Hoạt động
+- [x] Test `/brainstorm` - ✅ Hoạt động
+- [x] Sửa 16 TOML commands (xóa !{...})
+- [x] Tạo `doc.md` từ geminicli.com
+- [x] Cập nhật workflows với doc.md
 
 ---
 
-## ✅ GIAI ĐOẠN 6: BUILD - HOÀN THÀNH
+## 🚀 ADVANCED FEATURES ROADMAP
 
-- [x] Chạy `npm install` (90 packages)
-- [x] Chạy `npm run build`
-- [x] Kiểm tra `dist/kit-server.js` được tạo (9.7KB)
+### Phase 1: LEARNINGS.md - Context Learning ✅
+> Thời gian: 2h | Độ khó: Dễ | **HOÀN THÀNH**
+
+- [x] **1.1** Thêm MCP tool `kit_save_learning` ✅
+- [x] **1.2** Thêm MCP tool `kit_get_learnings` ✅
+- [x] **1.3** Build MCP server thành công ✅
+- [x] **1.4** Cập nhật `before-agent.js` hook để inject learnings ✅
+- [x] **1.5** Cập nhật GEMINI.md hướng dẫn AI dùng learnings ✅
+- [ ] **1.6** Test: AI tự lưu học và apply
 
 ---
 
-## 🔜 GIAI ĐOẠN 7: LINK & TEST (Phiên tiếp theo)
+### Phase 2: Dry Run Mode ✅
+> Thời gian: 1h | Độ khó: Dễ | **HOÀN THÀNH**
 
-- [ ] Link extension: `gemini extensions link $(pwd)`
-- [ ] Restart Gemini CLI
-- [ ] Test commands: `/cook`, `/plan`, `/scout`, `/brainstorm`
-- [ ] Test MCP tools: yêu cầu AI dùng `kit_create_checkpoint`
-- [ ] Test hooks: kiểm tra log trong `.gemini-kit/logs/`
+- [x] **2.1** Tạo `/code-preview` command (TOML) ✅
+- [x] **2.2** Thêm MCP tool `kit_store_diff` ✅
+- [x] **2.3** Thêm MCP tool `kit_apply_stored_diff` ✅
+- [x] **2.4** Build thành công ✅
+
+---
+
+### Phase 3: Auto-Rollback ✅
+> Thời gian: 3h | Độ khó: Trung bình | **HOÀN THÀNH**
+
+- [x] **3.1** Sửa `/cook` với Step 0 tạo checkpoint ✅
+- [x] **3.2** Thêm rollback rules trong cook.toml ✅
+- [x] **3.3** Thêm MCP tool `kit_auto_rollback` ✅
+- [x] **3.4** Build thành công ✅
+- [ ] **3.5** Test: Workflow tự rollback khi fail
+
+---
+
+### Phase 4: RAG/Vector Search ✅
+> Thời gian: 1-2 ngày | Độ khó: Khó | **HOÀN THÀNH**
+
+- [x] **4.1** Thiết kế lightweight semantic search (no vector DB) ✅
+- [x] **4.2** Thêm MCP tool `kit_index_codebase` ✅
+- [x] **4.3** Thêm MCP tool `kit_semantic_search` ✅
+- [x] **4.4** Cập nhật `/scout` command với semantic search ✅
+- [x] **4.5** Build thành công ✅
+- [ ] **4.6** Test: Tìm kiếm ngữ nghĩa trong codebase
 
 ---
 
@@ -95,7 +86,19 @@
 |------------|----------|------------|
 | Config files | 5 | ✅ |
 | TOML Commands | 16 | ✅ |
-| MCP Server | 1 (6 tools) | ✅ |
+| MCP Tools | 6 (+4 planned) | ✅ |
 | Hooks | 5 | ✅ |
-| Build | 9.7KB | ✅ |
-| **TỔNG** | **29 files** | **✅** |
+| Learnings | 0 | 🔜 Phase 1 |
+| RAG/Vector | 0 | 🔜 Phase 4 |
+
+---
+
+## ⏰ TIMELINE
+
+| Session | Tasks | Status |
+|---------|-------|--------|
+| 1-5 | Foundation | ✅ |
+| 6 | Link & Test | ✅ |
+| 7 | Phase 1: LEARNINGS.md | 🔜 Next |
+| 8 | Phase 2 + 3: Dry Run + Rollback | ⏳ |
+| 9-10 | Phase 4: RAG | ⏳ |
