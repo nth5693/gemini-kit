@@ -80,16 +80,46 @@
 
 ---
 
+### Phase 5: Vector Learnings ✅
+> Thời gian: 1-2h | Độ khó: Dễ | **HOÀN THÀNH**
+
+- [x] **5.1** Sửa `kit_get_learnings` dùng semantic search ✅
+- [x] **5.2** Cập nhật before-agent.js inject relevant learnings ✅
+- [x] **5.3** Build thành công ✅
+
+---
+
+### Phase 6: GitHub Integration ✅
+> Thời gian: 3-4h | Độ khó: Trung bình | **HOÀN THÀNH**
+
+- [x] **6.1** Tạo `/pr` command (TOML) ✅
+- [x] **6.2** Thêm MCP tool `kit_github_create_pr` ✅
+- [x] **6.3** Thêm MCP tool `kit_github_get_pr` ✅
+- [x] **6.4** Tạo `/review-pr` command ✅
+- [x] **6.5** Build thành công ✅
+- [ ] **6.6** Test: Tạo PR từ CLI
+
+---
+
+### Phase 7: Jira/Issue Integration ✅
+> Thời gian: 2-3h | Độ khó: Trung bình | **HOÀN THÀNH**
+
+- [x] **7.1** Tạo `/ticket` command ✅
+- [x] **7.2** Thêm MCP tool `kit_jira_get_ticket` ✅
+- [x] **7.3** Thêm MCP tool `kit_github_get_issue` ✅
+- [x] **7.4** Build thành công ✅
+
+---
+
 ## 📊 TỔNG KẾT
 
 | Thành phần | Số lượng | Trạng thái |
 |------------|----------|------------|
 | Config files | 5 | ✅ |
-| TOML Commands | 16 | ✅ |
-| MCP Tools | 6 (+4 planned) | ✅ |
+| TOML Commands | 17 | ✅ |
+| MCP Tools | 13 (+5 planned) | ✅ |
 | Hooks | 5 | ✅ |
-| Learnings | 0 | 🔜 Phase 1 |
-| RAG/Vector | 0 | 🔜 Phase 4 |
+| GitHub Integration | 0 | 🔜 Phase 6 |
 
 ---
 
@@ -98,6 +128,11 @@
 | Session | Tasks | Status |
 |---------|-------|--------|
 | 1-5 | Foundation | ✅ |
+| 6 | Phase 1-4 (Advanced) | ✅ |
+| 6+ | Phase 5 (Vector Learnings) | 🔜 Now |
+| 7 | Phase 6 (GitHub) | 🔜 |
+| 8 | Phase 7 (Jira) | ⏳ Optional |
+
 | 6 | Link & Test | ✅ |
 | 7 | Phase 1: LEARNINGS.md | 🔜 Next |
 | 8 | Phase 2 + 3: Dry Run + Rollback | ⏳ |
