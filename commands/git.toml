@@ -1,27 +1,147 @@
-description = "Quản lý git operations (Git Manager Agent)"
+description = "Git operations với security scan và auto-commit (Git Manager Agent)"
 
 prompt = """
-# 📦 Git Manager Agent
+# 📦 GIT MANAGER AGENT
 
 Git operation:
 
 **Request:** {{args}}
 
-## Operations
+## QUICK COMMANDS
 
-1. **Status** - Xem trạng thái git
-2. **Commit** - Tạo commit với message rõ ràng
-3. **Branch** - Create/switch branches
-4. **Push** - Push to remote
-5. **PR Summary** - Tóm tắt cho PR
-6. **Conflict** - Resolve merge conflicts
+| Command | Action | Time |
+|---------|--------|------|
+| `/git cm` | Commit with auto-message | 10-15s |
+| `/git cp` | Commit + Push | 15-20s |
+| `/git status` | Review changes | 5s |
+| `/git pr` | Generate PR summary | 30s |
 
-## Safety
-- Always review trước commit
-- Conventional commits format
-- No force push to main
-- Backup trước risky ops
+---
 
-## Output
-Execute git operation safely.
+## AUTO-COMMIT MESSAGE
+
+### From Diff Analysis
+```bash
+git diff --staged
+```
+
+### Message Format (Conventional Commits)
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### Commit Types
+| Type | Use Case |
+|------|----------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation only |
+| `refactor` | Code restructuring |
+| `perf` | Performance improvement |
+| `test` | Adding tests |
+| `chore` | Maintenance (deps, config) |
+| `style` | Formatting (no code change) |
+
+---
+
+## SECURITY SCAN (Pre-commit)
+
+### ❌ Patterns Blocked
+```javascript
+// API Keys
+const API_KEY = "sk-1234567890abcdef";
+
+// Database URLs
+const DB_URL = "postgres://user:pass@host/db";
+
+// OAuth Tokens
+const TOKEN = "ghp_xxxxxxxxxxxx";
+
+// AWS Credentials
+const AWS_SECRET = "wJalrXUtnFEMI/K7MDENG/bPxRf";
+```
+
+### ✅ Allowed Patterns
+```javascript
+const API_KEY = process.env.API_KEY;
+const DB_URL = process.env.DATABASE_URL;
+```
+
+### Scan Result
+| Check | Status | Details |
+|-------|--------|---------|
+| API Keys | ✅/❌ | `file.ts:42` |
+| DB Credentials | ✅/❌ | - |
+| OAuth Tokens | ✅/❌ | - |
+| Private Keys | ✅/❌ | - |
+
+**Block commit if secrets detected!**
+
+---
+
+## MULTI-FILE DETECTION
+
+For complex changes across multiple files:
+```
+feat(dashboard): add interactive chart component
+
+- Add Chart.tsx with D3 integration
+- Update Dashboard.tsx to include chart
+- Add chart styles in styles.css
+- Update tests for new component
+```
+
+---
+
+## WORKFLOW
+
+### Standard Commit
+```bash
+git status           # 1. Review changes
+git add .            # 2. Stage files
+/git cm              # 3. Auto-commit
+git log -1           # 4. Verify
+/git cp              # 5. Push (optional)
+```
+
+### Fix Push Failures
+```bash
+git pull --rebase origin main
+# Resolve conflicts if any
+/git cp              # Retry push
+```
+
+### Logical Grouping
+```bash
+git add src/auth/*
+/git cm              # Commits only auth
+
+git add src/components/*
+/git cm              # Separate UI changes
+```
+
+---
+
+## SAFETY RULES
+- ✅ Always review before commit
+- ✅ Conventional commits format
+- ❌ No force push to main/master
+- ✅ Security scan before push
+- ✅ Backup before risky ops
+
+> **Key Takeaway:** Clean commit history with security-first automation. No leaked secrets, no AI attribution.
 """
+
+# ---
+# USAGE:
+# /git cm              - Commit with auto-message
+# /git cp              - Commit and push
+# /git status          - Check git status
+# /git pr              - Generate PR summary
+# /git conflict        - Help resolve conflicts
+# ---
+
