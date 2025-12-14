@@ -129,6 +129,102 @@ Extension commands có precedence thấp nhất:
 
 Nếu conflict: `/deploy` → user command, `/gcp.deploy` → extension command
 
+### Extension Releasing
+
+#### Option 1: Git Repository (Simple)
+
+```bash
+# Users install via:
+gemini extensions install github.com/username/my-extension
+
+# Install specific branch/tag:
+gemini extensions install github.com/username/my-extension --ref=stable
+gemini extensions install github.com/username/my-extension --ref=v1.0.0
+```
+
+**Release Channels:**
+- `main` branch → stable
+- `preview` branch → preview releases
+- `dev` branch → development
+
+#### Option 2: GitHub Releases (Pro)
+
+Faster installation via pre-built archives.
+
+**Steps:**
+1. Build extension
+2. Create archive
+3. Tag version
+4. Create GitHub Release with archive attached
+
+**Archive Naming Convention:**
+
+```
+{platform}.{arch}.{name}.{extension}
+```
+
+| Platform | Values |
+|----------|--------|
+| `darwin` | macOS |
+| `linux` | Linux |
+| `win32` | Windows |
+| `x64`, `arm64` | Architecture |
+
+**Examples:**
+- `darwin.arm64.my-tool.tar.gz` (Apple Silicon)
+- `linux.x64.my-tool.tar.gz`
+- `win32.my-tool.zip`
+
+**Archive Structure:**
+```
+my-extension.tar.gz
+├── gemini-extension.json    # REQUIRED at root
+├── commands/
+├── dist/
+├── hooks/
+└── ...
+```
+
+#### GitHub Actions Workflow Example
+
+```yaml
+name: Release Extension
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run build
+      - name: Create archive
+        run: |
+          tar --exclude='node_modules' --exclude='.git' \
+              -czvf release/gemini-kit.tar.gz .
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: release/gemini-kit.tar.gz
+```
+
+#### Install from Release
+
+```bash
+# Latest release
+gemini extensions install github.com/username/my-extension
+
+# Specific release
+gemini extensions install github.com/username/my-extension --ref=v1.0.0
+
+# Pre-release
+gemini extensions install github.com/username/my-extension --pre-release
+```
+
 ---
 
 ## Custom Commands
