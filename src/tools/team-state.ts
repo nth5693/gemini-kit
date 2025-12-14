@@ -276,12 +276,19 @@ export function listSessions(): TeamSession[] {
         return [];
     }
 
-    const files = fs.readdirSync(config.sessionDir).filter(f => f.endsWith('.json'));
+    const files = fs.readdirSync(config.sessionDir).filter((f: string) => f.endsWith('.json'));
 
-    return files.map(file => {
-        const data = fs.readFileSync(path.join(config.sessionDir, file), 'utf-8');
-        return JSON.parse(data) as TeamSession;
-    }).sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+    // FIX: Add try/catch to handle corrupted JSON files
+    return files.map((file: string) => {
+        try {
+            const data = fs.readFileSync(path.join(config.sessionDir, file), 'utf-8');
+            return JSON.parse(data) as TeamSession;
+        } catch {
+            return null; // Skip corrupted files
+        }
+    })
+        .filter((s): s is TeamSession => s !== null)
+        .sort((a: TeamSession, b: TeamSession) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
 }
 
 /**

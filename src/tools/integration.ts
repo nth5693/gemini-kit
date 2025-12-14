@@ -160,10 +160,27 @@ Get API token from: https://id.atlassian.com/manage-profile/security/api-tokens`
                     };
                 }
 
-                const auth = Buffer.from(`${email}:${apiToken}`).toString('base64');
-                const cmd = `curl -s -H "Authorization: Basic ${auth}" -H "Content-Type: application/json" "${baseUrl}/rest/api/3/issue/${ticketId}"`;
+                // FIX: Validate ticketId format to prevent command injection
+                const safeTicketId = ticketId.match(/^[A-Z]+-\d+$/)?.[0];
+                if (!safeTicketId) {
+                    return {
+                        content: [{
+                            type: 'text' as const,
+                            text: `❌ Invalid ticket ID format: ${ticketId}\n\nExpected format: PROJ-123`
+                        }]
+                    };
+                }
 
-                const result = execSync(cmd, { encoding: 'utf8', timeout: 30000 });
+                const auth = Buffer.from(`${email}:${apiToken}`).toString('base64');
+
+                // FIX: Use execFileSync with args array instead of command string
+                const { execFileSync } = await import('child_process');
+                const result = execFileSync('curl', [
+                    '-s',
+                    '-H', `Authorization: Basic ${auth}`,
+                    '-H', 'Content-Type: application/json',
+                    `${baseUrl}/rest/api/3/issue/${safeTicketId}`
+                ], { encoding: 'utf8', timeout: 30000 });
                 const ticket = JSON.parse(result);
 
                 if (ticket.errorMessages) {
@@ -206,9 +223,7 @@ ${ticket.fields.labels?.join(', ') || 'None'}`;
         },
         async ({ issueNumber }) => {
             try {
-                try {
-                    execSync('gh --version', { encoding: 'utf8', timeout: 5000 });
-                } catch {
+                if (!commandExists('gh')) {
                     return {
                         content: [{
                             type: 'text' as const,
@@ -217,10 +232,11 @@ ${ticket.fields.labels?.join(', ') || 'None'}`;
                     };
                 }
 
-                const issueInfo = execSync(`gh issue view ${issueNumber} --json title,body,state,author,labels,assignees`, {
-                    encoding: 'utf8',
-                    timeout: 30000
-                });
+                // FIX: Use safeGh instead of execSync string
+                const issueInfo = safeGh([
+                    'issue', 'view', String(issueNumber),
+                    '--json', 'title,body,state,author,labels,assignees'
+                ]);
 
                 const issue = JSON.parse(issueInfo);
 
