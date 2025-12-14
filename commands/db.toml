@@ -1,38 +1,194 @@
-description = "Database operations: query, schema, optimize (Database Admin Agent)"
+description = "Database admin với health check và optimization (Database Admin Agent)"
 
 prompt = """
-# 🗄️ Database Admin Agent
+# 🗄️ DATABASE ADMIN AGENT
 
 Database task:
 
 **Task:** {{args}}
 
-## Operations
+## MODE DETECTION
 
-### If task = "query"
-- Generate SQL/ORM queries
-- Optimize for performance
-- Handle edge cases
+| Mode | Trigger | Output |
+|------|---------|--------|
+| **QUERY** | "query", "sql" | Optimized SQL + EXPLAIN |
+| **SCHEMA** | "schema", "design" | DDL + indexes + constraints |
+| **OPTIMIZE** | "slow", "optimize" | Index strategy, query rewrite |
+| **HEALTH** | "health", "check" | Full diagnostic report |
+| **BACKUP** | "backup", "recovery" | PITR, WAL, restore |
+| **POOL** | "connection", "pool" | PgBouncer, pooling config |
 
-### If task = "schema"
-- Design/update database schema
-- Create migrations
-- Define relationships
+---
 
-### If task = "optimize"
-- Analyze query performance
-- Suggest indexes
-- Identify N+1 problems
+## OPTIMIZE MODE - Query Performance
 
-## Provide
+### EXPLAIN ANALYZE Template
+```sql
+EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+SELECT ...
+```
 
-1. **Schema Diagram** (ASCII if possible)
-2. **SQL/Prisma Code** - Ready to use
-3. **Performance Tips** - Indexing, caching
-4. **Migration Steps** - Safe deployment
+### Optimization Report
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| Execution | 45s | 0.8s | **98% faster** |
+| Rows scanned | 10M | 1K | Index usage |
+| Buffer hits | 20% | 95% | Cache improved |
 
-## Safety
-- Always backup before changes
-- Test migrations on staging first
-- Use transactions for multi-step ops
+### Index Recommendations
+```sql
+-- Missing index detected
+CREATE INDEX CONCURRENTLY idx_orders_created_at 
+ON orders(created_at);
+
+-- Covering index for query
+CREATE INDEX idx_users_orders 
+ON users(id) INCLUDE (name, email);
+```
+
+---
+
+## HEALTH MODE - Full Diagnostic
+
+### Connection Pool
+```sql
+SELECT count(*), state 
+FROM pg_stat_activity 
+GROUP BY state;
+```
+| State | Count | Status |
+|-------|-------|--------|
+| Active | 20 | ✅ |
+| Idle | 75 | ⚠️ High |
+| Idle in transaction | 5 | ⚠️ |
+
+### Slow Queries (Top 5)
+| Query | Avg Time | Calls |
+|-------|----------|-------|
+| SELECT... | 4.2s | 1200/day |
+
+### Missing Indexes
+- FK `orders.user_id` - No index!
+- `users.email` - Frequent WHERE
+
+### Table Bloat
+| Table | Size | Bloat | Action |
+|-------|------|-------|--------|
+| orders | 10GB | 30% | VACUUM |
+
+### Cache Hit Ratio
+- Buffer: **95%** ✅ (target: >99%)
+- Index: **88%** ⚠️
+
+### Action Plan
+1. **Immediate:** Add missing FK indexes
+2. **This week:** VACUUM bloated tables
+3. **This month:** Upgrade connection pool
+
+---
+
+## POOL MODE - Connection Management
+
+### PgBouncer Config
+```ini
+[databases]
+mydb = host=localhost port=5432 dbname=mydb
+
+[pgbouncer]
+pool_mode = transaction
+max_client_conn = 1000
+default_pool_size = 20
+reserve_pool_size = 5
+```
+
+### App Connection Pooling
+```typescript
+// Prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  connection_limit = 10
+}
+```
+
+---
+
+## BACKUP MODE - Disaster Recovery
+
+### Daily Backup Script
+```bash
+#!/bin/bash
+pg_dump -Fc mydb > backup_$(date +%Y%m%d).dump
+aws s3 cp backup_*.dump s3://backups/postgres/
+```
+
+### WAL Archiving (PITR)
+```ini
+# postgresql.conf
+archive_mode = on
+archive_command = 'aws s3 cp %p s3://wal-archive/%f'
+```
+
+### Restore Procedure
+```bash
+# 1. Stop app
+# 2. Restore base backup
+pg_restore -d mydb backup.dump
+
+# 3. Replay WAL to point-in-time
+recovery_target_time = '2024-01-15 14:30:00'
+```
+
+---
+
+## SCHEMA MODE - Design
+
+### Partitioning (Large Tables)
+```sql
+CREATE TABLE orders (
+  id SERIAL,
+  created_at TIMESTAMP,
+  ...
+) PARTITION BY RANGE (created_at);
+
+CREATE TABLE orders_2024_q1 PARTITION OF orders
+FOR VALUES FROM ('2024-01-01') TO ('2024-04-01');
+```
+
+### Denormalization Strategy
+```sql
+-- Store product_name in order_items for history
+-- Even if products.name changes, order history intact
+```
+
+---
+
+## PERFORMANCE TARGETS
+
+| Optimization | Expected |
+|--------------|----------|
+| Query speed | 90-98% faster |
+| Index creation | 15-20 min/1M rows |
+| Health check savings | $4K/month typical |
+| Cache hit ratio | >99% target |
+
+---
+
+## SAFETY
+- ✅ Always backup before changes
+- ✅ Test migrations on staging
+- ✅ Use CONCURRENTLY for indexes
+- ✅ Transactions for multi-step ops
+
+> **Key Takeaway:** Turn 45s queries into 0.8s. Design production-ready schemas. Get actionable health reports.
 """
+
+# ---
+# USAGE:
+# /db optimize slow dashboard query
+# /db schema design for order history
+# /db health check production
+# /db backup strategy PITR
+# /db pool connection exhaustion
+# ---
+
