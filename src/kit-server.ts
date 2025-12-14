@@ -35,6 +35,44 @@ registerIntegrationTools(server);   // Tools 14, 15, 16, 17
 // ═══════════════════════════════════════════════════════════════
 // TOOL 3: GET PROJECT CONTEXT (FIX 9.3 - Cross-platform)
 // ═══════════════════════════════════════════════════════════════
+
+// Default file extensions - expanded to support more languages
+const DEFAULT_EXTENSIONS = [
+    '.ts', '.js', '.tsx', '.jsx',   // JavaScript/TypeScript
+    '.py',                           // Python
+    '.go',                           // Go
+    '.rs',                           // Rust
+    '.java', '.kt',                  // Java/Kotlin
+    '.cpp', '.c', '.h', '.hpp',      // C/C++
+    '.php',                          // PHP
+    '.rb',                           // Ruby
+    '.swift',                        // Swift
+    '.vue', '.svelte',               // Frontend frameworks
+    '.json', '.yaml', '.yml',        // Config files
+    '.md',                           // Documentation
+];
+
+/**
+ * Get file extensions - from settings.json or defaults
+ * Allows project-specific customization
+ */
+function getFileExtensions(projectDir: string): string[] {
+    const settingsPath = path.join(projectDir, '.gemini', 'settings.json');
+
+    if (fs.existsSync(settingsPath)) {
+        try {
+            const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+            if (settings.fileExtensions && Array.isArray(settings.fileExtensions)) {
+                return settings.fileExtensions;
+            }
+        } catch (e) {
+            // Use default on error
+        }
+    }
+
+    return DEFAULT_EXTENSIONS;
+}
+
 server.tool(
     'kit_get_project_context',
     'Gather project context including structure, dependencies, and recent changes',
@@ -43,8 +81,8 @@ server.tool(
         try {
             // FIX 9.3: Use cross-platform findFiles instead of Unix shell commands
             const projectDir = process.cwd();
-            const allExtensions = ['.ts', '.js', '.tsx', '.jsx', '.py', '.go', '.rs', '.java', '.json', '.md'];
-            const files = findFiles(projectDir, allExtensions, 50);
+            const extensions = getFileExtensions(projectDir); // Configurable!
+            const files = findFiles(projectDir, extensions, 50);
 
             // Filter by depth (approximate)
             const structure = files.filter(f => {

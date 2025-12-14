@@ -5,6 +5,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { debounce } from '../utils.js';
 
 export interface AgentResult {
     agent: string;
@@ -45,6 +46,7 @@ let config: TeamStateConfig = DEFAULT_CONFIG;
 
 /**
  * Initialize team state with optional config
+ * Also attempts to recover any active session from previous run
  */
 export function initTeamState(customConfig?: Partial<TeamStateConfig>): void {
     config = { ...DEFAULT_CONFIG, ...customConfig };
@@ -53,6 +55,51 @@ export function initTeamState(customConfig?: Partial<TeamStateConfig>): void {
     if (!fs.existsSync(config.sessionDir)) {
         fs.mkdirSync(config.sessionDir, { recursive: true });
     }
+
+    // Try to recover last active session
+    if (!currentSession) {
+        const recoveredSession = recoverActiveSession();
+        if (recoveredSession) {
+            currentSession = recoveredSession;
+            console.log(`✅ Recovered active session: ${recoveredSession.id}`);
+        }
+    }
+}
+
+/**
+ * Attempt to recover an active session from disk
+ * Scans sessions folder for most recent active session
+ */
+function recoverActiveSession(): TeamSession | null {
+    if (!fs.existsSync(config.sessionDir)) {
+        return null;
+    }
+
+    try {
+        const files = fs.readdirSync(config.sessionDir)
+            .filter(f => f.endsWith('.json'))
+            .sort()
+            .reverse(); // Most recent first (by filename which includes timestamp)
+
+        for (const file of files) {
+            try {
+                const filePath = path.join(config.sessionDir, file);
+                const data = fs.readFileSync(filePath, 'utf-8');
+                const session = JSON.parse(data) as TeamSession;
+
+                if (session.status === 'active') {
+                    return session;
+                }
+            } catch (e) {
+                // Skip corrupted files
+                continue;
+            }
+        }
+    } catch (e) {
+        // Session directory read error, ignore
+    }
+
+    return null;
 }
 
 /**
@@ -165,7 +212,7 @@ export function endSession(status: 'completed' | 'failed' = 'completed'): TeamSe
     currentSession.status = status;
     currentSession.endTime = new Date().toISOString();
 
-    saveSession();
+    saveSession(true); // Immediate save for critical operation
 
     const session = currentSession;
     currentSession = null;
@@ -174,13 +221,36 @@ export function endSession(status: 'completed' | 'failed' = 'completed'): TeamSe
 }
 
 /**
- * Save session to file
+ * Save session to file (internal sync version)
  */
-function saveSession(): void {
+function saveSessionSync(): void {
     if (!currentSession) return;
 
     const filePath = path.join(config.sessionDir, `${currentSession.id}.json`);
     fs.writeFileSync(filePath, JSON.stringify(currentSession, null, 2));
+}
+
+/**
+ * Debounced save - reduces file I/O when called rapidly
+ * Waits 500ms after last call before actually writing
+ */
+const debouncedSave = debounce(() => {
+    saveSessionSync();
+}, 500);
+
+/**
+ * Save session - uses debounce for frequent calls, sync for critical operations
+ */
+function saveSession(immediate = false): void {
+    if (!currentSession) return;
+
+    if (immediate) {
+        // Critical operations (end session) - save immediately
+        saveSessionSync();
+    } else {
+        // Regular operations - debounce
+        debouncedSave();
+    }
 }
 
 /**
