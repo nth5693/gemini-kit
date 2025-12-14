@@ -252,25 +252,41 @@
 
 ---
 
-## 🎉 EXTENSION HOÀN THÀNH (Phase 11)!
+### Phase 12: ClaudeKit Parity Improvements ✅ DONE
+> Hoàn thành: 2024-12-14 | Bổ sung features từ ClaudeKit
+
+#### 12.1 New Commands (2 new)
+- [x] **12.1.1** `/content` - Marketing content (cro/landing/social) ✅
+- [x] **12.1.2** `/video` - Video to code analysis ✅
+
+#### 12.2 Command Improvements (2 upgrade)
+- [x] **12.2.1** `/plan:two` - Tạo 2 approaches so sánh ✅
+- [x] **12.2.2** `/journal` - Enhanced incident report template ✅
+
+#### 12.3 Agent System
+- [x] **12.3.1** `brainstormer` agent (đã có sẵn) ✅
+- [x] **12.3.2** `researcher` agent (đã có sẵn) ✅
+- [x] **12.3.3** Thêm 3 assistants vào `/use`: brainstormer, researcher, content ✅
+
+---
+
+## 🎉 EXTENSION HOÀN THÀNH (Phase 12)!
 
 | Metric | Count |
 |--------|-------|
-| **TOML Commands** | **31** |
+| **TOML Commands** | **33** |
 | **MCP Tools** | **24** |
 | Hooks | 5 |
 | Workflows | 8 |
-| Orchestration Patterns | 6 |
+| Assistants | 8 |
 
-### Workflows:
-- `cook` - Full cycle: Plan → Scout → Code → Test → Review
-- `quickfix` - Bug fix: Debug → Code → Test
-- `feature` - New feature: Design → Plan → Code → Test → Docs
-- `refactor` - Refactor: Scout → Plan → Code → Test → Review
-- `review` - Code review: Scout → Review → Security
-- `tdd` - Test-driven: Write tests → Implement → Verify
-- `docs` - Documentation: Scout → Analyze → Write → Review
-- `multi-scout` - Parallel scouting
+### Phase 12 New:
+- `/content` - Marketing content generator
+- `/video` - Video to code analysis
+- `/plan:two` - 2 approaches comparison
+- `/journal` - Incident report template
 
 **GitHub:** https://github.com/nth5693/gemini-kit
-**Release:** v1.0.0
+**Release:** v1.1.0
+
+
