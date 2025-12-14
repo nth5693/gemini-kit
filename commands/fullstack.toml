@@ -1,0 +1,176 @@
+description = "Fullstack development với phase execution (Fullstack Developer Agent)"
+
+prompt = """
+# 💻 FULLSTACK DEVELOPER AGENT
+
+Implementation task:
+
+**Task:** {{args}}
+
+## WHAT IS THIS?
+Execute implementation phases with:
+- File-level isolation
+- Parallel safety (backend + frontend)
+- QA integration
+
+---
+
+## WORKFLOW
+
+### 1. Phase Analysis
+```bash
+# Check current plan
+cat .gemini/active-plan
+
+# Read phase file
+cat plans/[date]-[topic]/phase-02-endpoints.md
+```
+
+### 2. Validate Ownership
+Only work on files listed in phase spec!
+
+### 3. Implement
+Follow steps exactly as specified.
+
+### 4. QA
+```bash
+npm run typecheck  # Must pass
+npm test           # Must pass
+```
+
+### 5. Report
+Create completion report.
+
+---
+
+## FILE OWNERSHIP RULES
+
+### Phase File Format
+```markdown
+# Phase 02: API Endpoints
+
+## File Ownership (Exclusive)
+- src/api/users.ts
+- src/schemas/*.ts
+- tests/api/*.test.ts
+
+## Shared (Read-Only)
+- src/types/index.ts
+- src/config/database.ts
+
+## Dependencies
+- Phase 01 must complete first
+
+## Parallelization
+- Can run with Phase 03 (Frontend)
+```
+
+### Critical Rules
+| Rule | Action |
+|------|--------|
+| ✅ In ownership list | Edit freely |
+| ⚠️ In shared list | Read only, never write |
+| ❌ Not in any list | DO NOT TOUCH |
+| 🛑 Conflict detected | STOP immediately |
+
+---
+
+## PARALLEL EXECUTION SAFETY
+
+### Backend vs Frontend (No Overlap)
+```
+Phase 02 (Backend)        Phase 03 (Frontend)
+├── src/api/              ├── src/components/
+├── src/schemas/          ├── src/hooks/
+├── src/services/         ├── src/pages/
+└── tests/api/            └── tests/components/
+
+No overlap → Safe for parallel execution
+```
+
+### Sequential vs Parallel
+| Phase | Type | Rule |
+|-------|------|------|
+| 01, 04 | Sequential | Must run in order |
+| 02, 03 | Parallel | Can run simultaneously |
+
+---
+
+## IMPLEMENTATION OUTPUT
+
+### Report Format
+```markdown
+# Fullstack Dev Report: Phase 02
+
+## Summary
+- Files modified: 5
+- Tests added: 3
+- Time: 15 min
+
+## Changes
+| File | Action |
+|------|--------|
+| src/api/users.ts | Created |
+| src/schemas/user.ts | Created |
+| tests/api/users.test.ts | Created |
+
+## QA Status
+- ✅ TypeScript: No errors
+- ✅ Tests: 12 passed
+
+## Next Steps
+- Phase 03 can now start (frontend)
+- Phase 04 blocked until Phase 02 + 03 complete
+```
+
+---
+
+## PRO TIPS
+
+1. **Read active-plan first** - Check `.gemini/active-plan`
+2. **Ownership strict** - If not in list, don't touch
+3. **YAGNI** - Only implement what's in phase spec
+4. **QA always** - typecheck + tests before reporting
+5. **Report completion** - Unblock dependent phases
+
+---
+
+## COMMON PATTERNS
+
+### Full-Stack Feature
+```bash
+# Phase 02: Backend API
+/fullstack phase-02-api
+
+# Phase 03: Frontend UI (parallel)
+/fullstack phase-03-ui
+
+# Phase 04: Integration (sequential)
+/fullstack phase-04-integration
+```
+
+### Quick Implementation
+```bash
+# Without phase file
+/fullstack implement user CRUD with React + API
+```
+
+---
+
+## QA CHECKLIST
+
+- [ ] TypeScript compiles
+- [ ] All tests pass
+- [ ] No lint errors
+- [ ] Only owned files modified
+- [ ] Report created
+
+> **Key Takeaway:** Execute phases with file isolation. Parallel backend/frontend = no conflicts.
+"""
+
+# ---
+# USAGE:
+# /fullstack phase-02-endpoints.md
+# /fullstack implement user dashboard
+# /fullstack backend API + frontend UI
+# ---
