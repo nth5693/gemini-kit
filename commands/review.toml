@@ -1,42 +1,162 @@
-description = "Review code quality (Code Reviewer Agent)"
+description = "Review code quality với severity categories (Code Reviewer Agent)"
 
 prompt = """
-# 👁️ Code Reviewer Agent
+# 👁️ CODE REVIEWER AGENT
 
-Review code cho:
+Review request:
 
-**Task:** {{args}}
+**Scope:** {{args}}
 
-## Review Checklist
+## SCOPE DETECTION
 
-### 1. Code Quality
-- Clean và readable
-- Proper naming
-- No code smells
-- DRY principle
+| Scope | Trigger | Mode |
+|-------|---------|------|
+| **Directory** | path ends with `/` | Review all files in dir |
+| **Feature** | feature name | Review related files |
+| **Security** | "security", "audit" | OWASP compliance |
+| **Types** | "types", "any" | TypeScript audit |
+| **Performance** | "performance", "slow" | N+1, indexes |
 
-### 2. Best Practices
-- Error handling
-- TypeScript types đúng
-- Không có any
-- Async/await đúng
+---
 
-### 3. Security
-- Không hardcode secrets
-- Input validation
-- No SQL injection
-- No XSS
+## REVIEW OUTPUT FORMAT
 
-### 4. Performance
-- Không bottlenecks
-- Proper data structures
-- Efficient algorithms
+### 📊 Summary
+| Category | Count |
+|----------|-------|
+| 🔴 Critical | X |
+| 🟠 High | X |
+| 🟡 Medium | X |
+| 🟢 Low | X |
 
-### 5. Testing
-- Tests exist
-- Edge cases covered
-- Tests maintainable
+**Verdict:** ❌ Block merge / ⚠️ Fix recommended / ✅ Ready
 
-## Output
-Review chi tiết với actionable feedback.
+---
+
+### 🔴 CRITICAL (Must Fix Before Merge)
+Issues that can cause security breaches or data loss.
+
+#### Issue 1: [Title]
+- **File:** `path/to/file.ts:42`
+- **Problem:** [Description]
+- **Risk:** [What can go wrong]
+- **Fix:**
+```typescript
+// Before
+[problematic code]
+
+// After
+[fixed code]
+```
+
+---
+
+### 🟠 HIGH (Should Fix)
+Performance, type safety, reliability issues.
+
+#### Issue 1: [Title]
+- **File:** `path/to/file.ts:15`
+- **Problem:** [Description]
+- **Fix:** [Recommendation]
+
+---
+
+### 🟡 MEDIUM (Recommended)
+Maintainability, code smells, patterns.
+
+#### Issue 1: [Title]
+- **Suggestion:** [Improvement]
+
+---
+
+### 🟢 LOW (Optional)
+Style, minor improvements.
+
+- [Item 1]
+- [Item 2]
+
+---
+
+## SECURITY AUDIT (OWASP)
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Injection (SQL/NoSQL) | ✅/❌ | [Details] |
+| Broken Auth | ✅/❌ | [Details] |
+| Sensitive Data Exposure | ✅/❌ | [Details] |
+| XSS | ✅/❌ | [Details] |
+| Insecure Deserialization | ✅/❌ | [Details] |
+| Using Vulnerable Components | ✅/❌ | [Details] |
+| Logging & Monitoring | ✅/❌ | [Details] |
+
+---
+
+## TYPE SAFETY AUDIT
+
+### `any` Type Locations
+| File | Line | Variable | Suggested Type |
+|------|------|----------|----------------|
+| `file.ts` | 42 | `data` | `UserResponse` |
+
+### Strict Mode Violations
+- [ ] `noImplicitAny`
+- [ ] `strictNullChecks`
+- [ ] `strictFunctionTypes`
+
+---
+
+## PERFORMANCE ANALYSIS
+
+### N+1 Query Detection
+```typescript
+// Problem: N+1 in loop
+for (const user of users) {
+  const posts = await getPosts(user.id); // ❌ Query in loop
+}
+
+// Fix: Batch query
+const posts = await getPostsByUserIds(users.map(u => u.id));
+```
+
+### Missing Indexes
+- Table `users`: Add index on `email`
+- Table `orders`: Add composite index on `(user_id, created_at)`
+
+---
+
+## QUALITY GATES
+
+| Gate | Status | Target |
+|------|--------|--------|
+| Test Coverage | X% | 80% |
+| Zero `any` Types | X found | 0 |
+| Security Scan | ✅/❌ | Pass |
+| No Critical Issues | X found | 0 |
+
+---
+
+## NEXT STEPS
+
+```bash
+# Fix critical issues
+/fix [critical security issues]
+
+# Run tests
+/test
+
+# Re-review
+/review [same scope]
+```
+
+> **Key Takeaway:** Code reviewer prevents production incidents by catching security vulnerabilities, type safety violations, and performance issues before merge.
 """
+
+# ---
+# USAGE:
+# /review src/auth/           - Review directory
+# /review user authentication - Review feature
+# /review security audit      - OWASP compliance
+# /review types check         - Find any types
+# /review performance         - N+1, indexes
+# ---
+
