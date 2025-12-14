@@ -120,9 +120,21 @@ ClaudeKit has **17 specialized agents**:
 - Large refactors - Map dependencies
 - CI/CD failures - Analyze and create fix plans
 
+**Skills:**
+- Codebase analysis (reads project structure)
+- Implementation roadmap creation
+- Time estimation with rollback plans
+- Security checklist generation
+
 **Commands:** `/plan`, `/plan:two`, `/plan:hard`, `/plan:cro`
 
 **Output:** `plans/[feature-name]-YYYYMMDD-HHMMSS.md`
+
+**Example:**
+```bash
+/plan [add WebSocket notifications with Socket.io and Redis]
+# Output: Plan with setup steps, auth integration, database schema, test strategy
+```
 
 ---
 
@@ -132,10 +144,21 @@ ClaudeKit has **17 specialized agents**:
 - Backend + Frontend work simultaneously
 - File-level isolation for parallel execution
 
+**Skills:**
+- Phase file reading and validation
+- Parallel task execution
+- File ownership management
+- TypeScript/Test verification
+
 **Key Rules:**
 - NEVER modify files not in ownership list
 - STOP if conflict detected
 - Only read shared files, never write
+
+**Process:**
+```
+Phase Analysis → Implementation → npm run typecheck → npm test → Report
+```
 
 ---
 
@@ -146,18 +169,32 @@ ClaudeKit has **17 specialized agents**:
 - Onboarding: Map project structure
 - Refactoring: Identify affected files
 
+**Skills:**
+- Parallel file search (multi-agent)
+- Git-aware filtering
+- Relevance ranking
+- Directory mapping
+
 **Scale Guidelines:**
-- 1-3: Small projects (<100 files)
-- 4-6: Medium (100-500 files)
-- 7-10: Large codebases (500+)
+- 1-3: Small projects (<100 files) → 1-2 min
+- 4-6: Medium (100-500 files) → 2-4 min
+- 7-10: Large codebases (500+) → 3-5 min
 
 **Command:** `/scout "query" [scale]`
+
+**Example:**
+```bash
+/scout "locate all authentication-related files" 5
+# Output: auth services, middleware, routes, tests, config
+```
 
 ---
 
 #### 🌐 Scout External Agent
-- Researches external documentation
-- Gathers context before planning
+**Skills:**
+- External documentation research
+- API docs gathering
+- Third-party library analysis
 
 ---
 
@@ -168,12 +205,31 @@ ClaudeKit has **17 specialized agents**:
 - Database connection issues
 - Production incidents
 
+**Skills:**
+- Log pattern searching
+- Code execution tracing
+- Bottleneck identification
+- Fix suggestion with performance impact
+- Regression test generation
+
+**Example:**
+```bash
+/debug [users reporting timeout errors on checkout]
+# Agent traces: logs → execution paths → bottleneck → fixes → tests
+```
+
 ---
 
 #### 🧪 Tester Agent
 **When to Use:**
 - Pre-commit validation
 - CI/CD pipeline verification
+
+**Skills:**
+- Multi-framework test execution (Jest, pytest, Flutter)
+- Coverage analysis
+- Flaky test detection
+- JSON report generation for CI
 
 **Commands:** `/test`, `/fix:test`
 
@@ -193,6 +249,12 @@ ClaudeKit has **17 specialized agents**:
 - Type safety validation
 - Performance analysis
 
+**Skills:**
+- OWASP compliance checking
+- `any` type detection
+- N+1 query detection
+- Security audit reporting
+
 **Categories:**
 - **Critical**: Must fix (security, data loss)
 - **High**: Should fix (performance, types)
@@ -201,12 +263,27 @@ ClaudeKit has **17 specialized agents**:
 
 **Command:** `/review [scope]`
 
+**Example:**
+```bash
+/review [security audit of auth module]
+# Output: OWASP compliance report, vulnerability list, remediation steps
+```
+
 ---
 
 #### 🗄️ Database Admin Agent
-- Database operations
-- Schema validation
-- Query optimization
+**When to Use:**
+- Dashboard queries timing out (>5s)
+- Tables growing but queries slowing
+- Schema design for new features
+- Connection pool exhaustion
+
+**Skills:**
+- Query plan analysis (EXPLAIN)
+- Index recommendation
+- Schema design
+- Connection pool management
+- Backup strategy planning
 
 ---
 
@@ -215,22 +292,57 @@ ClaudeKit has **17 specialized agents**:
 #### 📚 Docs Manager Agent
 **When to Use:**
 - After implementing new features
-- Initial project setup (`/docs:init`)
-- Syncing docs with code (`/docs:update`)
+- Initial project setup
+- Syncing docs with code
+
+**Skills:**
+- README generation
+- API reference creation
+- Codebase summarization (Repomix)
+- Architecture documentation
+
+**Commands:** `/docs:init`, `/docs:update`, `/docs:summarize`
 
 ---
 
 #### 📊 Project Manager Agent
-- Project oversight
-- Task coordination
+**When to Use:**
+- Weekly progress reviews
+- Feature completion verification
+- Multi-agent coordination
+
+**Skills:**
+- Status report generation
+- Milestone tracking
+- Task completeness verification
+- Sprint planning
+
+**Command:** `/watzup`
+
+**Output:** `plans/reports/` directory
 
 ---
 
 #### 📓 Journal Writer Agent
-- Dev journal entries
-- Progress tracking
+**When to Use:**
+- Production down >30min or data loss
+- Critical bugs caught before release
+- Failed deployments
+- Repeated issues
+
+**Skills:**
+- Incident report creation
+- Timeline documentation
+- Root cause analysis
+- Lessons learned extraction
 
 **Command:** `/journal`
+
+**Example:**
+```bash
+/journal Context: Found race condition in payment system 2hrs before release.
+# Output: Full incident report with code snippets, failed attempts, final fix
+```
 
 ---
 
@@ -239,6 +351,12 @@ ClaudeKit has **17 specialized agents**:
 - Auto-generate semantic commits
 - Prevent secrets leaking
 - Create pull requests
+
+**Skills:**
+- Conventional commit format (`type(scope): description`)
+- Pre-commit secret scanning
+- PR description generation
+- Branch management
 
 **Commands:** `/git:cm`, `/git:cp`, `/git:pr`
 
@@ -253,23 +371,62 @@ ClaudeKit has **17 specialized agents**:
 - 3D with Three.js/WebGL
 - Design systems with CSS tokens
 
+**Skills:**
+- Responsive layout creation
+- CSS variable systems
+- Three.js integration
+- Screenshot-to-code conversion
+- Video-to-code conversion
+
 **Commands:** `/design:fast`, `/design:good`, `/design:3d`, `/design:screenshot`, `/design:video`
 
 ---
 
 #### ✍️ Copywriter Agent
-- Content creation
-- Marketing copy
+**When to Use:**
+- Landing pages, hero sections, CTAs
+- Twitter/X threads, LinkedIn posts
+- Email campaigns
+- Low-converting pages (CRO)
+
+**Skills:**
+- A/B test variant creation
+- Social proof integration
+- Psychological trigger application
+- Conversion rate optimization
 
 **Commands:** `/content:fast`, `/content:good`, `/content:cro`
+
+**Example:**
+```bash
+/content:good [create hero section for AI analytics SaaS targeting enterprise CTOs]
+# Output: Multiple versions (ROI-focused, time-focused), A/B test plan
+```
 
 ---
 
 #### 💡 Brainstormer Agent
-- Feature ideation
-- Feasibility exploration
+**When to Use:**
+- Evaluating architectural approaches
+- Challenging assumptions
+- Technical decision debates
+- "Second opinion" on complex problems
+
+**Skills:**
+- Trade-off analysis
+- YAGNI assessment
+- Success criteria definition
+- Recommendation generation
 
 **Command:** `/brainstorm`
+
+**Example:**
+```bash
+/brainstorm [should we use REST API or GraphQL for our mobile app?]
+# Output: Pros/cons, team fit analysis, recommendation with reasoning
+```
+
+**Key Takeaway:** Saves you from writing the wrong code. 10 minutes prevents weeks of refactoring.
 
 ---
 
@@ -280,15 +437,29 @@ ClaudeKit has **17 specialized agents**:
 - Technical comparison
 - Deep dive validation (10+ sources)
 
-**Output:** Structured markdown report with 15+ cited sources
+**Skills:**
+- Multi-source search (Google, YouTube, GitHub, docs)
+- 15+ source cross-validation
+- Security concern identification
+- Best practices extraction
+
+**Output:** Structured markdown report with citations
+
+**Example:**
+```bash
+/plan research Stripe vs PayPal integration for SaaS billing
+# Output: 15-page comparison with security audit, pricing, code examples
+```
 
 ---
 
 ### Integration
 
 #### 🔌 MCP Manager Agent
-- MCP server management
-- Tool integration
+**Skills:**
+- MCP server configuration
+- Tool registration
+- External service integration
 
 ---
 
