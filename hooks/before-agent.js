@@ -83,6 +83,43 @@ async function main(input) {
         } catch { }
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // AUTO-INJECT WORKFLOW CONTEXT (ClaudeKit-style)
+    // ═══════════════════════════════════════════════════════════════
+    const extensionDir = path.join(homeDir, '.gemini', 'extensions', 'gemini-kit');
+    const workflowDir = path.join(extensionDir, '.agent', 'workflows');
+
+    if (fs.existsSync(workflowDir)) {
+        try {
+            // Always inject development rules
+            const devRulesFile = path.join(workflowDir, 'development-rules.md');
+            if (fs.existsSync(devRulesFile)) {
+                const devRules = fs.readFileSync(devRulesFile, 'utf8');
+                context.push(`## 📋 Development Rules\n\n${devRules.slice(0, 500)}...`);
+            }
+
+            // Inject orchestration protocol for complex tasks
+            const orchestrationKeywords = ['cook', 'workflow', 'plan', 'team', 'agent', 'orchestr'];
+            if (orchestrationKeywords.some(kw => prompt.toLowerCase().includes(kw))) {
+                const orchFile = path.join(workflowDir, 'orchestration-protocol.md');
+                if (fs.existsSync(orchFile)) {
+                    const orchContent = fs.readFileSync(orchFile, 'utf8');
+                    context.push(`## 🔄 Orchestration Protocol\n\n${orchContent.slice(0, 800)}...`);
+                }
+            }
+
+            // Inject doc rules when documentation mentioned
+            const docKeywords = ['doc', 'readme', 'changelog', 'document'];
+            if (docKeywords.some(kw => prompt.toLowerCase().includes(kw))) {
+                const docFile = path.join(workflowDir, 'documentation-management.md');
+                if (fs.existsSync(docFile)) {
+                    const docContent = fs.readFileSync(docFile, 'utf8');
+                    context.push(`## 📝 Documentation Guidelines\n\n${docContent.slice(0, 500)}...`);
+                }
+            }
+        } catch { }
+    }
+
     // Add recent git activity if relevant
     const keywords = ['commit', 'change', 'recent', 'history', 'git'];
     if (keywords.some(kw => prompt.toLowerCase().includes(kw))) {
