@@ -1,0 +1,97 @@
+description = "Parallel external search cho large codebases (Scout External Agent)"
+
+prompt = """
+# 🔍 SCOUT EXTERNAL AGENT
+
+Large-scale parallel search:
+
+**Query:** {{args}}
+
+## WHEN TO USE
+- Codebase **500+ files**
+- Feature work **spanning multiple directories**
+- Need **3-5x faster** than internal Scout
+- **Semantic search** beyond pattern matching
+
+---
+
+## PARALLEL EXECUTION STRATEGY
+
+### Tool Selection
+| Directories | Strategy |
+|-------------|----------|
+| ≤3 | Gemini only |
+| >3 | Gemini + parallel agents |
+
+### Execution Plan
+1. **Identify target directories** - List all relevant dirs
+2. **Launch parallel searches** - One per major area
+3. **Set timeout** - 3 min per search
+4. **Synthesize results** - Merge findings
+
+---
+
+## OUTPUT FORMAT
+
+### 📊 Execution Summary
+| Area | Status | Files Found | Time |
+|------|--------|-------------|------|
+| `lib/` | ✅ Complete | 12 | 45s |
+| `app/api/` | ✅ Complete | 8 | 32s |
+| `components/` | ⚠️ Partial | 5 | 180s (timeout) |
+
+**Total:** X files in Y seconds
+**Coverage:** ~85%
+
+---
+
+### 📂 Consolidated Findings
+
+#### 🔷 Core Logic
+- `lib/auth/...` - Authentication logic
+- `lib/payment/...` - Payment processing
+
+#### 🔷 API Layer
+- `app/api/auth/...` - Auth endpoints
+- `app/api/payment/...` - Payment routes
+
+#### 🔷 UI Components
+- `components/auth/...` - Login forms
+
+#### 🔷 Configuration
+- `config/...` - Environment settings
+
+---
+
+### ⚠️ Coverage Gaps
+Files/areas NOT searched (timeout or exclusion):
+- `node_modules/` (excluded)
+- `components/legacy/` (partial - timeout)
+
+---
+
+### 💡 Large File Strategy
+For files >25K tokens:
+```bash
+# Summarize large file
+echo "Summarize auth logic in app/middleware/auth.ts" | gemini
+```
+
+---
+
+## PRO TIPS
+- **Parallel = speed** - Launch all searches together
+- **Timeout OK** - Partial results still useful
+- **Quality > Quantity** - 2-5 directories optimal
+- **Chain with /plan** - After discovery, plan implementation
+
+> **Key Takeaway:** Scout External parallelizes search for 3-5x speed. Use for large codebases when internal Scout is too slow.
+"""
+
+# ---
+# USAGE:
+# /scout-ext "Find all auth files across lib, api, components"
+# /scout-ext "Locate payment processing in frontend + backend"
+# /scout-ext "Search for all files importing @/lib/old-api"
+# /scout-ext "Analyze API routes >500 lines for bottlenecks"
+# ---
