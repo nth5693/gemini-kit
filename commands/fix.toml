@@ -32,10 +32,49 @@ Fix TypeScript errors:
 3. Suggest or apply fixes
 
 ### If "test":
-Fix failing tests:
-1. Run tests to find failures
-2. Analyze failure reasons
-3. Suggest fixes for each
+Fix failing tests with full pipeline:
+
+**Phase 1: Compile**
+- Run `tsc --noEmit` for TypeScript
+- Fix any syntax errors first
+
+**Phase 2: Run Tests**
+- Execute test suite (jest/vitest/pytest/go test)
+- Capture failures and errors
+
+**Phase 3: Debug**
+- Analyze failure stack traces
+- Find root cause of each failure
+
+**Phase 4: Plan**
+- Create fix plan for each failure
+- Prioritize by complexity
+
+**Phase 5: Implement**
+- Apply fixes to source code
+- Handle edge cases
+
+**Phase 6: Re-test**
+- Run tests again to verify
+- If still failing → loop back to Phase 3
+
+**Phase 7: Review**
+- Validate changes don't break other code
+- Check for side effects
+
+**Output:**
+```
+✗ 3 tests failed
+- auth/login.test.js: Expected 200, got 401
+
+Debugging...
+Root cause: JWT secret not loaded in test env
+
+Planning fix...
+Implementing...
+
+✓ All tests passing (48/48)
+```
 
 ### If "ui":
 Fix UI/styling issues:
