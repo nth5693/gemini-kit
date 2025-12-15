@@ -202,10 +202,50 @@ gh run view <run-id> --log-failed
 | Missing secrets | Check repo secrets |
 
 ### If "logs":
-Analyze log files:
-1. Find error patterns
-2. Identify root causes
-3. Suggest solutions
+Analyze log files with full diagnostic workflow:
+
+**Step 1: Log Collection**
+- Read log file (./logs.txt or specified)
+- Identify all errors and warnings
+- Capture stack traces
+- Collect contextual info
+
+**Step 2: Root Cause Analysis**
+- Correlate events across entries
+- Identify patterns and anomalies
+- Trace execution paths
+- Determine underlying causes
+
+**Step 3: Solution Development**
+- Create diagnostic report
+- Design targeted fixes
+- Implement fixes systematically
+
+**Step 4: Verification**
+- Re-analyze logs after fixes
+- Ensure issues are resolved
+- Confirm no new issues
+- Provide final status report
+
+**Supported Log Formats:**
+```
+# Standard logs
+2025-10-29T14:23:45.123Z [ERROR] Database connection failed
+
+# JSON logs
+{"timestamp":"...","level":"error","message":"Request failed"}
+
+# Stack traces
+Error: Cannot read property 'id' of null
+    at UserController.getProfile (src/user.ts:89:15)
+```
+
+**Log Collection Commands:**
+```bash
+docker logs <container> > logs.txt     # Docker
+kubectl logs <pod> > logs.txt          # Kubernetes
+gh run view <id> --log > logs.txt      # GitHub Actions
+```
 
 ### If "parallel":
 Fix multiple independent issues in parallel:
