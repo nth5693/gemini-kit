@@ -1,6 +1,6 @@
-# Integrate - Payment Integrations
-# Usage: /integrate <service>
-# Generate payment integration code
+# Integrate - External Service Integrations
+# Usage: /integrate <service> [requirements]
+# Supports: payments, auth, database, email, SMS
 
 [command]
 trigger = "integrate"
@@ -11,97 +11,120 @@ runImmediately = true
 [command.user]
 content = """
 {{#if args}}
-# 💳 Payment Integration: {{args}}
+# 🔌 Integration Engineer
 
-Generate complete integration code for: **{{args}}**
+You are an expert at integrating third-party services.
 
-## Instructions:
+**Request:** {{args}}
 
-Parse the service from "{{args}}":
+## Workflow:
 
-### If "polar" or "polar.sh":
-Generate Polar.sh integration:
-1. Installation (npm packages)
-2. Environment variables
-3. API routes for webhooks
-4. Checkout session creation
-5. Subscription management
-6. React components (pricing, checkout)
-7. Type definitions
+### 1. Service Detection
+Parse "{{args}}" to identify:
+- Service name
+- Features needed
+- Current stack (check package.json)
 
-### If "stripe":
-Generate Stripe integration:
-1. Stripe SDK setup
-2. Environment variables
-3. Checkout session API
-4. Webhook handling
-5. Customer portal
-6. React components
-7. Subscription management
+### 2. Supported Services
 
-### If "sepay" or "sepay.vn":
-Generate SePay.vn integration (Vietnam):
-1. API credentials setup
-2. QR code generation
-3. Payment verification webhook
-4. Transaction status check
-5. React components
-6. VND currency handling
+#### 💳 Payments
+| Service | Features |
+|---------|----------|
+| **stripe** | Checkout, subscriptions, webhooks |
+| **polar** | Open-source subscriptions |
+| **sepay** | Vietnam payments |
+| **paypal** | Global payments |
 
-### If "paypal":
-Generate PayPal integration:
-1. PayPal SDK setup
-2. Button components
-3. Order creation
-4. Capture payment
-5. Webhook handling
+#### 🔐 Authentication
+| Service | Features |
+|---------|----------|
+| **supabase** | Auth, database, realtime |
+| **firebase** | Auth, Firestore, Functions |
+| **auth0** | SSO, MFA, social login |
+| **clerk** | User management, components |
 
-### Otherwise:
-- List available integrations
-- Ask which one to generate
+#### 📧 Communication
+| Service | Features |
+|---------|----------|
+| **resend** | Transactional emails |
+| **twilio** | SMS, voice |
+| **nodemailer** | SMTP emails |
 
-## Output:
-Provide production-ready TypeScript/React code with:
-- All necessary files
-- Environment variable examples
-- Step-by-step setup instructions
+#### 🗄️ Database
+| Service | Features |
+|---------|----------|
+| **prisma** | ORM, migrations |
+| **drizzle** | TypeScript ORM |
+| **mongoose** | MongoDB ODM |
+
+### 3. Implementation
+
+1. **Install** packages
+2. **Configure** env vars
+3. **Create** client/service file
+4. **Add** API routes/webhooks
+5. **Build** UI components
+6. **Test** integration
+7. **Document** setup
+
+### 4. Output Format
+
+```markdown
+## Integration: [Service]
+
+### Install
+npm install [packages]
+
+### Environment Variables
+SERVICE_KEY=xxx
+
+### Files Created
+- src/lib/[service].ts
+- src/routes/api/[service]/
+
+### Usage
+[code example]
+```
 
 ---
 
-Now generate integration for: "{{args}}"
+Implement: {{args}}
 {{else}}
-# 💳 Payment Integrations
+# 🔌 Integration Helper
 
-Generate complete payment integration code.
+Integrate external services with AI assistance.
 
 ## Usage:
 ```
-/integrate <service>
+/integrate <service> [requirements]
 ```
 
-## Available Services:
+## Categories:
 
-| Service | Description |
-|---------|-------------|
-| `/integrate polar` | Polar.sh (US/EU subscriptions) |
-| `/integrate stripe` | Stripe (Global) |
-| `/integrate sepay` | SePay.vn (Vietnam) |
-| `/integrate paypal` | PayPal (Global) |
+### 💳 Payments
+- `/integrate stripe subscriptions`
+- `/integrate polar billing`
+- `/integrate sepay vn payments`
 
-## What You Get:
-- Environment setup
-- API routes/webhooks
-- React components
-- Type definitions
-- Setup instructions
+### 🔐 Auth
+- `/integrate supabase auth`
+- `/integrate clerk users`
+- `/integrate auth0 sso`
 
-## Examples:
+### 📧 Email/SMS
+- `/integrate resend emails`
+- `/integrate twilio sms`
+
+### 🗄️ Database
+- `/integrate prisma postgres`
+- `/integrate drizzle orm`
+
+## Example:
 ```
-/integrate polar
-/integrate stripe
-/integrate sepay
+/integrate stripe Add checkout and subscriptions
+/integrate supabase Add auth with Google OAuth
 ```
 
-Choose a payment service to integrate!
+What service do you want to integrate?
 {{/if}}
 """
