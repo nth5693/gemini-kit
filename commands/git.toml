@@ -116,6 +116,43 @@ git pull --rebase origin main
 /git cp              # Retry push
 ```
 
+---
+
+## PRE-PUSH SAFETY CHECKS (for /git cp)
+
+### 1. Pre-Push Validation
+Before pushing, automatically run:
+```
+Running pre-push checks...
+✓ TypeScript: No errors
+✓ Lint: Passed
+✓ Tests: All passed (if fast)
+✓ Security: No sensitive files
+Safe to push.
+```
+
+### 2. Conflict Detection
+```
+⚠ Warning: Remote has changes
+Remote branch has X new commits.
+Options:
+1. Pull and rebase: git pull --rebase
+2. Pull and merge: git pull
+3. Cancel push
+```
+
+### 3. Force Push Prevention
+```
+❌ Error: Would require force push
+Your branch is behind 'origin/main' by X commits.
+Options:
+1. Pull and rebase: git pull --rebase
+2. Create new branch
+3. Cancel
+```
+
+**Never force push to main/master without explicit approval!**
+
 ### Logical Grouping
 ```bash
 git add src/auth/*
