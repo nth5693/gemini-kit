@@ -123,6 +123,64 @@ After creation:
 
 ---
 
+## FIX-LOGS MODE
+
+When input starts with "fix-logs" or "fix":
+
+**Syntax:**
+```bash
+/skill fix-logs [skill-name]
+/skill fix mongodb-skill
+```
+
+### 5-Step Workflow:
+
+**Step 1: Log Analysis**
+- Read logs.txt file
+- Identify skill-related errors
+- Extract error messages and context
+- Map errors to skill sections
+
+**Step 2: Skill Diagnosis**
+- Analyze current skill content
+- Compare with error patterns
+- Identify root causes
+- Find incorrect examples
+
+**Step 3: Fix Planning**
+- List issues to address
+- Plan content additions
+- Identify sections to rewrite
+
+**Step 4: Skill Update**
+- Update problematic sections
+- Add missing information
+- Fix code examples
+- Improve error handling guidance
+
+**Step 5: Validation**
+- Verify fixes address logged issues
+- Test updated examples
+- Validate skill structure
+
+**Output:**
+```
+✓ Analyzed: 15 errors in logs.txt
+✓ Identified: 3 skill issues
+  - Incorrect webhook verification code
+  - Missing SDK import example
+  - Outdated API endpoint
+
+✓ Fixed: mongodb-skill.md
+  - Updated webhook example
+  - Added SDK import section
+  - Fixed API endpoints
+
+Validation: PASSED
+```
+
+---
+
 Now process: "{{args}}"
 """
 
