@@ -51,6 +51,64 @@ Fix TypeScript errors:
 2. Analyze each error
 3. Suggest or apply fixes
 
+### If "hard":
+Complex fix mode for difficult bugs (10-15 min):
+
+**Stage 1: Discovery (2-3 min)**
+- Scan entire codebase for related code
+- Identify all files involved
+- Map dependencies and relationships
+```
+Files scanned: 1,247
+Files identified: 15
+Dependencies mapped: 43
+```
+
+**Stage 2: Root Cause Analysis (1-2 min)**
+- Analyze logs and error traces
+- Identify underlying causes
+- Distinguish symptoms from root causes
+```
+Root cause identified: [description]
+```
+
+**Stage 3: Research (1-2 min)**
+- Search for best practices
+- Review similar issues
+- Check for known solutions
+
+**Stage 4: Planning (1 min)**
+- Create detailed fix strategy
+- Plan implementation steps
+- Identify test scenarios
+```
+Strategy created: plans/fix-[issue].md
+Files to modify: 8
+Tests to add: 15
+```
+
+**Stage 5: Implementation (3-5 min)**
+- Implement fix following plan
+- Handle edge cases
+- Add error handling
+
+**Stage 6: Validation (1-2 min)**
+- Run full test suite
+- Validate edge cases
+- Check for regressions
+```
+✓ Unit tests: 45/45
+✓ Integration tests: 23/23
+✓ Regression tests: 67/67
+Coverage: 96%
+```
+
+**Use for:**
+- Complex authentication bugs
+- Memory leak investigation
+- Multi-file architecture issues
+- Race conditions
+
 ### If "test":
 Fix failing tests with full pipeline:
 
