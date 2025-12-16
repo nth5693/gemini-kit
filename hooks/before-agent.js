@@ -84,7 +84,7 @@ async function main(input) {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // AUTO-INJECT WORKFLOW CONTEXT (ClaudeKit-style)
+    // AUTO-INJECT WORKFLOW CONTEXT (Gemini-Kit-style)
     // ═══════════════════════════════════════════════════════════════
     const extensionDir = path.join(homeDir, '.gemini', 'extensions', 'gemini-kit');
     const workflowDir = path.join(extensionDir, '.agent', 'workflows');
