@@ -1,32 +1,33 @@
 # Gemini-Kit Extension
 
-Super Engineer - Team of AI Agents for software development.
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/nth5693/gemini-kit/releases)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## Installation
+> **Super Engineer** - Team of AI Agents for software development.
 
-### Quick Install (from GitHub)
+## ✨ Features
+
+- 🤖 **15 AI Agents** - Specialized roles (Planner, Scout, Coder, Tester, etc.)
+- 🔄 **Workflow Orchestration** - Smart routing & team sessions
+- 📚 **Learning System** - AI learns from your feedback
+- ✅ **39 Unit Tests** - Verified with Vitest
+- 🔒 **Security Hooks** - Secret detection, path traversal prevention
+
+## 📦 Installation
+
 ```bash
-gemini extensions install github.com/your-username/gemini-kit
+# Install from GitHub
+gemini extensions install nth5693/gemini-kit
 ```
 
 ### Manual Install
 ```bash
-# Clone or copy to extensions directory
 cd ~/.gemini/extensions/gemini-kit
-
-# Install dependencies
-npm install
-
-# Build
-npm run build
-
-# Link extension
+npm install && npm run build
 gemini extensions link $(pwd)
-
-# Restart Gemini CLI
 ```
 
-## Commands
+## 🚀 Commands
 
 | Command | Description |
 |---------|-------------|
@@ -39,23 +40,55 @@ gemini extensions link $(pwd)
 | `/debug` | Debug issues |
 | `/git` | Git operations |
 
-## MCP Tools
+## 🤖 AI Agents
 
-- `kit_create_checkpoint` - Create git checkpoint before changes
-- `kit_restore_checkpoint` - Restore to previous checkpoint
-- `kit_get_project_context` - Gather project context
-- `kit_handoff_agent` - Handoff between agents
-- `kit_save_artifact` - Save artifacts
-- `kit_list_checkpoints` - List available checkpoints
+| Agent | Role |
+|-------|------|
+| Planner | Implementation plans, estimation |
+| Scout | Codebase exploration, monorepo |
+| Coder | Clean code, conventions |
+| Tester | Unit/integration tests, Vitest |
+| Reviewer | Code review, security audit |
+| Debugger | Root cause analysis |
+| Git Manager | Version control, hooks |
+| Database Admin | Schema, queries, migrations |
+| Researcher | API research, comparison |
+| UI Designer | Dark mode, animations |
+| Docs Manager | README, ADR, changelog |
+| Brainstormer | Ideas, SCAMPER, Six Hats |
+| Fullstack Dev | End-to-end development |
+| Project Manager | Agile, sprint planning |
+| Copywriter | Marketing, CRO |
 
-## Hooks
+## 🔧 MCP Tools
 
-- **session-start** - Initialize on session start
-- **before-agent** - Inject context before processing
-- **before-tool** - Security validation (block secrets)
-- **after-tool** - Auto-run tests after code changes
-- **session-end** - Cleanup and save logs
+### Core
+- `kit_create_checkpoint` - Git checkpoint before changes
+- `kit_restore_checkpoint` - Rollback to checkpoint
+- `kit_get_project_context` - Project analysis
+- `kit_handoff_agent` - Agent-to-agent communication
 
-## License
+### Learning
+- `kit_save_learning` - Save feedback as lessons
+- `kit_get_learnings` - Retrieve relevant learnings
+
+### Team Orchestration
+- `kit_team_start` / `kit_team_end` - Session management
+- `kit_run_workflow` - Execute predefined workflows
+- `kit_smart_route` - Auto-select best workflow
+
+📖 **Full API Reference**: [docs/API.md](docs/API.md)
+
+## 🔒 Security Hooks
+
+- **before-tool**: Block secrets (30+ patterns), path traversal prevention
+- **after-tool**: Auto-run tests after code changes
+
+## 📝 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
+
+## 📄 License
 
 MIT
+
