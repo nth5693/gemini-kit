@@ -1,15 +1,89 @@
 # 🚀 Gemini-Kit
 
+<div align="center">
+
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/nth5693/gemini-kit/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-39%20passed-brightgreen.svg)]()
+[![Agents](https://img.shields.io/badge/AI%20Agents-15-purple.svg)]()
 
-> **Gemini-Kit** biến Gemini CLI thành một **đội ngũ AI engineers** giúp bạn code nhanh hơn, ít lỗi hơn.
+### 🎯 Code 10x Faster với Đội Ngũ AI Engineers Riêng Của Bạn
+
+**Gemini-Kit** biến terminal của bạn thành một **engineering team hoàn chỉnh** - từ planning đến production.
+
+[🚀 Cài Đặt Ngay](#-cài-đặt) • [📖 Hướng Dẫn](#-cách-sử-dụng) • [🤖 Agents](#-danh-sách-agents) • [📚 Docs](docs/API.md)
+
+</div>
+
+---
+
+## ⚡ Tại Sao Chọn Gemini-Kit?
+
+<table>
+<tr>
+<td width="50%">
+
+### ❌ Trước khi có Gemini-Kit
+
+```
+😩 Viết code một mình
+😩 Debug hàng giờ không ra
+😩 Quên viết tests
+😩 Commit lộ API key
+😩 Mỗi task lặp lại workflow
+```
+
+</td>
+<td width="50%">
+
+### ✅ Sau khi có Gemini-Kit
+
+```
+🚀 15 AI agents hỗ trợ 24/7
+🚀 Auto debug với root cause
+🚀 Tests được viết tự động
+🚀 Block secrets trước khi commit
+🚀 /cook tự động làm hết
+```
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🏆 Những Gì Bạn Sẽ Có
+
+| Tính năng | Mô tả |
+|-----------|-------|
+| 🤖 **15 AI Agents Chuyên Biệt** | Planner, Coder, Tester, Reviewer... mỗi agent một chuyên môn |
+| ⚡ **One-Command Workflow** | `/cook` = Plan → Scout → Code → Test → Review tự động |
+| 🧠 **AI Học Từ Bạn** | Feedback được lưu lại, AI cải thiện theo thời gian |
+| 🔒 **Chặn Leak Secrets** | 30+ patterns phát hiện API keys, passwords |
+| 💾 **Auto Checkpoint** | Tự backup trước khi thay đổi, rollback dễ dàng |
+| 📊 **Production-Ready** | 39 unit tests, TypeScript, clean architecture |
+
+---
+
+## 🎬 Demo Nhanh
+
+```bash
+# Chỉ một lệnh - AI làm tất cả
+$ /cook Thêm chức năng login với Google OAuth
+
+🤖 Planner: Đang tạo kế hoạch...
+🔍 Scout: Phân tích codebase...
+💻 Coder: Viết code...
+🧪 Tester: Tạo unit tests...
+👀 Reviewer: Review code...
+
+✅ Hoàn thành! Code đã sẵn sàng để commit.
+```
 
 ---
 
 ## 📖 Mục Lục
 
-- [Gemini-Kit là gì?](#-gemini-kit-là-gì)
 - [Cài đặt](#-cài-đặt)
 - [Cách sử dụng](#-cách-sử-dụng)
 - [Danh sách Agents](#-danh-sách-agents)
@@ -18,6 +92,7 @@
 - [Tài liệu](#-tài-liệu)
 
 ---
+
 
 ## 🤔 Gemini-Kit là gì?
 
