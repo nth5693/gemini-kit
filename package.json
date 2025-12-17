@@ -1,6 +1,6 @@
 {
     "name": "gemini-kit",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Super Engineer - Team of AI Agents for software development",
     "type": "module",
     "scripts": {
