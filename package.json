@@ -4,7 +4,8 @@
     "description": "Super Engineer - Team of AI Agents for software development",
     "type": "module",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && npm run bundle",
+        "bundle": "esbuild src/kit-server.ts --bundle --platform=node --format=esm --outfile=dist/kit-server.js --external:node:* --banner:js=\"import { createRequire } from 'module'; const require = createRequire(import.meta.url);\"",
         "watch": "tsc --watch",
         "test": "vitest run",
         "test:watch": "vitest",
@@ -22,6 +23,7 @@
         "@types/diff": "^7.0.2",
         "@types/node": "^20.0.0",
         "@vitest/coverage-v8": "^2.1.0",
+        "esbuild": "^0.27.2",
         "eslint": "^9.39.2",
         "typescript": "^5.3.0",
         "typescript-eslint": "^8.50.0",
