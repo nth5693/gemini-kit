@@ -126,3 +126,49 @@ describe('safeGit', () => {
         // This is hard to test without a slow command
     });
 });
+describe('commandExists', () => {
+    let commandExists;
+    beforeEach(async () => {
+        const security = await import('../security.js');
+        commandExists = security.commandExists;
+    });
+    it('should return true for existing command (node)', () => {
+        expect(commandExists('node')).toBe(true);
+    });
+    it('should return false for non-existing command', () => {
+        expect(commandExists('non-existent-command-xyz-12345')).toBe(false);
+    });
+    it('should handle git command', () => {
+        // Git should be installed in most dev environments
+        const result = commandExists('git');
+        expect(typeof result).toBe('boolean');
+    });
+});
+describe('safeGh', () => {
+    let safeGh;
+    beforeEach(async () => {
+        const security = await import('../security.js');
+        safeGh = security.safeGh;
+    });
+    it('should throw error when gh is not installed or command fails', () => {
+        // This will either fail because gh is not installed
+        // or because the command is invalid
+        expect(() => safeGh(['invalid-command-xyz'])).toThrow();
+    });
+    it('should include error details in thrown error', () => {
+        try {
+            safeGh(['invalid-command-xyz']);
+        }
+        catch (error) {
+            expect(error instanceof Error).toBe(true);
+            expect(error.message).toContain('GitHub CLI failed');
+        }
+    });
+});
+describe('homeDir', () => {
+    it('should export homeDir constant', async () => {
+        const security = await import('../security.js');
+        expect(security.homeDir).toBeDefined();
+        expect(typeof security.homeDir).toBe('string');
+    });
+});
