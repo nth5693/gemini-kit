@@ -1,0 +1,120 @@
+/**
+ * Security Helpers - Prevent Command Injection
+ * Exported utilities for safe command execution
+ */
+import { execFileSync } from 'child_process';
+import * as os from 'os';
+import * as fs from 'fs';
+import * as path from 'path';
+// FIX: Use os.homedir() for proper cross-platform support
+export const homeDir = os.homedir();
+/**
+ * Sanitize string for safe use in shell commands
+ * Removes dangerous characters but keeps quotes (safe with execFileSync)
+ */
+export function sanitize(input) {
+    // FIX: Keep quotes - execFileSync with array args handles them safely
+    // Only remove shell operators that are dangerous
+    return String(input)
+        .replace(/[;&|`$(){}[\]<>\\!#*?]/g, '')
+        .trim()
+        .slice(0, 500); // Limit length
+}
+/**
+ * Extract stderr from error for better logging
+ */
+function extractStderr(error) {
+    if (error && typeof error === 'object' && 'stderr' in error) {
+        return String(error.stderr);
+    }
+    return '';
+}
+/**
+ * Safe git command execution using execFileSync
+ * Includes stderr in error message for better debugging
+ */
+export function safeGit(args, options) {
+    try {
+        return execFileSync('git', args, {
+            encoding: 'utf8',
+            timeout: options?.timeout || 10000,
+            cwd: options?.cwd,
+            maxBuffer: 10 * 1024 * 1024, // 10MB
+        });
+    }
+    catch (error) {
+        const stderr = extractStderr(error);
+        const baseMsg = error instanceof Error ? error.message : String(error);
+        throw new Error(`Git command failed: ${baseMsg}${stderr ? `\nDetails: ${stderr}` : ''}`);
+    }
+}
+/**
+ * Safe gh (GitHub CLI) command execution
+ * Includes stderr in error message for better debugging
+ */
+export function safeGh(args, options) {
+    try {
+        return execFileSync('gh', args, {
+            encoding: 'utf8',
+            timeout: options?.timeout || 30000,
+            maxBuffer: 10 * 1024 * 1024,
+        });
+    }
+    catch (error) {
+        const stderr = extractStderr(error);
+        const baseMsg = error instanceof Error ? error.message : String(error);
+        throw new Error(`GitHub CLI failed: ${baseMsg}${stderr ? `\nDetails: ${stderr}` : ''}`);
+    }
+}
+/**
+ * Check if a command exists (cross-platform)
+ * Uses 'where' on Windows, 'which' on macOS/Linux
+ */
+export function commandExists(cmd) {
+    try {
+        const checkCmd = process.platform === 'win32' ? 'where' : 'which';
+        execFileSync(checkCmd, [cmd], { encoding: 'utf8', timeout: 5000, stdio: 'ignore' });
+        return true;
+    }
+    catch {
+        return false;
+    }
+}
+/**
+ * Cross-platform file finder (replaces Unix-only find/grep/head)
+ * Works on Windows, macOS, Linux
+ */
+export function findFiles(dir, extensions, maxFiles, excludeDirs = ['node_modules', '.git', 'dist', 'build', 'coverage']) {
+    const results = [];
+    function walk(currentDir, relativePath = '') {
+        if (results.length >= maxFiles)
+            return;
+        let entries;
+        try {
+            entries = fs.readdirSync(currentDir, { withFileTypes: true });
+        }
+        catch {
+            return; // Skip directories we can't read
+        }
+        for (const entry of entries) {
+            if (results.length >= maxFiles)
+                return;
+            const fullPath = path.join(currentDir, entry.name);
+            const relPath = relativePath ? path.join(relativePath, entry.name) : entry.name;
+            if (entry.isDirectory()) {
+                // Skip excluded directories
+                if (!excludeDirs.includes(entry.name)) {
+                    walk(fullPath, relPath);
+                }
+            }
+            else if (entry.isFile()) {
+                // Check extension
+                if (extensions.some(ext => entry.name.endsWith(ext))) {
+                    results.push(relPath);
+                }
+            }
+        }
+    }
+    walk(dir);
+    return results;
+}
