@@ -2,14 +2,11 @@
 # Usage: /integrate <service> [requirements]
 # Supports: payments, auth, database, email, SMS
 
-[command]
-trigger = "integrate"
+description = "Integration with external services"
 
-[command.settings]
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 {{#if args}}
 # 🔌 Integration Engineer
 

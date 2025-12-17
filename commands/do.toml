@@ -2,14 +2,11 @@
 # Usage: /do <task description>
 # Automatically analyzes task and executes appropriate agents
 
-[command]
-trigger = "do"
+description = "Quick actions for common tasks"
 
-[command.settings]
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 {{#if args}}
 # 🧠 AI Router - Auto Agent Selection
 

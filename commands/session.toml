@@ -2,14 +2,11 @@
 # Usage: /session [action] [name/id]
 # Save, load, and manage work sessions
 
-[command]
-trigger = "session"
+description = "Save, load, and manage work sessions"
 
-[command.settings]
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 {{#if args}}
 # 💾 Session Management
 

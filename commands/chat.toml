@@ -2,14 +2,11 @@
 # Usage: /chat
 # Reference for chat shortcuts and commands
 
-[command]
-trigger = "chat"
+description = "Reference for chat shortcuts and commands"
 
-[command.settings]
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 # 💬 Gemini CLI Chat Reference
 
 Quick reference for chat mode features in Gemini CLI.

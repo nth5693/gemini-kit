@@ -2,14 +2,9 @@
 # Usage: /ask <question>
 # Ask questions about the codebase, AI will search and answer
 
-[command]
-trigger = "ask"
+description = "Ask questions about the codebase, AI will search and answer"
 
-[command.settings]
-runImmediately = true
-
-[command.user]
-content = """
+prompt = """
 {{#if args}}
 # ❓ Ask About Codebase
 

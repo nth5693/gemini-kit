@@ -2,14 +2,11 @@
 # Usage: /use <assistant> <message>
 # Chat with specialized AI assistants
 
-[command]
-trigger = "use"
+description = "Use specific tools or workflows"
 
-[command.settings]
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 {{#if args}}
 # 🤖 Custom Assistant Mode
 

@@ -1,18 +1,15 @@
 # Gemini-Kit Help
-# Usage: /help [command]
+# Usage: /help description = "Help and usage information"
 # - /help → Show all commands
 # - /help plan → Show help for /plan
 # - /help tools → Show all MCP tools
 
-[command]
-trigger = "help"
+description = "Help and usage information"
 
-[command.settings]
 
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 {{#if args}}
 Show detailed help for: {{args}}
 

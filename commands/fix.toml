@@ -2,14 +2,11 @@
 # Usage: /fix [mode] [issue]
 # Intelligent fix for various issues
 
-[command]
-trigger = "fix"
+description = "Smart fix for bugs, types, tests, UI, CI"
 
-[command.settings]
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 {{#if args}}
 # 🔧 Smart Fix
 

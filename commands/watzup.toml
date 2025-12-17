@@ -2,14 +2,11 @@
 # Usage: /watzup
 # Quick overview of project status
 
-[command]
-trigger = "watzup"
+description = "Check recent activity and status"
 
-[command.settings]
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 # 📊 Project Status Check
 
 Analyze the current project and provide a comprehensive status report.

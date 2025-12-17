@@ -2,14 +2,11 @@
 # Usage: /screenshot <image-path> [framework]
 # Convert UI screenshot to HTML/CSS code
 
-[command]
-trigger = "screenshot"
+description = "Take screenshot for visual debugging"
 
-[command.settings]
-runImmediately = true
 
-[command.user]
-content = """
+
+prompt = """
 {{#if args}}
 # 📸 Screenshot to Code
 
