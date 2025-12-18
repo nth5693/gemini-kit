@@ -13,9 +13,20 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as Diff from 'diff';
 import { homeDir, findFiles } from './security.js';
-// Learning delimiter constants (FIX 9.5)
+// Constants
 const LEARNING_START = '<!-- LEARNING_START';
 const LEARNING_END = '<!-- LEARNING_END -->';
+const MAX_FILE_SIZE_BYTES = 1 * 1024 * 1024; // 1MB limit for indexing
+// Zod schemas for JSON validation (MEDIUM 3)
+const DiffDataSchema = z.object({
+    id: z.string(),
+    file: z.string(),
+    originalContent: z.string(),
+    newContent: z.string(),
+    description: z.string().optional(),
+    createdAt: z.string(),
+    applied: z.boolean(),
+});
 /**
  * FIX: Validate file path to prevent path traversal attacks
  * Ensures the resolved path stays within the project directory
@@ -207,7 +218,19 @@ To apply: \`kit_apply_stored_diff\` with id: \`${diffId}\``
             if (!fs.existsSync(diffFile)) {
                 return { content: [{ type: 'text', text: `❌ Diff not found: ${diffId}` }] };
             }
-            const diffData = JSON.parse(fs.readFileSync(diffFile, 'utf8'));
+            // FIX HIGH 2: Re-validate path from stored JSON to prevent tampering
+            const parseResult = DiffDataSchema.safeParse(JSON.parse(fs.readFileSync(diffFile, 'utf8')));
+            if (!parseResult.success) {
+                return { content: [{ type: 'text', text: `❌ Invalid diff data: ${parseResult.error.message}` }] };
+            }
+            const diffData = parseResult.data;
+            // Re-validate path to prevent path traversal from tampered JSON
+            try {
+                validatePath(diffData.file);
+            }
+            catch {
+                return { content: [{ type: 'text', text: `❌ Invalid file path in diff: ${diffData.file}` }] };
+            }
             if (diffData.applied) {
                 return { content: [{ type: 'text', text: `⚠️ Diff already applied: ${diffId}` }] };
             }
@@ -267,6 +290,12 @@ Your changes would be lost if applied.
                 const results = await Promise.all(batch.map(async (file) => {
                     try {
                         const fullPath = path.join(projectDir, file);
+                        // FIX HIGH 1: Check file size before reading (prevent DoS on large files)
+                        const stats = await fsPromises.stat(fullPath);
+                        if (stats.size > MAX_FILE_SIZE_BYTES) {
+                            // Skip large files (minified bundles, generated code, etc.)
+                            return null;
+                        }
                         const content = await fsPromises.readFile(fullPath, 'utf8');
                         const lines = content.split('\n');
                         const words = content.toLowerCase().match(/\b[a-z][a-z0-9_]{2,}\b/g) || [];

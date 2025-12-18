@@ -20829,7 +20829,8 @@ function safeGit(args, options) {
   try {
     return execFileSync("git", args, {
       encoding: "utf8",
-      timeout: options?.timeout || 1e4,
+      timeout: options?.timeout || 3e4,
+      // MEDIUM 5: Increased from 10s to 30s
       cwd: options?.cwd,
       maxBuffer: 10 * 1024 * 1024
       // 10MB
@@ -20845,7 +20846,8 @@ function safeGh(args, options) {
   try {
     return execFileSync("gh", args, {
       encoding: "utf8",
-      timeout: options?.timeout || 3e4,
+      timeout: options?.timeout || 6e4,
+      // MEDIUM 5: Increased from 30s to 60s
       maxBuffer: 10 * 1024 * 1024
     });
   } catch (error2) {
@@ -21491,6 +21493,16 @@ function splitLines(text) {
 // src/tools/knowledge.ts
 var LEARNING_START = "<!-- LEARNING_START";
 var LEARNING_END = "<!-- LEARNING_END -->";
+var MAX_FILE_SIZE_BYTES = 1 * 1024 * 1024;
+var DiffDataSchema = external_exports.object({
+  id: external_exports.string(),
+  file: external_exports.string(),
+  originalContent: external_exports.string(),
+  newContent: external_exports.string(),
+  description: external_exports.string().optional(),
+  createdAt: external_exports.string(),
+  applied: external_exports.boolean()
+});
 function validatePath(filePath, baseDir = process.cwd()) {
   const resolved = path3.resolve(baseDir, filePath);
   if (!resolved.startsWith(path3.resolve(baseDir))) {
@@ -21701,7 +21713,16 @@ To apply: \`kit_apply_stored_diff\` with id: \`${diffId}\``
         if (!fs3.existsSync(diffFile)) {
           return { content: [{ type: "text", text: `\u274C Diff not found: ${diffId}` }] };
         }
-        const diffData = JSON.parse(fs3.readFileSync(diffFile, "utf8"));
+        const parseResult = DiffDataSchema.safeParse(JSON.parse(fs3.readFileSync(diffFile, "utf8")));
+        if (!parseResult.success) {
+          return { content: [{ type: "text", text: `\u274C Invalid diff data: ${parseResult.error.message}` }] };
+        }
+        const diffData = parseResult.data;
+        try {
+          validatePath(diffData.file);
+        } catch {
+          return { content: [{ type: "text", text: `\u274C Invalid file path in diff: ${diffData.file}` }] };
+        }
         if (diffData.applied) {
           return { content: [{ type: "text", text: `\u26A0\uFE0F Diff already applied: ${diffId}` }] };
         }
@@ -21761,6 +21782,10 @@ File: ${diffData.file}` }] };
           const results = await Promise.all(batch.map(async (file) => {
             try {
               const fullPath = path3.join(projectDir, file);
+              const stats = await fsPromises.stat(fullPath);
+              if (stats.size > MAX_FILE_SIZE_BYTES) {
+                return null;
+              }
               const content = await fsPromises.readFile(fullPath, "utf8");
               const lines = content.split("\n");
               const words = content.toLowerCase().match(/\b[a-z][a-z0-9_]{2,}\b/g) || [];
@@ -21901,6 +21926,31 @@ ${results.map(
 }
 
 // src/tools/integration.ts
+var PrDetailSchema = external_exports.object({
+  title: external_exports.string(),
+  body: external_exports.string().nullable(),
+  state: external_exports.string(),
+  author: external_exports.object({ login: external_exports.string() }),
+  labels: external_exports.array(external_exports.object({ name: external_exports.string() })),
+  changedFiles: external_exports.number(),
+  additions: external_exports.number(),
+  deletions: external_exports.number()
+});
+var PrListItemSchema = external_exports.object({
+  number: external_exports.number(),
+  title: external_exports.string(),
+  state: external_exports.string(),
+  author: external_exports.object({ login: external_exports.string() })
+});
+var IssueDetailSchema = external_exports.object({
+  number: external_exports.number(),
+  title: external_exports.string(),
+  body: external_exports.string().nullable(),
+  state: external_exports.string(),
+  author: external_exports.object({ login: external_exports.string() }),
+  labels: external_exports.array(external_exports.object({ name: external_exports.string() })),
+  comments: external_exports.number()
+});
 function registerIntegrationTools(server2) {
   server2.tool(
     "kit_github_create_pr",
@@ -21980,7 +22030,11 @@ ${result}`
         }
         if (prNumber) {
           const prInfo = safeGh(["pr", "view", String(prNumber), "--json", "title,body,state,author,labels,changedFiles,additions,deletions"]);
-          const pr = JSON.parse(prInfo);
+          const parseResult = PrDetailSchema.safeParse(JSON.parse(prInfo));
+          if (!parseResult.success) {
+            return { content: [{ type: "text", text: `\u274C Failed to parse PR data: ${parseResult.error.message}` }] };
+          }
+          const pr = parseResult.data;
           let output = `## PR #${prNumber}: ${pr.title}
 
 **State:** ${pr.state}
@@ -22005,7 +22059,11 @@ ${diff.slice(0, 3e3)}${diff.length > 3e3 ? "\n... (truncated)" : ""}
           return { content: [{ type: "text", text: output }] };
         } else {
           const list = safeGh(["pr", "list", "--limit", "10", "--json", "number,title,state,author"]);
-          const prs = JSON.parse(list);
+          const parseResult = external_exports.array(PrListItemSchema).safeParse(JSON.parse(list));
+          if (!parseResult.success) {
+            return { content: [{ type: "text", text: `\u274C Failed to parse PR list: ${parseResult.error.message}` }] };
+          }
+          const prs = parseResult.data;
           const output = `## Recent Pull Requests
 
 ${prs.map(

@@ -11,6 +11,8 @@ export declare function sanitize(input: string): string;
 /**
  * Safe git command execution using execFileSync
  * Includes stderr in error message for better debugging
+ *
+ * @param timeout Default 30s (increased for large repos). Override with options.timeout
  */
 export declare function safeGit(args: string[], options?: {
     cwd?: string;
@@ -19,6 +21,8 @@ export declare function safeGit(args: string[], options?: {
 /**
  * Safe gh (GitHub CLI) command execution
  * Includes stderr in error message for better debugging
+ *
+ * @param timeout Default 60s (increased for API operations). Override with options.timeout
  */
 export declare function safeGh(args: string[], options?: {
     timeout?: number;

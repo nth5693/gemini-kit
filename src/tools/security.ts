@@ -37,12 +37,14 @@ function extractStderr(error: unknown): string {
 /**
  * Safe git command execution using execFileSync
  * Includes stderr in error message for better debugging
+ * 
+ * @param timeout Default 30s (increased for large repos). Override with options.timeout
  */
 export function safeGit(args: string[], options?: { cwd?: string; timeout?: number }): string {
     try {
         return execFileSync('git', args, {
             encoding: 'utf8',
-            timeout: options?.timeout || 10000,
+            timeout: options?.timeout || 30000, // MEDIUM 5: Increased from 10s to 30s
             cwd: options?.cwd,
             maxBuffer: 10 * 1024 * 1024, // 10MB
         });
@@ -56,12 +58,14 @@ export function safeGit(args: string[], options?: { cwd?: string; timeout?: numb
 /**
  * Safe gh (GitHub CLI) command execution
  * Includes stderr in error message for better debugging
+ * 
+ * @param timeout Default 60s (increased for API operations). Override with options.timeout
  */
 export function safeGh(args: string[], options?: { timeout?: number }): string {
     try {
         return execFileSync('gh', args, {
             encoding: 'utf8',
-            timeout: options?.timeout || 30000,
+            timeout: options?.timeout || 60000, // MEDIUM 5: Increased from 30s to 60s
             maxBuffer: 10 * 1024 * 1024,
         });
     } catch (error) {

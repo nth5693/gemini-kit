@@ -8,6 +8,35 @@ import { z } from 'zod';
 import { execSync } from 'child_process';
 import { sanitize, safeGh, commandExists } from './security.js';
 
+// Zod schemas for GitHub CLI responses (MEDIUM 3: Validate JSON)
+const PrDetailSchema = z.object({
+    title: z.string(),
+    body: z.string().nullable(),
+    state: z.string(),
+    author: z.object({ login: z.string() }),
+    labels: z.array(z.object({ name: z.string() })),
+    changedFiles: z.number(),
+    additions: z.number(),
+    deletions: z.number(),
+});
+
+const PrListItemSchema = z.object({
+    number: z.number(),
+    title: z.string(),
+    state: z.string(),
+    author: z.object({ login: z.string() }),
+});
+
+const IssueDetailSchema = z.object({
+    number: z.number(),
+    title: z.string(),
+    body: z.string().nullable(),
+    state: z.string(),
+    author: z.object({ login: z.string() }),
+    labels: z.array(z.object({ name: z.string() })),
+    comments: z.number(),
+});
+
 export function registerIntegrationTools(server: McpServer): void {
     // TOOL 14: GITHUB CREATE PR
     server.tool(
@@ -95,12 +124,17 @@ Run: gh auth login`
                 if (prNumber) {
                     const prInfo = safeGh(['pr', 'view', String(prNumber), '--json', 'title,body,state,author,labels,changedFiles,additions,deletions']);
 
-                    const pr = JSON.parse(prInfo);
+                    // MEDIUM 3: Validate JSON with zod
+                    const parseResult = PrDetailSchema.safeParse(JSON.parse(prInfo));
+                    if (!parseResult.success) {
+                        return { content: [{ type: 'text' as const, text: `❌ Failed to parse PR data: ${parseResult.error.message}` }] };
+                    }
+                    const pr = parseResult.data;
                     let output = `## PR #${prNumber}: ${pr.title}
 
 **State:** ${pr.state}
 **Author:** ${pr.author.login}
-**Labels:** ${pr.labels.map((l: { name: string }) => l.name).join(', ') || 'none'}
+**Labels:** ${pr.labels.map(l => l.name).join(', ') || 'none'}
 **Changes:** +${pr.additions} / -${pr.deletions} (${pr.changedFiles} files)
 
 ### Description
@@ -117,8 +151,13 @@ ${pr.body || 'No description'}`;
                 } else {
                     const list = safeGh(['pr', 'list', '--limit', '10', '--json', 'number,title,state,author']);
 
-                    const prs = JSON.parse(list);
-                    const output = `## Recent Pull Requests\n\n${prs.map((pr: { number: number, title: string, state: string, author: { login: string } }) =>
+                    // MEDIUM 3: Validate JSON with zod
+                    const parseResult = z.array(PrListItemSchema).safeParse(JSON.parse(list));
+                    if (!parseResult.success) {
+                        return { content: [{ type: 'text' as const, text: `❌ Failed to parse PR list: ${parseResult.error.message}` }] };
+                    }
+                    const prs = parseResult.data;
+                    const output = `## Recent Pull Requests\n\n${prs.map(pr =>
                         `- **#${pr.number}** ${pr.title} (${pr.state}) by @${pr.author.login}`
                     ).join('\n')}`;
 
