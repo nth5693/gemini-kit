@@ -1,6 +1,6 @@
 {
     "name": "gemini-kit",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "description": "Super Engineer - Team of AI Agents for software development",
     "contextFileName": "GEMINI.md",
     "mcpServers": {

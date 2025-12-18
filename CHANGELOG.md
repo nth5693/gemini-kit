@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2024-12-18
+
+### Refactored
+- **kit-server.ts**: Reduced from 418 to 260 lines
+- **Extracted Modules**:
+  - `core.ts` - Project context, handoff, artifact tools (100% coverage)
+  - `config.ts` - Configuration utilities (100% coverage)
+- **Async File Scanning**: Added `findFilesAsync` for non-blocking file operations
+
+### Added
+- `core.test.ts` - 8 tests for core tools
+- `config.test.ts` - 6 tests for config utilities
+
+### Stats
+- **Tests**: 251 passing
+- **Coverage**: 86.54%
+
+---
+
 ## [2.1.0] - 2024-12-18
 
 ### Improved

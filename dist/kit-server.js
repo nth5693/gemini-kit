@@ -3223,8 +3223,8 @@ var require_utils = __commonJS({
       }
       return ind;
     }
-    function removeDotSegments(path6) {
-      let input = path6;
+    function removeDotSegments(path7) {
+      let input = path7;
       const output = [];
       let nextSlash = -1;
       let len = 0;
@@ -3423,8 +3423,8 @@ var require_schemes = __commonJS({
         wsComponent.secure = void 0;
       }
       if (wsComponent.resourceName) {
-        const [path6, query] = wsComponent.resourceName.split("?");
-        wsComponent.path = path6 && path6 !== "/" ? path6 : void 0;
+        const [path7, query] = wsComponent.resourceName.split("?");
+        wsComponent.path = path7 && path7 !== "/" ? path7 : void 0;
         wsComponent.query = query;
         wsComponent.resourceName = void 0;
       }
@@ -6777,12 +6777,12 @@ var require_dist = __commonJS({
         throw new Error(`Unknown format "${name}"`);
       return f;
     };
-    function addFormats(ajv, list, fs6, exportName) {
+    function addFormats(ajv, list, fs7, exportName) {
       var _a;
       var _b;
       (_a = (_b = ajv.opts.code).formats) !== null && _a !== void 0 ? _a : _b.formats = (0, codegen_1._)`require("ajv-formats/dist/formats").${exportName}`;
       for (const f of list)
-        ajv.addFormat(f, fs6[f]);
+        ajv.addFormat(f, fs7[f]);
     }
     module.exports = exports = formatsPlugin;
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -7268,8 +7268,8 @@ function getErrorMap() {
 
 // node_modules/zod/v3/helpers/parseUtil.js
 var makeIssue = (params) => {
-  const { data, path: path6, errorMaps, issueData } = params;
-  const fullPath = [...path6, ...issueData.path || []];
+  const { data, path: path7, errorMaps, issueData } = params;
+  const fullPath = [...path7, ...issueData.path || []];
   const fullIssue = {
     ...issueData,
     path: fullPath
@@ -7385,11 +7385,11 @@ var errorUtil;
 
 // node_modules/zod/v3/types.js
 var ParseInputLazyPath = class {
-  constructor(parent, value, path6, key) {
+  constructor(parent, value, path7, key) {
     this._cachedPath = [];
     this.parent = parent;
     this.data = value;
-    this._path = path6;
+    this._path = path7;
     this._key = key;
   }
   get path() {
@@ -11026,15 +11026,15 @@ function assignProp(target, prop, value) {
     configurable: true
   });
 }
-function getElementAtPath(obj, path6) {
-  if (!path6)
+function getElementAtPath(obj, path7) {
+  if (!path7)
     return obj;
-  return path6.reduce((acc, key) => acc?.[key], obj);
+  return path7.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
-  const promises = keys.map((key) => promisesObj[key]);
-  return Promise.all(promises).then((results) => {
+  const promises2 = keys.map((key) => promisesObj[key]);
+  return Promise.all(promises2).then((results) => {
     const resolvedObj = {};
     for (let i = 0; i < keys.length; i++) {
       resolvedObj[keys[i]] = results[i];
@@ -11349,11 +11349,11 @@ function aborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path6, issues) {
+function prefixIssues(path7, issues) {
   return issues.map((iss) => {
     var _a;
     (_a = iss).path ?? (_a.path = []);
-    iss.path.unshift(path6);
+    iss.path.unshift(path7);
     return iss;
   });
 }
@@ -20805,10 +20805,6 @@ var StdioServerTransport = class {
   }
 };
 
-// src/kit-server.ts
-import * as fs5 from "fs";
-import * as path5 from "path";
-
 // src/tools/git.ts
 import * as fs2 from "fs";
 import * as path2 from "path";
@@ -21174,16 +21170,16 @@ var Diff = class {
       }
     }
   }
-  addToPath(path6, added, removed, oldPosInc, options) {
-    const last = path6.lastComponent;
+  addToPath(path7, added, removed, oldPosInc, options) {
+    const last = path7.lastComponent;
     if (last && !options.oneChangePerToken && last.added === added && last.removed === removed) {
       return {
-        oldPos: path6.oldPos + oldPosInc,
+        oldPos: path7.oldPos + oldPosInc,
         lastComponent: { count: last.count + 1, added, removed, previousComponent: last.previousComponent }
       };
     } else {
       return {
-        oldPos: path6.oldPos + oldPosInc,
+        oldPos: path7.oldPos + oldPosInc,
         lastComponent: { count: 1, added, removed, previousComponent: last }
       };
     }
@@ -22149,9 +22145,176 @@ ${issue2.body || "No description"}`;
   );
 }
 
-// src/tools/team-state.ts
+// src/tools/core.ts
+import * as fs5 from "fs";
+import * as path5 from "path";
+
+// src/tools/config.ts
 import * as fs4 from "fs";
 import * as path4 from "path";
+var DEFAULT_EXTENSIONS = [
+  ".ts",
+  ".js",
+  ".tsx",
+  ".jsx",
+  // JavaScript/TypeScript
+  ".py",
+  // Python
+  ".go",
+  // Go
+  ".rs",
+  // Rust
+  ".java",
+  ".kt",
+  // Java/Kotlin
+  ".cpp",
+  ".c",
+  ".h",
+  ".hpp",
+  // C/C++
+  ".php",
+  // PHP
+  ".rb",
+  // Ruby
+  ".swift",
+  // Swift
+  ".vue",
+  ".svelte",
+  // Frontend frameworks
+  ".json",
+  ".yaml",
+  ".yml",
+  // Config files
+  ".md"
+  // Documentation
+];
+function getFileExtensions(projectDir) {
+  const settings = loadProjectSettings(projectDir);
+  if (settings.fileExtensions && Array.isArray(settings.fileExtensions)) {
+    return settings.fileExtensions;
+  }
+  return DEFAULT_EXTENSIONS;
+}
+function loadProjectSettings(projectDir) {
+  const settingsPath = path4.join(projectDir, ".gemini", "settings.json");
+  if (fs4.existsSync(settingsPath)) {
+    try {
+      return JSON.parse(fs4.readFileSync(settingsPath, "utf-8"));
+    } catch {
+    }
+  }
+  return {};
+}
+
+// src/tools/core.ts
+function registerCoreTools(server2) {
+  server2.tool(
+    "kit_get_project_context",
+    "Gather project context including structure, dependencies, and recent changes",
+    { depth: external_exports.number().optional().default(2).describe("Directory depth to scan") },
+    async ({ depth = 2 }) => {
+      try {
+        const projectDir = process.cwd();
+        const extensions = getFileExtensions(projectDir);
+        const files = findFiles(projectDir, extensions, 50);
+        const structure = files.filter((f) => {
+          const parts = f.split(path5.sep);
+          return parts.length <= depth + 1;
+        });
+        let packageInfo = null;
+        const pkgPath = path5.join(projectDir, "package.json");
+        if (fs5.existsSync(pkgPath)) {
+          try {
+            packageInfo = JSON.parse(fs5.readFileSync(pkgPath, "utf8"));
+          } catch {
+          }
+        }
+        let gitLog = "";
+        try {
+          gitLog = safeGit(["log", "--oneline", "-5"]);
+        } catch {
+        }
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify({
+              structure,
+              package: packageInfo ? {
+                name: packageInfo.name,
+                version: packageInfo.version,
+                dependencies: Object.keys(packageInfo.dependencies || {})
+              } : null,
+              recentCommits: gitLog.split("\n").filter(Boolean)
+            }, null, 2)
+          }]
+        };
+      } catch (error2) {
+        return { content: [{ type: "text", text: `Error getting context: ${error2}` }] };
+      }
+    }
+  );
+  server2.tool(
+    "kit_handoff_agent",
+    "Handoff context to another agent in the workflow",
+    {
+      fromAgent: external_exports.string().describe("Current agent name"),
+      toAgent: external_exports.string().describe("Target agent name"),
+      context: external_exports.string().describe("Context to pass"),
+      artifacts: external_exports.array(external_exports.string()).optional().describe("File paths of artifacts")
+    },
+    async ({ fromAgent, toAgent, context, artifacts }) => {
+      try {
+        const handoffDir = path5.join(process.cwd(), ".gemini-kit", "handoffs");
+        fs5.mkdirSync(handoffDir, { recursive: true });
+        const handoff = {
+          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+          from: fromAgent,
+          to: toAgent,
+          context,
+          artifacts: artifacts || []
+        };
+        const filename = `${Date.now()}-${fromAgent}-${toAgent}.json`;
+        fs5.writeFileSync(path5.join(handoffDir, filename), JSON.stringify(handoff, null, 2));
+        return {
+          content: [{
+            type: "text",
+            text: `\u2705 Handoff from ${fromAgent} \u2192 ${toAgent}
+
+Context: ${context.slice(0, 200)}...`
+          }]
+        };
+      } catch (error2) {
+        return { content: [{ type: "text", text: `Error in handoff: ${error2}` }] };
+      }
+    }
+  );
+  server2.tool(
+    "kit_save_artifact",
+    "Save an artifact (plan, report, log) from agent work",
+    {
+      name: external_exports.string().describe("Artifact name"),
+      type: external_exports.enum(["plan", "report", "log", "other"]).describe("Artifact type"),
+      content: external_exports.string().describe("Artifact content")
+    },
+    async ({ name, type, content }) => {
+      try {
+        const artifactDir = path5.join(process.cwd(), ".gemini-kit", "artifacts", type);
+        fs5.mkdirSync(artifactDir, { recursive: true });
+        const safeName = path5.basename(String(name)).replace(/[^a-zA-Z0-9-_]/g, "-").slice(0, 50);
+        const filename = `${safeName}-${Date.now()}.md`;
+        const filepath = path5.join(artifactDir, filename);
+        fs5.writeFileSync(filepath, content);
+        return { content: [{ type: "text", text: `\u2705 Artifact saved: ${filepath}` }] };
+      } catch (error2) {
+        return { content: [{ type: "text", text: `Error saving artifact: ${error2}` }] };
+      }
+    }
+  );
+}
+
+// src/tools/team-state.ts
+import * as fs6 from "fs";
+import * as path6 from "path";
 
 // src/utils.ts
 function debounce(fn, wait) {
@@ -22177,8 +22340,8 @@ var currentSession = null;
 var config2 = DEFAULT_CONFIG;
 function initTeamState(customConfig) {
   config2 = { ...DEFAULT_CONFIG, ...customConfig };
-  if (!fs4.existsSync(config2.sessionDir)) {
-    fs4.mkdirSync(config2.sessionDir, { recursive: true });
+  if (!fs6.existsSync(config2.sessionDir)) {
+    fs6.mkdirSync(config2.sessionDir, { recursive: true });
   }
   if (!currentSession) {
     const recoveredSession = recoverActiveSession();
@@ -22189,15 +22352,15 @@ function initTeamState(customConfig) {
   }
 }
 function recoverActiveSession() {
-  if (!fs4.existsSync(config2.sessionDir)) {
+  if (!fs6.existsSync(config2.sessionDir)) {
     return null;
   }
   try {
-    const files = fs4.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json")).sort().reverse();
+    const files = fs6.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json")).sort().reverse();
     for (const file of files) {
       try {
-        const filePath = path4.join(config2.sessionDir, file);
-        const data = fs4.readFileSync(filePath, "utf-8");
+        const filePath = path6.join(config2.sessionDir, file);
+        const data = fs6.readFileSync(filePath, "utf-8");
         const session = JSON.parse(data);
         if (session.status === "active") {
           return session;
@@ -22253,8 +22416,8 @@ function endSession(status = "completed") {
 }
 function saveSessionSync() {
   if (!currentSession) return;
-  const filePath = path4.join(config2.sessionDir, `${currentSession.id}.json`);
-  fs4.writeFileSync(filePath, JSON.stringify(currentSession, null, 2));
+  const filePath = path6.join(config2.sessionDir, `${currentSession.id}.json`);
+  fs6.writeFileSync(filePath, JSON.stringify(currentSession, null, 2));
 }
 var debouncedSave = debounce(() => {
   saveSessionSync();
@@ -22268,13 +22431,13 @@ function saveSession(immediate = false) {
   }
 }
 function listSessions() {
-  if (!fs4.existsSync(config2.sessionDir)) {
+  if (!fs6.existsSync(config2.sessionDir)) {
     return [];
   }
-  const files = fs4.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json"));
+  const files = fs6.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json"));
   return files.map((file) => {
     try {
-      const data = fs4.readFileSync(path4.join(config2.sessionDir, file), "utf-8");
+      const data = fs6.readFileSync(path6.join(config2.sessionDir, file), "utf-8");
       return JSON.parse(data);
     } catch {
       return null;
@@ -22567,146 +22730,7 @@ var server = new McpServer({
 registerGitTools(server);
 registerKnowledgeTools(server);
 registerIntegrationTools(server);
-var DEFAULT_EXTENSIONS = [
-  ".ts",
-  ".js",
-  ".tsx",
-  ".jsx",
-  // JavaScript/TypeScript
-  ".py",
-  // Python
-  ".go",
-  // Go
-  ".rs",
-  // Rust
-  ".java",
-  ".kt",
-  // Java/Kotlin
-  ".cpp",
-  ".c",
-  ".h",
-  ".hpp",
-  // C/C++
-  ".php",
-  // PHP
-  ".rb",
-  // Ruby
-  ".swift",
-  // Swift
-  ".vue",
-  ".svelte",
-  // Frontend frameworks
-  ".json",
-  ".yaml",
-  ".yml",
-  // Config files
-  ".md"
-  // Documentation
-];
-function getFileExtensions(projectDir) {
-  const settingsPath = path5.join(projectDir, ".gemini", "settings.json");
-  if (fs5.existsSync(settingsPath)) {
-    try {
-      const settings = JSON.parse(fs5.readFileSync(settingsPath, "utf-8"));
-      if (settings.fileExtensions && Array.isArray(settings.fileExtensions)) {
-        return settings.fileExtensions;
-      }
-    } catch (e) {
-    }
-  }
-  return DEFAULT_EXTENSIONS;
-}
-server.tool(
-  "kit_get_project_context",
-  "Gather project context including structure, dependencies, and recent changes",
-  { depth: external_exports.number().optional().default(2).describe("Directory depth to scan") },
-  async ({ depth = 2 }) => {
-    try {
-      const projectDir = process.cwd();
-      const extensions = getFileExtensions(projectDir);
-      const files = findFiles(projectDir, extensions, 50);
-      const structure = files.filter((f) => {
-        const parts = f.split(path5.sep);
-        return parts.length <= depth + 1;
-      });
-      let packageInfo = null;
-      const pkgPath = path5.join(projectDir, "package.json");
-      if (fs5.existsSync(pkgPath)) {
-        try {
-          packageInfo = JSON.parse(fs5.readFileSync(pkgPath, "utf8"));
-        } catch {
-        }
-      }
-      let gitLog = "";
-      try {
-        gitLog = safeGit(["log", "--oneline", "-5"]);
-      } catch {
-      }
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            structure,
-            package: packageInfo ? {
-              name: packageInfo.name,
-              version: packageInfo.version,
-              dependencies: Object.keys(packageInfo.dependencies || {})
-            } : null,
-            recentCommits: gitLog.split("\n").filter(Boolean)
-          }, null, 2)
-        }]
-      };
-    } catch (error2) {
-      return { content: [{ type: "text", text: `Error getting context: ${error2}` }] };
-    }
-  }
-);
-server.tool(
-  "kit_handoff_agent",
-  "Handoff context to another agent in the workflow",
-  {
-    fromAgent: external_exports.string().describe("Current agent name"),
-    toAgent: external_exports.string().describe("Target agent name"),
-    context: external_exports.string().describe("Context to pass"),
-    artifacts: external_exports.array(external_exports.string()).optional().describe("File paths of artifacts")
-  },
-  async ({ fromAgent, toAgent, context, artifacts }) => {
-    try {
-      const handoffDir = path5.join(process.cwd(), ".gemini-kit", "handoffs");
-      fs5.mkdirSync(handoffDir, { recursive: true });
-      const handoff = { timestamp: (/* @__PURE__ */ new Date()).toISOString(), from: fromAgent, to: toAgent, context, artifacts: artifacts || [] };
-      const filename = `${Date.now()}-${fromAgent}-${toAgent}.json`;
-      fs5.writeFileSync(path5.join(handoffDir, filename), JSON.stringify(handoff, null, 2));
-      return { content: [{ type: "text", text: `\u2705 Handoff from ${fromAgent} \u2192 ${toAgent}
-
-Context: ${context.slice(0, 200)}...` }] };
-    } catch (error2) {
-      return { content: [{ type: "text", text: `Error in handoff: ${error2}` }] };
-    }
-  }
-);
-server.tool(
-  "kit_save_artifact",
-  "Save an artifact (plan, report, log) from agent work",
-  {
-    name: external_exports.string().describe("Artifact name"),
-    type: external_exports.enum(["plan", "report", "log", "other"]).describe("Artifact type"),
-    content: external_exports.string().describe("Artifact content")
-  },
-  async ({ name, type, content }) => {
-    try {
-      const artifactDir = path5.join(process.cwd(), ".gemini-kit", "artifacts", type);
-      fs5.mkdirSync(artifactDir, { recursive: true });
-      const safeName = path5.basename(String(name)).replace(/[^a-zA-Z0-9-_]/g, "-").slice(0, 50);
-      const filename = `${safeName}-${Date.now()}.md`;
-      const filepath = path5.join(artifactDir, filename);
-      fs5.writeFileSync(filepath, content);
-      return { content: [{ type: "text", text: `\u2705 Artifact saved: ${filepath}` }] };
-    } catch (error2) {
-      return { content: [{ type: "text", text: `Error saving artifact: ${error2}` }] };
-    }
-  }
-);
+registerCoreTools(server);
 initOrchestrator({ maxRetries: 3, autoRetry: true, verbose: false });
 server.tool(
   "kit_team_start",

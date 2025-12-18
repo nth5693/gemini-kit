@@ -130,3 +130,47 @@ export function findFiles(
     walk(dir);
     return results;
 }
+
+/**
+ * Async file finder - non-blocking for large repos
+ * Uses fs.promises.readdir to avoid blocking event loop
+ */
+export async function findFilesAsync(
+    dir: string,
+    extensions: string[],
+    maxFiles: number,
+    excludeDirs: string[] = ['node_modules', '.git', 'dist', 'build', 'coverage']
+): Promise<string[]> {
+    const results: string[] = [];
+
+    async function walk(currentDir: string, relativePath: string = ''): Promise<void> {
+        if (results.length >= maxFiles) return;
+
+        let entries;
+        try {
+            entries = await fs.promises.readdir(currentDir, { withFileTypes: true });
+        } catch {
+            return; // Skip directories we can't read
+        }
+
+        for (const entry of entries) {
+            if (results.length >= maxFiles) return;
+
+            const fullPath = path.join(currentDir, entry.name);
+            const relPath = relativePath ? path.join(relativePath, entry.name) : entry.name;
+
+            if (entry.isDirectory()) {
+                if (!excludeDirs.includes(entry.name)) {
+                    await walk(fullPath, relPath);
+                }
+            } else if (entry.isFile()) {
+                if (extensions.some(ext => entry.name.endsWith(ext))) {
+                    results.push(relPath);
+                }
+            }
+        }
+    }
+
+    await walk(dir);
+    return results;
+}

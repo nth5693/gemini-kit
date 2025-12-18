@@ -4,21 +4,31 @@
  * Provides custom tools for agent orchestration
  * 
  * Modular architecture - tools split into separate modules
- * 
- * FIX 9.3: Cross-platform compatible (no Unix shell commands)
+ * Refactored: Core tools moved to tools/core.ts
  */
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import * as fs from 'fs';
-import * as path from 'path';
 
-// Import tool modules
+// Import modular tool registrations
 import { registerGitTools } from './tools/git.js';
 import { registerKnowledgeTools } from './tools/knowledge.js';
 import { registerIntegrationTools } from './tools/integration.js';
-import { safeGit, findFiles } from './tools/security.js';
+import { registerCoreTools } from './tools/core.js';
+
+// Orchestration imports
+import {
+    initOrchestrator,
+    teamStart,
+    teamStatus,
+    teamEnd,
+    runWorkflow,
+    smartRoute,
+    getSessionHistory,
+} from './tools/orchestrator.js';
+
+import { listWorkflows } from './tools/workflows.js';
 
 const server = new McpServer({
     name: 'gemini-kit-agents',
@@ -28,182 +38,19 @@ const server = new McpServer({
 // ═══════════════════════════════════════════════════════════════
 // REGISTER MODULAR TOOLS
 // ═══════════════════════════════════════════════════════════════
-registerGitTools(server);           // Tools 1, 2, 6, 11
-registerKnowledgeTools(server);     // Tools 7, 8, 9, 10, 12, 13
-registerIntegrationTools(server);   // Tools 14, 15, 16, 17
-
-// ═══════════════════════════════════════════════════════════════
-// TOOL 3: GET PROJECT CONTEXT (FIX 9.3 - Cross-platform)
-// ═══════════════════════════════════════════════════════════════
-
-// Default file extensions - expanded to support more languages
-const DEFAULT_EXTENSIONS = [
-    '.ts', '.js', '.tsx', '.jsx',   // JavaScript/TypeScript
-    '.py',                           // Python
-    '.go',                           // Go
-    '.rs',                           // Rust
-    '.java', '.kt',                  // Java/Kotlin
-    '.cpp', '.c', '.h', '.hpp',      // C/C++
-    '.php',                          // PHP
-    '.rb',                           // Ruby
-    '.swift',                        // Swift
-    '.vue', '.svelte',               // Frontend frameworks
-    '.json', '.yaml', '.yml',        // Config files
-    '.md',                           // Documentation
-];
-
-/**
- * Get file extensions - from settings.json or defaults
- * Allows project-specific customization
- */
-function getFileExtensions(projectDir: string): string[] {
-    const settingsPath = path.join(projectDir, '.gemini', 'settings.json');
-
-    if (fs.existsSync(settingsPath)) {
-        try {
-            const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
-            if (settings.fileExtensions && Array.isArray(settings.fileExtensions)) {
-                return settings.fileExtensions;
-            }
-        } catch (e) {
-            // Use default on error
-        }
-    }
-
-    return DEFAULT_EXTENSIONS;
-}
-
-server.tool(
-    'kit_get_project_context',
-    'Gather project context including structure, dependencies, and recent changes',
-    { depth: z.number().optional().default(2).describe('Directory depth to scan') },
-    async ({ depth = 2 }) => {
-        try {
-            // FIX 9.3: Use cross-platform findFiles instead of Unix shell commands
-            const projectDir = process.cwd();
-            const extensions = getFileExtensions(projectDir); // Configurable!
-            const files = findFiles(projectDir, extensions, 50);
-
-            // Filter by depth (approximate)
-            const structure = files.filter(f => {
-                const parts = f.split(path.sep);
-                return parts.length <= depth + 1;
-            });
-
-            let packageInfo = null;
-            const pkgPath = path.join(projectDir, 'package.json');
-            if (fs.existsSync(pkgPath)) {
-                try {
-                    packageInfo = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-                } catch { /* parse error, ignore */ }
-            }
-
-            let gitLog = '';
-            try {
-                gitLog = safeGit(['log', '--oneline', '-5']);
-            } catch { /* no git log, ignore */ }
-
-            return {
-                content: [{
-                    type: 'text' as const,
-                    text: JSON.stringify({
-                        structure: structure,
-                        package: packageInfo ? {
-                            name: packageInfo.name,
-                            version: packageInfo.version,
-                            dependencies: Object.keys(packageInfo.dependencies || {})
-                        } : null,
-                        recentCommits: gitLog.split('\n').filter(Boolean),
-                    }, null, 2),
-                }],
-            };
-        } catch (error) {
-            return { content: [{ type: 'text' as const, text: `Error getting context: ${error}` }] };
-        }
-    }
-);
-
-// ═══════════════════════════════════════════════════════════════
-// TOOL 4: HANDOFF AGENT
-// ═══════════════════════════════════════════════════════════════
-server.tool(
-    'kit_handoff_agent',
-    'Handoff context to another agent in the workflow',
-    {
-        fromAgent: z.string().describe('Current agent name'),
-        toAgent: z.string().describe('Target agent name'),
-        context: z.string().describe('Context to pass'),
-        artifacts: z.array(z.string()).optional().describe('File paths of artifacts'),
-    },
-    async ({ fromAgent, toAgent, context, artifacts }) => {
-        try {
-            const handoffDir = path.join(process.cwd(), '.gemini-kit', 'handoffs');
-            fs.mkdirSync(handoffDir, { recursive: true });
-
-            const handoff = { timestamp: new Date().toISOString(), from: fromAgent, to: toAgent, context, artifacts: artifacts || [] };
-            const filename = `${Date.now()}-${fromAgent}-${toAgent}.json`;
-            fs.writeFileSync(path.join(handoffDir, filename), JSON.stringify(handoff, null, 2));
-
-            return { content: [{ type: 'text' as const, text: `✅ Handoff from ${fromAgent} → ${toAgent}\n\nContext: ${context.slice(0, 200)}...` }] };
-        } catch (error) {
-            return { content: [{ type: 'text' as const, text: `Error in handoff: ${error}` }] };
-        }
-    }
-);
-
-// ═══════════════════════════════════════════════════════════════
-// TOOL 5: SAVE ARTIFACT
-// ═══════════════════════════════════════════════════════════════
-server.tool(
-    'kit_save_artifact',
-    'Save an artifact (plan, report, log) from agent work',
-    {
-        name: z.string().describe('Artifact name'),
-        type: z.enum(['plan', 'report', 'log', 'other']).describe('Artifact type'),
-        content: z.string().describe('Artifact content'),
-    },
-    async ({ name, type, content }) => {
-        try {
-            const artifactDir = path.join(process.cwd(), '.gemini-kit', 'artifacts', type);
-            fs.mkdirSync(artifactDir, { recursive: true });
-
-            // FIX: Use path.basename and allow only safe characters to prevent path traversal
-            const safeName = path.basename(String(name))
-                .replace(/[^a-zA-Z0-9-_]/g, '-')  // Only alphanumeric, dash, underscore
-                .slice(0, 50);  // Limit length
-            const filename = `${safeName}-${Date.now()}.md`;
-            const filepath = path.join(artifactDir, filename);
-            fs.writeFileSync(filepath, content);
-
-            return { content: [{ type: 'text' as const, text: `✅ Artifact saved: ${filepath}` }] };
-        } catch (error) {
-            return { content: [{ type: 'text' as const, text: `Error saving artifact: ${error}` }] };
-        }
-    }
-);
-
-// ═══════════════════════════════════════════════════════════════
-// ORCHESTRATION TOOLS (Phase 11)
-// ═══════════════════════════════════════════════════════════════
-
-import {
-    initOrchestrator,
-    teamStart,
-    teamStatus,
-    teamEnd,
-    runWorkflow,
-    smartRoute,
-    handleStepFailure,
-    getSessionHistory,
-    getCollaborationPrompt,
-} from './tools/orchestrator.js';
-
-import { listWorkflows } from './tools/workflows.js';
+registerGitTools(server);           // Checkpoint, restore, list, rollback
+registerKnowledgeTools(server);     // Learning, diff, search tools
+registerIntegrationTools(server);   // GitHub, Jira tools
+registerCoreTools(server);          // Project context, handoff, artifact
 
 // Initialize orchestrator
 initOrchestrator({ maxRetries: 3, autoRetry: true, verbose: false });
 
-// TOOL 18: Start Team Session
+// ═══════════════════════════════════════════════════════════════
+// ORCHESTRATION TOOLS
+// ═══════════════════════════════════════════════════════════════
+
+// TOOL: Start Team Session
 server.tool(
     'kit_team_start',
     'Start a new team session with a goal. AI will suggest best workflow.',
@@ -235,7 +82,7 @@ Use \`kit_run_workflow\` to start the workflow or \`kit_team_status\` to check p
     }
 );
 
-// TOOL 19: Get Team Status
+// TOOL: Get Team Status
 server.tool(
     'kit_team_status',
     'Get current team session status and progress',
@@ -257,7 +104,7 @@ server.tool(
     }
 );
 
-// TOOL 20: End Team Session
+// TOOL: End Team Session
 server.tool(
     'kit_team_end',
     'End current team session and get summary',
@@ -281,7 +128,7 @@ server.tool(
     }
 );
 
-// TOOL 21: Run Workflow
+// TOOL: Run Workflow
 server.tool(
     'kit_run_workflow',
     'Execute a complete workflow (cook, quickfix, feature, refactor, review, tdd, docs)',
@@ -321,7 +168,7 @@ Execute each step in order. Use \`kit_team_status\` to track progress.`,
     }
 );
 
-// TOOL 22: Smart Route
+// TOOL: Smart Route
 server.tool(
     'kit_smart_route',
     'Analyze task and auto-select best workflow',
@@ -355,7 +202,7 @@ Use \`kit_run_workflow\` with workflow="${result.workflow.name}" to start.`,
     }
 );
 
-// TOOL 23: List Workflows
+// TOOL: List Workflows
 server.tool(
     'kit_list_workflows',
     'List all available workflows',
@@ -379,7 +226,7 @@ Use \`kit_run_workflow\` with the workflow name to execute.`,
     }
 );
 
-// TOOL 24: Session History
+// TOOL: Session History
 server.tool(
     'kit_session_history',
     'Get history of past team sessions',
