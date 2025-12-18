@@ -8,7 +8,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// FIX: Use os.homedir() for proper cross-platform support
+// Cross-platform home directory
 export const homeDir = os.homedir();
 
 /**
@@ -16,7 +16,7 @@ export const homeDir = os.homedir();
  * Removes dangerous characters but keeps quotes (safe with execFileSync)
  */
 export function sanitize(input: string): string {
-    // FIX: Keep quotes - execFileSync with array args handles them safely
+    // Note: execFileSync with array args handles quotes safely, so we only
     // Only remove shell operators that are dangerous
     return String(input)
         .replace(/[;&|`$(){}[\]<>\\!#*?]/g, '')
