@@ -20868,30 +20868,32 @@ function commandExists(cmd) {
 }
 function findFiles(dir, extensions, maxFiles, excludeDirs = ["node_modules", ".git", "dist", "build", "coverage"]) {
   const results = [];
-  function walk(currentDir, relativePath = "") {
-    if (results.length >= maxFiles) return;
+  const queue = [
+    { fullPath: dir, relativePath: "" }
+  ];
+  while (queue.length > 0 && results.length < maxFiles) {
+    const current = queue.shift();
     let entries;
     try {
-      entries = fs.readdirSync(currentDir, { withFileTypes: true });
+      entries = fs.readdirSync(current.fullPath, { withFileTypes: true });
     } catch {
-      return;
+      continue;
     }
     for (const entry of entries) {
-      if (results.length >= maxFiles) return;
-      const fullPath = path.join(currentDir, entry.name);
-      const relPath = relativePath ? path.join(relativePath, entry.name) : entry.name;
+      if (results.length >= maxFiles) break;
+      const entryFullPath = path.join(current.fullPath, entry.name);
+      const entryRelPath = current.relativePath ? path.join(current.relativePath, entry.name) : entry.name;
       if (entry.isDirectory()) {
         if (!excludeDirs.includes(entry.name)) {
-          walk(fullPath, relPath);
+          queue.push({ fullPath: entryFullPath, relativePath: entryRelPath });
         }
       } else if (entry.isFile()) {
         if (extensions.some((ext) => entry.name.endsWith(ext))) {
-          results.push(relPath);
+          results.push(entryRelPath);
         }
       }
     }
   }
-  walk(dir);
   return results;
 }
 async function findFilesAsync(dir, extensions, maxFiles, excludeDirs = ["node_modules", ".git", "dist", "build", "coverage"]) {
@@ -21533,7 +21535,8 @@ var DiffDataSchema = external_exports.object({
 });
 function validatePath(filePath, baseDir = process.cwd()) {
   const resolved = path3.resolve(baseDir, filePath);
-  if (!resolved.startsWith(path3.resolve(baseDir))) {
+  const root = path3.resolve(baseDir);
+  if (resolved !== root && !resolved.startsWith(root + path3.sep)) {
     throw new Error(`Path traversal detected: ${filePath}`);
   }
   return resolved;
@@ -22518,6 +22521,7 @@ function listSessions() {
       const data = fs6.readFileSync(path6.join(config2.sessionDir, file), "utf-8");
       return JSON.parse(data);
     } catch {
+      console.warn(`[gemini-kit] Skipping corrupted session file: ${file}`);
       return null;
     }
   }).filter((s) => s !== null).sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());

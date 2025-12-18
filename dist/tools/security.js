@@ -86,40 +86,42 @@ export function commandExists(cmd) {
 }
 /**
  * Cross-platform file finder (replaces Unix-only find/grep/head)
- * Works on Windows, macOS, Linux
+ * MEDIUM 2: Uses iterative queue-based approach to prevent stack overflow
  */
 export function findFiles(dir, extensions, maxFiles, excludeDirs = ['node_modules', '.git', 'dist', 'build', 'coverage']) {
     const results = [];
-    function walk(currentDir, relativePath = '') {
-        if (results.length >= maxFiles)
-            return;
+    // Use queue instead of recursion to prevent stack overflow on deep dirs
+    const queue = [
+        { fullPath: dir, relativePath: '' }
+    ];
+    while (queue.length > 0 && results.length < maxFiles) {
+        const current = queue.shift();
         let entries;
         try {
-            entries = fs.readdirSync(currentDir, { withFileTypes: true });
+            entries = fs.readdirSync(current.fullPath, { withFileTypes: true });
         }
         catch {
-            return; // Skip directories we can't read
+            continue; // Skip directories we can't read
         }
         for (const entry of entries) {
             if (results.length >= maxFiles)
-                return;
-            const fullPath = path.join(currentDir, entry.name);
-            const relPath = relativePath ? path.join(relativePath, entry.name) : entry.name;
+                break;
+            const entryFullPath = path.join(current.fullPath, entry.name);
+            const entryRelPath = current.relativePath
+                ? path.join(current.relativePath, entry.name)
+                : entry.name;
             if (entry.isDirectory()) {
-                // Skip excluded directories
                 if (!excludeDirs.includes(entry.name)) {
-                    walk(fullPath, relPath);
+                    queue.push({ fullPath: entryFullPath, relativePath: entryRelPath });
                 }
             }
             else if (entry.isFile()) {
-                // Check extension
                 if (extensions.some(ext => entry.name.endsWith(ext))) {
-                    results.push(relPath);
+                    results.push(entryRelPath);
                 }
             }
         }
     }
-    walk(dir);
     return results;
 }
 /**

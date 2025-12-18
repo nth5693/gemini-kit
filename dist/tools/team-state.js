@@ -211,14 +211,15 @@ export function listSessions() {
         return [];
     }
     const files = fs.readdirSync(config.sessionDir).filter((f) => f.endsWith('.json'));
-    // FIX: Add try/catch to handle corrupted JSON files
+    // FIX LOW 2: Add warning for corrupted JSON files to help debug state issues
     return files.map((file) => {
         try {
             const data = fs.readFileSync(path.join(config.sessionDir, file), 'utf-8');
             return JSON.parse(data);
         }
         catch {
-            return null; // Skip corrupted files
+            console.warn(`[gemini-kit] Skipping corrupted session file: ${file}`);
+            return null;
         }
     })
         .filter((s) => s !== null)

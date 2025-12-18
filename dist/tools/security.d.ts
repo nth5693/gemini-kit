@@ -34,7 +34,7 @@ export declare function safeGh(args: string[], options?: {
 export declare function commandExists(cmd: string): boolean;
 /**
  * Cross-platform file finder (replaces Unix-only find/grep/head)
- * Works on Windows, macOS, Linux
+ * MEDIUM 2: Uses iterative queue-based approach to prevent stack overflow
  */
 export declare function findFiles(dir: string, extensions: string[], maxFiles: number, excludeDirs?: string[]): string[];
 /**

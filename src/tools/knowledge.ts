@@ -33,12 +33,17 @@ const DiffDataSchema = z.object({
 });
 
 /**
- * FIX: Validate file path to prevent path traversal attacks
- * Ensures the resolved path stays within the project directory
+ * FIX HIGH 2: Validate file path to prevent path traversal attacks
+ * Uses stricter path.sep check to prevent prefix matching flaws
+ * (e.g., /tmp/app should not match /tmp/app-secret)
+ * Exported for testability (LOW 3)
  */
-function validatePath(filePath: string, baseDir: string = process.cwd()): string {
+export function validatePath(filePath: string, baseDir: string = process.cwd()): string {
     const resolved = path.resolve(baseDir, filePath);
-    if (!resolved.startsWith(path.resolve(baseDir))) {
+    const root = path.resolve(baseDir);
+
+    // Stricter: exact match OR starts with root + separator
+    if (resolved !== root && !resolved.startsWith(root + path.sep)) {
         throw new Error(`Path traversal detected: ${filePath}`);
     }
     return resolved;

@@ -278,13 +278,14 @@ export function listSessions(): TeamSession[] {
 
     const files = fs.readdirSync(config.sessionDir).filter((f: string) => f.endsWith('.json'));
 
-    // FIX: Add try/catch to handle corrupted JSON files
+    // FIX LOW 2: Add warning for corrupted JSON files to help debug state issues
     return files.map((file: string) => {
         try {
             const data = fs.readFileSync(path.join(config.sessionDir, file), 'utf-8');
             return JSON.parse(data) as TeamSession;
         } catch {
-            return null; // Skip corrupted files
+            console.warn(`[gemini-kit] Skipping corrupted session file: ${file}`);
+            return null;
         }
     })
         .filter((s): s is TeamSession => s !== null)
