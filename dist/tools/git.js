@@ -22,7 +22,7 @@ export function checkGitAvailable() {
         }).trim();
         return { available: true, version };
     }
-    catch (err) {
+    catch (_err) {
         return {
             available: false,
             error: 'Git is not installed or not in PATH. Please install Git: https://git-scm.com/downloads'

@@ -10,7 +10,6 @@
  */
 
 import * as https from 'https';
-import * as url from 'url';
 
 async function sendDiscord(webhookUrl, message, title = 'Gemini-Kit') {
     const payload = JSON.stringify({

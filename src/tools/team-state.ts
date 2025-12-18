@@ -90,12 +90,12 @@ function recoverActiveSession(): TeamSession | null {
                 if (session.status === 'active') {
                     return session;
                 }
-            } catch (e) {
+            } catch (_e) {
                 // Skip corrupted files
                 continue;
             }
         }
-    } catch (e) {
+    } catch (_e) {
         // Session directory read error, ignore
     }
 

@@ -4,7 +4,6 @@
  * Auto-run tests after code changes
  */
 
-import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -41,7 +40,7 @@ async function main(input) {
         `${base}.spec${ext}`,
     ];
 
-    const fullPath = path.isAbsolute(filePath) ? filePath : path.join(projectDir, filePath);
+    const _fullPath = path.isAbsolute(filePath) ? filePath : path.join(projectDir, filePath);
     const testFile = testFiles.find(f => {
         const testPath = path.isAbsolute(f) ? f : path.join(projectDir, f);
         return fs.existsSync(testPath);

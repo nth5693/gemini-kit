@@ -53,13 +53,13 @@ function recoverActiveSession() {
                     return session;
                 }
             }
-            catch (e) {
+            catch (_e) {
                 // Skip corrupted files
                 continue;
             }
         }
     }
-    catch (e) {
+    catch (_e) {
         // Session directory read error, ignore
     }
     return null;

@@ -21,15 +21,7 @@ const PrListItemSchema = z.object({
     state: z.string(),
     author: z.object({ login: z.string() }),
 });
-const IssueDetailSchema = z.object({
-    number: z.number(),
-    title: z.string(),
-    body: z.string().nullable(),
-    state: z.string(),
-    author: z.object({ login: z.string() }),
-    labels: z.array(z.object({ name: z.string() })),
-    comments: z.number(),
-});
+// Note: IssueDetailSchema reserved for future kit_github_get_issue tool
 export function registerIntegrationTools(server) {
     // TOOL 14: GITHUB CREATE PR
     server.tool('kit_github_create_pr', 'Create a Pull Request on GitHub using gh CLI', {

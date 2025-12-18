@@ -54,7 +54,6 @@ describe('Knowledge Tools - validatePath', () => {
     });
 
     it('should detect path traversal attack with ../', () => {
-        const baseDir = '/Users/test/project';
         const maliciousPath = '../../../etc/passwd';
 
         // Simulate path resolution
@@ -266,7 +265,7 @@ describe('Knowledge Tools - kit_apply_stored_diff', () => {
 
     it('should detect conflicts', async () => {
         const Diff = await import('diff');
-        vi.mocked(Diff.applyPatch).mockReturnValue(false as any);
+        vi.mocked(Diff.applyPatch).mockReturnValue(false as unknown as string);
 
         const result = Diff.applyPatch('content', 'conflicting patch');
         expect(result).toBe(false);
@@ -286,7 +285,6 @@ describe('Knowledge Tools - kit_search_codebase', () => {
     });
 
     it('should search with exact string', () => {
-        const files = ['src/index.ts', 'src/utils.ts'];
         const searchTerm = 'function';
 
         const content = 'function test() { return true; }';  // Use value directly

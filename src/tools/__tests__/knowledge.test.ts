@@ -3,7 +3,7 @@
  * Tests for validatePath and learning functions
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import * as path from 'path';
 
 // We'll test the validatePath function directly by recreating its logic

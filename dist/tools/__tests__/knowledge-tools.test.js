@@ -46,7 +46,6 @@ describe('Knowledge Tools - validatePath', () => {
         expect(resolved.startsWith(baseDir)).toBe(true);
     });
     it('should detect path traversal attack with ../', () => {
-        const baseDir = '/Users/test/project';
         const maliciousPath = '../../../etc/passwd';
         // Simulate path resolution
         const parts = maliciousPath.split('/');
@@ -228,7 +227,6 @@ describe('Knowledge Tools - kit_search_codebase', () => {
         vi.clearAllMocks();
     });
     it('should search with exact string', () => {
-        const files = ['src/index.ts', 'src/utils.ts'];
         const searchTerm = 'function';
         const content = 'function test() { return true; }'; // Use value directly
         expect(content).toContain(searchTerm);

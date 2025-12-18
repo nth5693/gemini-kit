@@ -9,9 +9,9 @@ import * as path from 'path';
 
 async function main(input) {
     // Parse input safely
-    let data;
+    let _data;
     try {
-        data = JSON.parse(input);
+        _data = JSON.parse(input);
     } catch {
         console.log(JSON.stringify({}));
         process.exit(0);

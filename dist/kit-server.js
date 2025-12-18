@@ -20903,7 +20903,7 @@ function checkGitAvailable() {
       stdio: ["pipe", "pipe", "pipe"]
     }).trim();
     return { available: true, version: version2 };
-  } catch (err) {
+  } catch (_err) {
     return {
       available: false,
       error: "Git is not installed or not in PATH. Please install Git: https://git-scm.com/downloads"
@@ -21942,15 +21942,6 @@ var PrListItemSchema = external_exports.object({
   state: external_exports.string(),
   author: external_exports.object({ login: external_exports.string() })
 });
-var IssueDetailSchema = external_exports.object({
-  number: external_exports.number(),
-  title: external_exports.string(),
-  body: external_exports.string().nullable(),
-  state: external_exports.string(),
-  author: external_exports.object({ login: external_exports.string() }),
-  labels: external_exports.array(external_exports.object({ name: external_exports.string() })),
-  comments: external_exports.number()
-});
 function registerIntegrationTools(server2) {
   server2.tool(
     "kit_github_create_pr",
@@ -22424,11 +22415,11 @@ function recoverActiveSession() {
         if (session.status === "active") {
           return session;
         }
-      } catch (e) {
+      } catch (_e) {
         continue;
       }
     }
-  } catch (e) {
+  } catch (_e) {
   }
   return null;
 }

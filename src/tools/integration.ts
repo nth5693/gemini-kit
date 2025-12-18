@@ -5,7 +5,6 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { execSync } from 'child_process';
 import { sanitize, safeGh, commandExists } from './security.js';
 
 // Zod schemas for GitHub CLI responses (MEDIUM 3: Validate JSON)
@@ -27,15 +26,7 @@ const PrListItemSchema = z.object({
     author: z.object({ login: z.string() }),
 });
 
-const IssueDetailSchema = z.object({
-    number: z.number(),
-    title: z.string(),
-    body: z.string().nullable(),
-    state: z.string(),
-    author: z.object({ login: z.string() }),
-    labels: z.array(z.object({ name: z.string() })),
-    comments: z.number(),
-});
+// Note: IssueDetailSchema reserved for future kit_github_get_issue tool
 
 export function registerIntegrationTools(server: McpServer): void {
     // TOOL 14: GITHUB CREATE PR

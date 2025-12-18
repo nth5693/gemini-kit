@@ -41,7 +41,7 @@ describe('WORKFLOWS', () => {
         });
 
         it('all workflows should have valid structure', () => {
-            for (const [name, workflow] of Object.entries(WORKFLOWS)) {
+            for (const [, workflow] of Object.entries(WORKFLOWS)) {
                 expect(workflow).toHaveProperty('name');
                 expect(workflow).toHaveProperty('description');
                 expect(workflow).toHaveProperty('steps');
@@ -152,7 +152,7 @@ describe('WORKFLOWS', () => {
 });
 
 describe('WorkflowStep validation', () => {
-    let WORKFLOWS: Record<string, any>;
+    let WORKFLOWS: Record<string, Workflow>;
 
     beforeEach(async () => {
         const workflows = await import('../workflows.js');
@@ -160,8 +160,8 @@ describe('WorkflowStep validation', () => {
     });
 
     it('steps with fallback onFailure should have fallbackAgent', () => {
-        for (const [name, workflow] of Object.entries(WORKFLOWS)) {
-            for (const step of (workflow as any).steps) {
+        for (const [, workflow] of Object.entries(WORKFLOWS)) {
+            for (const step of workflow.steps) {
                 if (step.onFailure === 'fallback') {
                     expect(step.fallbackAgent).toBeDefined();
                 }
@@ -176,8 +176,8 @@ describe('WorkflowStep validation', () => {
             'scout-frontend', 'scout-backend', 'scout-tests'
         ];
 
-        for (const [name, workflow] of Object.entries(WORKFLOWS)) {
-            for (const step of (workflow as any).steps) {
+        for (const [, workflow] of Object.entries(WORKFLOWS)) {
+            for (const step of workflow.steps) {
                 expect(knownAgents).toContain(step.agent);
             }
         }

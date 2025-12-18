@@ -14,7 +14,7 @@ import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Diff from 'diff';
-import { sanitize, homeDir, findFiles } from './security.js';
+import { homeDir, findFiles } from './security.js';
 
 // Constants
 const LEARNING_START = '<!-- LEARNING_START';
