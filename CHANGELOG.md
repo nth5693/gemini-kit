@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2024-12-18
+
+### Improved
+- **Type Safety**: Removed `eslint-disable` from 13 test files
+  - Added proper TypeScript interfaces: `ToolHandler`, `RegisteredTool`, `MockMcpServer`
+  - Used `ReturnType<typeof vi.fn>` for Mock types
+- **Comments**: Fixed confusing "FIX:" comments in `security.ts`
+- **Test Coverage**: 237 tests passing, 84.92% coverage
+
+### Fixed
+- Fixed type casting in registration test files
+- Removed unused `mock-types.ts` file
+
+---
+
 ## [2.0.0] - 2024-12-16
 
 ### 🎉 Major Release Highlights
