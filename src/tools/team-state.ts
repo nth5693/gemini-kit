@@ -343,8 +343,15 @@ function saveSession(immediate = false): void {
 
 /**
  * Load session from file
+ * Phase 1 FIX: Validates sessionId format to prevent path traversal
  */
 export function loadSession(sessionId: string): TeamSession | null {
+    // Validate sessionId format: alphanumeric + dashes only
+    if (!/^[a-zA-Z0-9-]+$/.test(sessionId)) {
+        console.error(`[gemini-kit] Invalid sessionId format: ${sessionId}`);
+        return null;
+    }
+
     const filePath = path.join(config.sessionDir, `${sessionId}.json`);
 
     if (!fs.existsSync(filePath)) {

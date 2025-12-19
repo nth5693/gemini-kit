@@ -66,6 +66,7 @@ export declare function canRetry(): boolean;
 export declare function endSession(status?: 'completed' | 'failed'): TeamSession | null;
 /**
  * Load session from file
+ * Phase 1 FIX: Validates sessionId format to prevent path traversal
  */
 export declare function loadSession(sessionId: string): TeamSession | null;
 /**
