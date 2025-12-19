@@ -51,7 +51,8 @@ describe('Team State', () => {
             const session1 = teamState.startSession('Goal 1');
             // Reset and create another
             vi.resetModules();
-            expect(session1.id).toMatch(/^session-\d+$/);
+            // Session ID format: session-{timestamp}-{uuid-prefix}
+            expect(session1.id).toMatch(/^session-\d+-[a-f0-9]{8}$/);
         });
         it('should set status to active', () => {
             const session = teamState.startSession('Test goal');

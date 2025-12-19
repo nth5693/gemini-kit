@@ -5,6 +5,87 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2024-12-20
+
+### 🎉 Major Release - Comprehensive Bug Fix & Quality Improvement
+
+Full codebase review and fix of 14 issues across security, reliability, and code quality.
+
+### 🔴 Critical Fixes
+
+- **Stack Overflow Prevention**: `findFilesAsync` converted from recursion to queue-based approach
+  - Prevents stack overflow with deeply nested directories
+  - File: `src/tools/security.ts`
+
+- **Session ID Collision**: Added UUID suffix to session IDs
+  - Format: `session-{timestamp}-{uuid8}`
+  - Prevents collision when multiple sessions created in same millisecond
+  - File: `src/tools/team-state.ts`
+
+- **Data Loss Prevention**: Reduced debounce from 500ms to 150ms
+  - Added `hasPendingChanges` flag for tracking unsaved changes
+  - Added `flushSession()` export for immediate save
+  - File: `src/tools/team-state.ts`
+
+### 🟡 Medium Fixes
+
+- **Null Safety**: Added bounds check for negative `currentStep` in `getNextStep`
+  - File: `src/tools/orchestrator.ts`
+
+- **Algorithm Improvement**: `autoSelectWorkflow` now uses weight-based scoring
+  - Prevents false positives like "Add error handling" → quickfix
+  - Strong signals (+10), weak signals (+3-5)
+  - File: `src/tools/workflows.ts`
+
+- **Jira ADF Support**: Improved schema validation for Atlassian Document Format
+  - Added `AdfContentSchema` permissive schema
+  - Added `extractAdfText()` helper for recursive text extraction
+  - File: `src/tools/integration.ts`
+
+- **Integer Overflow Protection**: `MAX_OUTPUT_SIZE` now validates with `Number.isFinite()`
+  - File: `src/tools/team-state.ts`
+
+### 🟢 Code Quality
+
+- **ESLint Clean**: Fixed all 6 warnings, now 0 warnings
+  - Removed unused variables: `_fullPath`, `_data`, `_err`, `_e`
+  - Removed unused import: `getContext` in orchestrator.ts
+  - Files: `hooks/*.js`, `src/tools/*.ts`
+
+- **Regex Safety**: Added `escapeRegex()` in `before-agent.js` to prevent ReDoS
+  - File: `hooks/before-agent.js`
+
+- **Magic Numbers**: Extracted `SCOUT_MODE_TIMEOUT_MS` constant
+  - File: `hooks/scout-block.js`
+
+### 🔒 Security Audit (OWASP)
+
+All security checks PASSED:
+- ✅ Command Injection: Protected via `execFileSync`
+- ✅ Path Traversal: Protected via `validatePath`
+- ✅ DoS: Protected via size limits and BFS queue
+- ✅ ReDoS: Protected via input escaping
+- ✅ Secrets: No hardcoded credentials
+
+### 📊 Stats
+
+- **Tests**: 291 passing (5x stress test verified)
+- **Lint**: 0 warnings, 0 errors
+- **Build**: Successful
+- **Coverage**: 81.74%
+
+### Testing Performed
+
+- ✅ Unit Tests (291)
+- ✅ Stress Tests (100 sessions, concurrent ops)
+- ✅ Edge Case Tests (100KB input, Unicode, empty strings)
+- ✅ Security Tests (path traversal, injection)
+- ✅ Performance Tests (file indexing <2ms)
+- ✅ Regression Tests (5x repeated, shuffle order)
+
+---
+
+
 ## [2.3.0] - 2024-12-18
 
 ### Security

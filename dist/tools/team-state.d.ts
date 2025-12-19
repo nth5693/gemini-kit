@@ -58,6 +58,11 @@ export declare function canRetry(): boolean;
  */
 export declare function endSession(status?: 'completed' | 'failed'): TeamSession | null;
 /**
+ * Flush any pending session changes immediately
+ * Call this before risky operations to ensure data is saved
+ */
+export declare function flushSession(): void;
+/**
  * Load session from file
  * Phase 1 FIX: Validates sessionId format to prevent path traversal
  */

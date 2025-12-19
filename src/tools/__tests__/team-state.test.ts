@@ -71,7 +71,8 @@ describe('Team State', () => {
             // Reset and create another
             vi.resetModules();
 
-            expect(session1.id).toMatch(/^session-\d+$/);
+            // Session ID format: session-{timestamp}-{uuid-prefix}
+            expect(session1.id).toMatch(/^session-\d+-[a-f0-9]{8}$/);
         });
 
         it('should set status to active', () => {

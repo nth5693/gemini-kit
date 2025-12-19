@@ -149,37 +149,41 @@ export function findFiles(dir, extensions, maxFiles, excludeDirs = ['node_module
 }
 /**
  * Async file finder - non-blocking for large repos
- * Uses fs.promises.readdir to avoid blocking event loop
+ * Uses queue-based approach to prevent stack overflow on deep directories
  */
 export async function findFilesAsync(dir, extensions, maxFiles, excludeDirs = ['node_modules', '.git', 'dist', 'build', 'coverage']) {
     const results = [];
-    async function walk(currentDir, relativePath = '') {
-        if (results.length >= maxFiles)
-            return;
+    // Use queue instead of recursion to prevent stack overflow
+    const queue = [
+        { fullPath: dir, relativePath: '' }
+    ];
+    while (queue.length > 0 && results.length < maxFiles) {
+        const current = queue.shift();
         let entries;
         try {
-            entries = await fs.promises.readdir(currentDir, { withFileTypes: true });
+            entries = await fs.promises.readdir(current.fullPath, { withFileTypes: true });
         }
         catch {
-            return; // Skip directories we can't read
+            continue; // Skip directories we can't read
         }
         for (const entry of entries) {
             if (results.length >= maxFiles)
-                return;
-            const fullPath = path.join(currentDir, entry.name);
-            const relPath = relativePath ? path.join(relativePath, entry.name) : entry.name;
+                break;
+            const entryFullPath = path.join(current.fullPath, entry.name);
+            const entryRelPath = current.relativePath
+                ? path.join(current.relativePath, entry.name)
+                : entry.name;
             if (entry.isDirectory()) {
                 if (!excludeDirs.includes(entry.name)) {
-                    await walk(fullPath, relPath);
+                    queue.push({ fullPath: entryFullPath, relativePath: entryRelPath });
                 }
             }
             else if (entry.isFile()) {
                 if (extensions.some(ext => entry.name.endsWith(ext))) {
-                    results.push(relPath);
+                    results.push(entryRelPath);
                 }
             }
         }
     }
-    await walk(dir);
     return results;
 }

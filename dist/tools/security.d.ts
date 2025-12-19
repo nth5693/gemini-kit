@@ -51,6 +51,6 @@ export declare function commandExists(cmd: string): boolean;
 export declare function findFiles(dir: string, extensions: string[], maxFiles: number, excludeDirs?: string[]): string[];
 /**
  * Async file finder - non-blocking for large repos
- * Uses fs.promises.readdir to avoid blocking event loop
+ * Uses queue-based approach to prevent stack overflow on deep directories
  */
 export declare function findFilesAsync(dir: string, extensions: string[], maxFiles: number, excludeDirs?: string[]): Promise<string[]>;

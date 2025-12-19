@@ -19,6 +19,15 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 
 /**
+ * Escape special regex characters to prevent ReDoS
+ * @param {string} str - String to escape
+ * @returns {string} Escaped string safe for RegExp
+ */
+function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * Find learnings relevant to the current prompt
  * @param {string} prompt - User's prompt
  * @param {string} learningsContent - Full learnings file content
@@ -40,7 +49,9 @@ function findRelevantLearnings(prompt, learningsContent, limit = 3) {
         const sectionLower = section.toLowerCase();
 
         for (const term of promptTerms) {
-            const matches = (sectionLower.match(new RegExp(term, 'g')) || []).length;
+            // Escape special regex chars to prevent ReDoS
+            const escapedTerm = escapeRegex(term);
+            const matches = (sectionLower.match(new RegExp(escapedTerm, 'g')) || []).length;
             score += matches;
 
             // Bonus for term in Lesson line

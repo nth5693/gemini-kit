@@ -40,7 +40,6 @@ async function main(input) {
         `${base}.spec${ext}`,
     ];
 
-    const _fullPath = path.isAbsolute(filePath) ? filePath : path.join(projectDir, filePath);
     const testFile = testFiles.find(f => {
         const testPath = path.isAbsolute(f) ? f : path.join(projectDir, f);
         return fs.existsSync(testPath);

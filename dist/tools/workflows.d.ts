@@ -36,6 +36,7 @@ export declare function listWorkflows(): Array<{
 }>;
 /**
  * Smart routing: auto-select workflow based on task description
+ * Uses weight-based scoring to handle ambiguous tasks better
  */
 export declare function autoSelectWorkflow(task: string): {
     workflow: Workflow;

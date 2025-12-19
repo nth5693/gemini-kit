@@ -20876,30 +20876,32 @@ function commandExists(cmd) {
 }
 async function findFilesAsync(dir, extensions, maxFiles, excludeDirs = ["node_modules", ".git", "dist", "build", "coverage"]) {
   const results = [];
-  async function walk(currentDir, relativePath = "") {
-    if (results.length >= maxFiles) return;
+  const queue = [
+    { fullPath: dir, relativePath: "" }
+  ];
+  while (queue.length > 0 && results.length < maxFiles) {
+    const current = queue.shift();
     let entries;
     try {
-      entries = await fs.promises.readdir(currentDir, { withFileTypes: true });
+      entries = await fs.promises.readdir(current.fullPath, { withFileTypes: true });
     } catch {
-      return;
+      continue;
     }
     for (const entry of entries) {
-      if (results.length >= maxFiles) return;
-      const fullPath = path.join(currentDir, entry.name);
-      const relPath = relativePath ? path.join(relativePath, entry.name) : entry.name;
+      if (results.length >= maxFiles) break;
+      const entryFullPath = path.join(current.fullPath, entry.name);
+      const entryRelPath = current.relativePath ? path.join(current.relativePath, entry.name) : entry.name;
       if (entry.isDirectory()) {
         if (!excludeDirs.includes(entry.name)) {
-          await walk(fullPath, relPath);
+          queue.push({ fullPath: entryFullPath, relativePath: entryRelPath });
         }
       } else if (entry.isFile()) {
         if (extensions.some((ext) => entry.name.endsWith(ext))) {
-          results.push(relPath);
+          results.push(entryRelPath);
         }
       }
     }
   }
-  await walk(dir);
   return results;
 }
 
@@ -20911,7 +20913,7 @@ function checkGitAvailable() {
       stdio: ["pipe", "pipe", "pipe"]
     }).trim();
     return { available: true, version: version2 };
-  } catch (_err) {
+  } catch {
     return {
       available: false,
       error: "Git is not installed or not in PATH. Please install Git: https://git-scm.com/downloads"
@@ -21959,6 +21961,11 @@ var PrListItemSchema = external_exports.object({
   state: external_exports.string(),
   author: external_exports.object({ login: external_exports.string() })
 });
+var AdfContentSchema = external_exports.object({
+  type: external_exports.string().optional(),
+  content: external_exports.array(external_exports.unknown()).optional(),
+  text: external_exports.string().optional()
+}).passthrough();
 var JiraFieldsSchema = external_exports.object({
   summary: external_exports.string(),
   status: external_exports.object({ name: external_exports.string() }).optional(),
@@ -21966,9 +21973,15 @@ var JiraFieldsSchema = external_exports.object({
   assignee: external_exports.object({ displayName: external_exports.string() }).nullable().optional(),
   reporter: external_exports.object({ displayName: external_exports.string() }).nullable().optional(),
   issuetype: external_exports.object({ name: external_exports.string() }).optional(),
+  // Handle both plain string and ADF (Atlassian Document Format) structures
   description: external_exports.union([
     external_exports.string(),
-    external_exports.object({ content: external_exports.array(external_exports.object({ content: external_exports.array(external_exports.object({ text: external_exports.string().optional() })).optional() })).optional() })
+    external_exports.object({
+      type: external_exports.string().optional(),
+      version: external_exports.number().optional(),
+      content: external_exports.array(AdfContentSchema).optional()
+    }).passthrough()
+    // Accept any additional ADF fields
   ]).nullable().optional(),
   labels: external_exports.array(external_exports.string()).optional()
 });
@@ -21976,6 +21989,24 @@ var JiraTicketSchema = external_exports.object({
   errorMessages: external_exports.array(external_exports.string()).optional(),
   fields: JiraFieldsSchema
 });
+function extractAdfText(adf) {
+  if (!adf || typeof adf !== "object") return "No description";
+  const content = adf.content;
+  if (!content || !Array.isArray(content)) return "No description";
+  const textParts = [];
+  function extractText(nodes) {
+    for (const node of nodes) {
+      if (typeof node.text === "string") {
+        textParts.push(node.text);
+      }
+      if (Array.isArray(node.content)) {
+        extractText(node.content);
+      }
+    }
+  }
+  extractText(content);
+  return textParts.join(" ") || "No description";
+}
 function registerIntegrationTools(server2) {
   server2.tool(
     "kit_github_create_pr",
@@ -22187,7 +22218,7 @@ ${ticket.errorMessages.join("\n")}`
 **Type:** ${ticket.fields.issuetype?.name || "Unknown"}
 
 ### Description
-${typeof ticket.fields.description === "string" ? ticket.fields.description : ticket.fields.description?.content?.[0]?.content?.[0]?.text || "No description"}
+${typeof ticket.fields.description === "string" ? ticket.fields.description : extractAdfText(ticket.fields.description)}
 
 ### Labels
 ${ticket.fields.labels?.join(", ") || "None"}`;
@@ -22412,6 +22443,7 @@ Context: ${context.slice(0, 200)}...`
 // src/tools/team-state.ts
 import * as fs6 from "fs";
 import * as path6 from "path";
+import * as crypto2 from "crypto";
 
 // src/utils.ts
 function debounce(fn, wait) {
@@ -22560,7 +22592,7 @@ function recoverActiveSession() {
   return null;
 }
 function startSession(goal, name) {
-  const id = `session-${Date.now()}`;
+  const id = `session-${Date.now()}-${crypto2.randomUUID().slice(0, 8)}`;
   currentSession = {
     id,
     name: name || `Team Session ${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`,
@@ -22581,7 +22613,8 @@ function startSession(goal, name) {
 function getCurrentSession() {
   return currentSession;
 }
-var MAX_OUTPUT_SIZE = parseInt(process.env.GEMINI_KIT_MAX_OUTPUT || "51200", 10);
+var parsedMaxOutput = parseInt(process.env.GEMINI_KIT_MAX_OUTPUT || "51200", 10);
+var MAX_OUTPUT_SIZE = Number.isFinite(parsedMaxOutput) && parsedMaxOutput > 0 ? parsedMaxOutput : 51200;
 function addAgentResult(result) {
   if (!currentSession) {
     throw new Error("No active session. Call startSession first.");
@@ -22621,14 +22654,18 @@ function saveSessionSync() {
   const filePath = path6.join(config2.sessionDir, `${currentSession.id}.json`);
   fs6.writeFileSync(filePath, JSON.stringify(currentSession, null, 2));
 }
+var hasPendingChanges = false;
 var debouncedSave = debounce(() => {
   saveSessionSync();
-}, 500);
+  hasPendingChanges = false;
+}, 150);
 function saveSession(immediate = false) {
   if (!currentSession) return;
   if (immediate) {
     saveSessionSync();
+    hasPendingChanges = false;
   } else {
+    hasPendingChanges = true;
     debouncedSave();
   }
 }
@@ -22688,8 +22725,9 @@ function gracefulShutdown() {
   if (currentSession) {
     try {
       saveSessionSync();
+      hasPendingChanges = false;
       console.error("[gemini-kit] Session saved on exit");
-    } catch (_e) {
+    } catch {
     }
   }
 }
@@ -22814,23 +22852,62 @@ function listWorkflows() {
 }
 function autoSelectWorkflow(task) {
   const taskLower = task.toLowerCase();
-  if (/\b(bug|fix|error|issue|crash|broken|not working)\b/.test(taskLower)) {
-    return { workflow: WORKFLOWS.quickfix, confidence: 0.9 };
+  const workflowScores = {
+    quickfix: { score: 0, workflow: WORKFLOWS.quickfix },
+    feature: { score: 0, workflow: WORKFLOWS.feature },
+    refactor: { score: 0, workflow: WORKFLOWS.refactor },
+    review: { score: 0, workflow: WORKFLOWS.review },
+    tdd: { score: 0, workflow: WORKFLOWS.tdd },
+    docs: { score: 0, workflow: WORKFLOWS.docs }
+  };
+  if (/\b(fix|debug|broken|crash|not working)\b/.test(taskLower)) {
+    workflowScores.quickfix.score += 10;
   }
-  if (/\b(feature|add|implement|create|new|build)\b/.test(taskLower)) {
-    return { workflow: WORKFLOWS.feature, confidence: 0.9 };
+  if (/\b(bug|error|issue)\b/.test(taskLower)) {
+    workflowScores.quickfix.score += 3;
   }
-  if (/\b(refactor|clean|improve|optimize|restructure)\b/.test(taskLower)) {
-    return { workflow: WORKFLOWS.refactor, confidence: 0.9 };
+  if (/\b(feature|implement|create|build)\b/.test(taskLower)) {
+    workflowScores.feature.score += 10;
   }
-  if (/\b(review|check|analyze|audit)\b/.test(taskLower)) {
-    return { workflow: WORKFLOWS.review, confidence: 0.9 };
+  if (/\b(add|new)\b/.test(taskLower)) {
+    workflowScores.feature.score += 5;
   }
-  if (/\b(test|tdd|coverage|spec)\b/.test(taskLower)) {
-    return { workflow: WORKFLOWS.tdd, confidence: 0.9 };
+  if (/\b(refactor|restructure|reorganize)\b/.test(taskLower)) {
+    workflowScores.refactor.score += 10;
   }
-  if (/\b(doc|document|readme|comment)\b/.test(taskLower)) {
-    return { workflow: WORKFLOWS.docs, confidence: 0.9 };
+  if (/\b(clean|improve|optimize)\b/.test(taskLower)) {
+    workflowScores.refactor.score += 5;
+  }
+  if (/\b(review|audit)\b/.test(taskLower)) {
+    workflowScores.review.score += 10;
+  }
+  if (/\b(check|analyze)\b/.test(taskLower)) {
+    workflowScores.review.score += 3;
+  }
+  if (/\b(test|tdd|spec)\b/.test(taskLower)) {
+    workflowScores.tdd.score += 10;
+  }
+  if (/\b(coverage)\b/.test(taskLower)) {
+    workflowScores.tdd.score += 5;
+  }
+  if (/\b(document|documentation|readme)\b/.test(taskLower)) {
+    workflowScores.docs.score += 10;
+  }
+  if (/\b(doc|comment)\b/.test(taskLower)) {
+    workflowScores.docs.score += 3;
+  }
+  let bestMatch = { name: "cook", score: 0, workflow: WORKFLOWS.cook };
+  for (const [name, data] of Object.entries(workflowScores)) {
+    if (data.score > bestMatch.score) {
+      bestMatch = { name, score: data.score, workflow: data.workflow };
+    }
+  }
+  if (bestMatch.score >= 10) {
+    return { workflow: bestMatch.workflow, confidence: 0.9 };
+  } else if (bestMatch.score >= 5) {
+    return { workflow: bestMatch.workflow, confidence: 0.7 };
+  } else if (bestMatch.score > 0) {
+    return { workflow: bestMatch.workflow, confidence: 0.5 };
   }
   return { workflow: WORKFLOWS.cook, confidence: 0.5 };
 }
@@ -22975,14 +23052,14 @@ function getNextStep() {
       completed: false
     };
   }
-  if (currentStep >= workflow.steps.length) {
+  if (currentStep < 0 || currentStep >= workflow.steps.length) {
     return {
       hasMore: false,
       stepIndex: currentStep,
       step: null,
-      prompt: "\u{1F389} Workflow completed! All steps done.",
+      prompt: currentStep < 0 ? "Invalid step index. Start a workflow first." : "\u{1F389} Workflow completed! All steps done.",
       remainingSteps: 0,
-      completed: true
+      completed: currentStep >= 0
     };
   }
   const step = workflow.steps[currentStep];

@@ -8,10 +8,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 async function main(input) {
-    // Parse input safely
-    let _data;
+    // Parse input safely - data is validated but not used
     try {
-        _data = JSON.parse(input);
+        JSON.parse(input);
     } catch {
         // If parse fails, return success (fail-open)
         console.log(JSON.stringify({}));

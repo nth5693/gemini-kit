@@ -4,6 +4,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import * as crypto from 'crypto';
 import { z } from 'zod';
 import { debounce } from '../utils.js';
 // Zod schemas for runtime validation (HIGH 1 fix)
@@ -180,7 +181,8 @@ function recoverActiveSession() {
  * Start a new team session
  */
 export function startSession(goal, name) {
-    const id = `session-${Date.now()}`;
+    // Use UUID to prevent collision when multiple sessions created in same millisecond
+    const id = `session-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
     currentSession = {
         id,
         name: name || `Team Session ${new Date().toISOString().slice(0, 10)}`,
@@ -210,7 +212,9 @@ export function getCurrentSession() {
  * Issue 3 FIX: Truncate output to prevent memory leak
  * MEDIUM FIX: Configurable via GEMINI_KIT_MAX_OUTPUT env var (default 50KB)
  */
-const MAX_OUTPUT_SIZE = parseInt(process.env.GEMINI_KIT_MAX_OUTPUT || '51200', 10); // 50KB default
+// Safely parse env var with validation to prevent NaN/Infinity
+const parsedMaxOutput = parseInt(process.env.GEMINI_KIT_MAX_OUTPUT || '51200', 10);
+const MAX_OUTPUT_SIZE = Number.isFinite(parsedMaxOutput) && parsedMaxOutput > 0 ? parsedMaxOutput : 51200;
 export function addAgentResult(result) {
     if (!currentSession) {
         throw new Error('No active session. Call startSession first.');
@@ -297,13 +301,16 @@ function saveSessionSync() {
 }
 /**
  * Debounced save - reduces file I/O when called rapidly
- * Waits 500ms after last call before actually writing
+ * Uses 150ms delay (reduced from 500ms) to minimize data loss risk on crash
  */
+let hasPendingChanges = false;
 const debouncedSave = debounce(() => {
     saveSessionSync();
-}, 500);
+    hasPendingChanges = false;
+}, 150);
 /**
  * Save session - uses debounce for frequent calls, sync for critical operations
+ * Tracks pending changes to enable immediate save on demand
  */
 function saveSession(immediate = false) {
     if (!currentSession)
@@ -311,10 +318,22 @@ function saveSession(immediate = false) {
     if (immediate) {
         // Critical operations (end session) - save immediately
         saveSessionSync();
+        hasPendingChanges = false;
     }
     else {
-        // Regular operations - debounce
+        // Regular operations - debounce with pending flag
+        hasPendingChanges = true;
         debouncedSave();
+    }
+}
+/**
+ * Flush any pending session changes immediately
+ * Call this before risky operations to ensure data is saved
+ */
+export function flushSession() {
+    if (hasPendingChanges && currentSession) {
+        saveSessionSync();
+        hasPendingChanges = false;
     }
 }
 /**
@@ -416,9 +435,10 @@ function gracefulShutdown() {
     if (currentSession) {
         try {
             saveSessionSync();
+            hasPendingChanges = false;
             console.error('[gemini-kit] Session saved on exit');
         }
-        catch (_e) {
+        catch {
             // Best effort save on exit
         }
     }

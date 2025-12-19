@@ -25,6 +25,9 @@ const BLOCKED_TOOLS = [
     'run_command'
 ];
 
+/** Scout mode timeout in milliseconds (30 minutes) */
+const SCOUT_MODE_TIMEOUT_MS = 30 * 60 * 1000;
+
 /**
  * Main hook handler
  * @param {string} input - JSON string input from CLI
@@ -48,7 +51,7 @@ async function main(input) {
     if (fs.existsSync(stateFile)) {
         try {
             const state = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
-            scoutMode = state.active && (Date.now() - new Date(state.startedAt).getTime() < 30 * 60 * 1000); // 30 min timeout
+            scoutMode = state.active && (Date.now() - new Date(state.startedAt).getTime() < SCOUT_MODE_TIMEOUT_MS);
         } catch { }
     }
 

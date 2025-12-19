@@ -130,32 +130,79 @@ export function listWorkflows() {
 }
 /**
  * Smart routing: auto-select workflow based on task description
+ * Uses weight-based scoring to handle ambiguous tasks better
  */
 export function autoSelectWorkflow(task) {
     const taskLower = task.toLowerCase();
-    // Bug/fix patterns
-    if (/\b(bug|fix|error|issue|crash|broken|not working)\b/.test(taskLower)) {
-        return { workflow: WORKFLOWS.quickfix, confidence: 0.9 };
+    // Weight patterns - higher weight = stronger signal
+    const workflowScores = {
+        quickfix: { score: 0, workflow: WORKFLOWS.quickfix },
+        feature: { score: 0, workflow: WORKFLOWS.feature },
+        refactor: { score: 0, workflow: WORKFLOWS.refactor },
+        review: { score: 0, workflow: WORKFLOWS.review },
+        tdd: { score: 0, workflow: WORKFLOWS.tdd },
+        docs: { score: 0, workflow: WORKFLOWS.docs },
+    };
+    // Bug/fix patterns - strong signals
+    if (/\b(fix|debug|broken|crash|not working)\b/.test(taskLower)) {
+        workflowScores.quickfix.score += 10;
     }
-    // Feature patterns
-    if (/\b(feature|add|implement|create|new|build)\b/.test(taskLower)) {
-        return { workflow: WORKFLOWS.feature, confidence: 0.9 };
+    // Weaker bug signals (could be part of feature work)
+    if (/\b(bug|error|issue)\b/.test(taskLower)) {
+        workflowScores.quickfix.score += 3;
+    }
+    // Feature patterns - strong signals
+    if (/\b(feature|implement|create|build)\b/.test(taskLower)) {
+        workflowScores.feature.score += 10;
+    }
+    // Weaker feature signals
+    if (/\b(add|new)\b/.test(taskLower)) {
+        workflowScores.feature.score += 5;
     }
     // Refactor patterns
-    if (/\b(refactor|clean|improve|optimize|restructure)\b/.test(taskLower)) {
-        return { workflow: WORKFLOWS.refactor, confidence: 0.9 };
+    if (/\b(refactor|restructure|reorganize)\b/.test(taskLower)) {
+        workflowScores.refactor.score += 10;
+    }
+    if (/\b(clean|improve|optimize)\b/.test(taskLower)) {
+        workflowScores.refactor.score += 5;
     }
     // Review patterns
-    if (/\b(review|check|analyze|audit)\b/.test(taskLower)) {
-        return { workflow: WORKFLOWS.review, confidence: 0.9 };
+    if (/\b(review|audit)\b/.test(taskLower)) {
+        workflowScores.review.score += 10;
+    }
+    if (/\b(check|analyze)\b/.test(taskLower)) {
+        workflowScores.review.score += 3;
     }
     // Test patterns
-    if (/\b(test|tdd|coverage|spec)\b/.test(taskLower)) {
-        return { workflow: WORKFLOWS.tdd, confidence: 0.9 };
+    if (/\b(test|tdd|spec)\b/.test(taskLower)) {
+        workflowScores.tdd.score += 10;
+    }
+    if (/\b(coverage)\b/.test(taskLower)) {
+        workflowScores.tdd.score += 5;
     }
     // Docs patterns
-    if (/\b(doc|document|readme|comment)\b/.test(taskLower)) {
-        return { workflow: WORKFLOWS.docs, confidence: 0.9 };
+    if (/\b(document|documentation|readme)\b/.test(taskLower)) {
+        workflowScores.docs.score += 10;
+    }
+    if (/\b(doc|comment)\b/.test(taskLower)) {
+        workflowScores.docs.score += 3;
+    }
+    // Find the highest scoring workflow
+    let bestMatch = { name: 'cook', score: 0, workflow: WORKFLOWS.cook };
+    for (const [name, data] of Object.entries(workflowScores)) {
+        if (data.score > bestMatch.score) {
+            bestMatch = { name, score: data.score, workflow: data.workflow };
+        }
+    }
+    // Calculate confidence based on score
+    if (bestMatch.score >= 10) {
+        return { workflow: bestMatch.workflow, confidence: 0.9 };
+    }
+    else if (bestMatch.score >= 5) {
+        return { workflow: bestMatch.workflow, confidence: 0.7 };
+    }
+    else if (bestMatch.score > 0) {
+        return { workflow: bestMatch.workflow, confidence: 0.5 };
     }
     // Default to cook (full cycle) with lower confidence
     return { workflow: WORKFLOWS.cook, confidence: 0.5 };

@@ -11,7 +11,6 @@ import {
     getCurrentSession,
     addAgentResult,
     updateContext,
-    getContext,
     incrementRetry,
     canRetry,
     endSession,
@@ -257,14 +256,17 @@ export function getNextStep(): {
         };
     }
 
-    if (currentStep >= workflow.steps.length) {
+    // Bounds check: currentStep must be non-negative and within workflow steps
+    if (currentStep < 0 || currentStep >= workflow.steps.length) {
         return {
             hasMore: false,
             stepIndex: currentStep,
             step: null,
-            prompt: '🎉 Workflow completed! All steps done.',
+            prompt: currentStep < 0
+                ? 'Invalid step index. Start a workflow first.'
+                : '🎉 Workflow completed! All steps done.',
             remainingSteps: 0,
-            completed: true,
+            completed: currentStep >= 0,
         };
     }
 

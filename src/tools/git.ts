@@ -24,7 +24,7 @@ export function checkGitAvailable(): { available: boolean; version?: string; err
             stdio: ['pipe', 'pipe', 'pipe']
         }).trim();
         return { available: true, version };
-    } catch (_err) {
+    } catch {
         return {
             available: false,
             error: 'Git is not installed or not in PATH. Please install Git: https://git-scm.com/downloads'

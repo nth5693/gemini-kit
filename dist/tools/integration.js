@@ -22,6 +22,13 @@ const PrListItemSchema = z.object({
     author: z.object({ login: z.string() }),
 });
 // MEDIUM 2: Jira ticket schema for runtime validation
+// ADF (Atlassian Document Format) can have many nested content types
+// We use a more permissive schema that accepts any ADF structure
+const AdfContentSchema = z.object({
+    type: z.string().optional(),
+    content: z.array(z.unknown()).optional(),
+    text: z.string().optional(),
+}).passthrough();
 const JiraFieldsSchema = z.object({
     summary: z.string(),
     status: z.object({ name: z.string() }).optional(),
@@ -29,9 +36,14 @@ const JiraFieldsSchema = z.object({
     assignee: z.object({ displayName: z.string() }).nullable().optional(),
     reporter: z.object({ displayName: z.string() }).nullable().optional(),
     issuetype: z.object({ name: z.string() }).optional(),
+    // Handle both plain string and ADF (Atlassian Document Format) structures
     description: z.union([
         z.string(),
-        z.object({ content: z.array(z.object({ content: z.array(z.object({ text: z.string().optional() })).optional() })).optional() }),
+        z.object({
+            type: z.string().optional(),
+            version: z.number().optional(),
+            content: z.array(AdfContentSchema).optional(),
+        }).passthrough(), // Accept any additional ADF fields
     ]).nullable().optional(),
     labels: z.array(z.string()).optional(),
 });
@@ -39,6 +51,30 @@ const JiraTicketSchema = z.object({
     errorMessages: z.array(z.string()).optional(),
     fields: JiraFieldsSchema,
 });
+/**
+ * Extract plain text from ADF (Atlassian Document Format) content
+ * Recursively walks the content tree to find text nodes
+ */
+function extractAdfText(adf) {
+    if (!adf || typeof adf !== 'object')
+        return 'No description';
+    const content = adf.content;
+    if (!content || !Array.isArray(content))
+        return 'No description';
+    const textParts = [];
+    function extractText(nodes) {
+        for (const node of nodes) {
+            if (typeof node.text === 'string') {
+                textParts.push(node.text);
+            }
+            if (Array.isArray(node.content)) {
+                extractText(node.content);
+            }
+        }
+    }
+    extractText(content);
+    return textParts.join(' ') || 'No description';
+}
 // Note: IssueDetailSchema reserved for future kit_github_get_issue tool
 export function registerIntegrationTools(server) {
     // TOOL 14: GITHUB CREATE PR
@@ -238,7 +274,7 @@ Get API token from: https://id.atlassian.com/manage-profile/security/api-tokens`
 ### Description
 ${typeof ticket.fields.description === 'string'
                 ? ticket.fields.description
-                : (ticket.fields.description?.content?.[0]?.content?.[0]?.text || 'No description')}
+                : extractAdfText(ticket.fields.description)}
 
 ### Labels
 ${ticket.fields.labels?.join(', ') || 'None'}`;
