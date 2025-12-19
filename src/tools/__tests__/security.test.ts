@@ -36,8 +36,9 @@ describe('sanitize', () => {
         expect(sanitize('`whoami`')).toBe('whoami');
     });
 
-    it('should remove $() syntax', () => {
-        expect(sanitize('$(cat /etc/passwd)')).toBe('cat /etc/passwd');
+    it('should remove $() syntax but keep parentheses (MEDIUM 1: relaxed)', () => {
+        // $ is removed, but () are now allowed for valid commit messages
+        expect(sanitize('$(cat /etc/passwd)')).toBe('(cat /etc/passwd)');
     });
 
     it('should remove ampersands (background/chaining)', () => {

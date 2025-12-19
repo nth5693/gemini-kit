@@ -21,6 +21,24 @@ const PrListItemSchema = z.object({
     state: z.string(),
     author: z.object({ login: z.string() }),
 });
+// MEDIUM 2: Jira ticket schema for runtime validation
+const JiraFieldsSchema = z.object({
+    summary: z.string(),
+    status: z.object({ name: z.string() }).optional(),
+    priority: z.object({ name: z.string() }).optional(),
+    assignee: z.object({ displayName: z.string() }).nullable().optional(),
+    reporter: z.object({ displayName: z.string() }).nullable().optional(),
+    issuetype: z.object({ name: z.string() }).optional(),
+    description: z.union([
+        z.string(),
+        z.object({ content: z.array(z.object({ content: z.array(z.object({ text: z.string().optional() })).optional() })).optional() }),
+    ]).nullable().optional(),
+    labels: z.array(z.string()).optional(),
+});
+const JiraTicketSchema = z.object({
+    errorMessages: z.array(z.string()).optional(),
+    fields: JiraFieldsSchema,
+});
 // Note: IssueDetailSchema reserved for future kit_github_get_issue tool
 export function registerIntegrationTools(server) {
     // TOOL 14: GITHUB CREATE PR
@@ -186,7 +204,18 @@ Get API token from: https://id.atlassian.com/manage-profile/security/api-tokens`
                         }]
                 };
             }
-            const ticket = await response.json();
+            // MEDIUM 2: Validate Jira response with Zod schema
+            const jsonData = await response.json();
+            const parseResult = JiraTicketSchema.safeParse(jsonData);
+            if (!parseResult.success) {
+                return {
+                    content: [{
+                            type: 'text',
+                            text: `❌ Invalid Jira response format: ${parseResult.error.message}`
+                        }]
+                };
+            }
+            const ticket = parseResult.data;
             if (ticket.errorMessages) {
                 return {
                     content: [{

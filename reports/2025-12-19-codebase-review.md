@@ -1,112 +1,102 @@
-# Codebase Review Report
-**Date:** 2025-12-19
-**Scope:** Full Codebase (`src/`, `hooks/`)
-**Version:** 2.3.0
+# Codebase Review Report - 2025-12-19
 
 ## 📊 Summary
+| Category | Count |
+|----------|-------|
+| 🔴 Critical | 0 |
+| 🟠 High | 2 |
+| 🟡 Medium | 2 |
+| 🟢 Low | 2 |
 
-| Category | Count | Status |
-|----------|-------|--------|
-| 🔴 Critical | 0 | ✅ Pass |
-| 🟠 High | 2 | ⚠️ Fix Recommended |
-| 🟡 Medium | 3 | ⚠️ Recommended |
-| 🟢 Low | 2 | ℹ️ Optional |
-
-**Verdict:** ✅ **Ready** (High quality, issues are mainly optimization/scalability)
+**Verdict:** ⚠️ Fix recommended
 
 ---
 
-## 🟠 HIGH (Performance & Reliability)
+## 🟠 HIGH (Should Fix)
 
-### Issue 1: Synchronous File I/O in Hot Paths
-- **File:** `src/tools/team-state.ts`, `src/tools/core.ts`
-- **Problem:** Extensive use of `fs.readFileSync` and `fs.writeFileSync`.
-  - `saveSessionSync` and `debouncedSave` eventually use sync writes.
-  - `kit_get_project_context` uses `findFiles` (sync) instead of `findFilesAsync`.
-- **Risk:** In a high-traffic environment or with large artifacts, this blocks the Node.js event loop, causing the MCP server to become unresponsive to other requests.
-- **Fix:** Refactor to use `fs.promises` (`async/await`) for all file operations.
-
+### Issue 1: Unsafe JSON Parsing in Team State
+- **File:** `src/tools/team-state.ts:133` (and others)
+- **Problem:** Uses `JSON.parse(data) as TeamSession` without validation. If the JSON is corrupted or doesn't match the schema, runtime errors will occur when accessing properties.
+- **Fix:** Use `zod` schema to validate the parsed JSON before casting.
 ```typescript
-// src/tools/team-state.ts
 // Before
-function saveSessionSync(): void {
-    fs.writeFileSync(filePath, JSON.stringify(currentSession, null, 2));
-}
+const session = JSON.parse(data) as TeamSession;
 
 // After
-async function saveSessionAsync(): Promise<void> {
-    await fs.promises.writeFile(filePath, JSON.stringify(currentSession, null, 2));
-}
+const session = TeamSessionSchema.parse(JSON.parse(data));
 ```
 
-### Issue 2: Scalability of Session Recovery
-- **File:** `src/tools/team-state.ts` (function `recoverActiveSession`)
-- **Problem:** Reads **every** JSON file in `.gemini-kit/sessions` to find the active one.
-- **Risk:** As session history grows (e.g., hundreds of sessions), this will degrade startup performance significantly (O(N) file reads).
-- **Fix:**
-    1.  Store a pointer to the active session in a separate file (e.g., `.gemini-kit/active-session.json`).
-    2.  Or stop scanning after finding the most recent active session (the code currently sorts then iterates, which is better, but still reads file content).
+### Issue 2: Fragile Regex-based Code Parsing
+- **File:** `src/tools/knowledge.ts:327`
+- **Problem:** `kit_index_codebase` uses regex to find functions and classes. This is fragile and will miss complex definitions or produce false positives (e.g., inside strings/comments).
+- **Fix:** Use `typescript` compiler API to parse the AST for accurate symbol extraction.
 
 ---
 
-## 🟡 MEDIUM (Maintainability & Stability)
+## 🟡 MEDIUM (Recommended)
 
-### Issue 3: Untyped Hooks
-- **File:** `hooks/*.js` (e.g., `before-agent.js`, `scout-block.js`)
-- **Problem:** Hooks are written in plain JavaScript without type safety or JSDoc types.
-- **Risk:** Refactoring core types (like `TeamSession`) won't trigger errors in hooks, leading to runtime failures.
-- **Fix:** Rewrite hooks in TypeScript (`hooks/*.ts`) and compile them, or run them with `ts-node`.
+### Issue 1: Overly Aggressive Input Sanitization
+- **File:** `src/tools/security.ts:18`
+- **Problem:** `sanitize` removes characters like `(`, `)`, `[`, `]`. This restricts valid git commit messages or file paths that use these characters. Since `execFileSync` is used, such aggressive sanitization is not strictly necessary for command injection prevention.
+- **Suggestion:** Relax the regex to allow safe characters used in common workflows.
 
-### Issue 4: Unsafe JSON Parsing in Hooks
-- **File:** `hooks/scout-block.js`, `hooks/before-agent.js`
-- **Problem:** `JSON.parse(fs.readFileSync(...))` is used without `try-catch` blocks.
-- **Risk:** If a config file or state file is corrupted (e.g., partial write), the hook will crash the entire workflow.
-- **Fix:** Wrap all `JSON.parse` calls in `try-catch` blocks.
-
-### Issue 5: Memory Usage in Indexing
-- **File:** `src/tools/knowledge.ts`
-- **Problem:** `kit_index_codebase` uses `findFilesAsync` which returns an array of *all* file paths.
-- **Risk:** On very large repositories (100k+ files), this array could consume significant memory.
-- **Fix:** Use a stream-based generator or process directories recursively without collecting all paths first.
+### Issue 2: Type Assertion in Jira Tool
+- **File:** `src/tools/integration.ts:153`
+- **Problem:** `const ticket = await response.json() as { ... }`. Runtime type safety is lost.
+- **Suggestion:** Define a Zod schema for the Jira response and validate it.
 
 ---
 
-## 🟢 LOW (Code Style & Minor)
+## 🟢 LOW (Optional)
 
-### Issue 6: Logic Duplication
-- **File:** `src/tools/knowledge.ts` vs `src/tools/security.ts`
-- **Problem:** `validatePath` is defined in `knowledge.ts` but seems like a core security utility that should be in `security.ts` and reused.
+### Issue 1: Regex Type Safety
+- **File:** `src/tools/knowledge.ts:104`
+- **Suggestion:** Although `strictNullChecks` is on, explicit checks for regex match groups would be more robust.
 
-### Issue 7: Hardcoded Paths
-- **File:** Various
-- **Problem:** `.gemini-kit` folder name is hardcoded in multiple places.
-- **Fix:** Move to a `CONSTANTS` file (e.g., `src/constants.ts`).
+### Issue 2: Hardcoded Timeout
+- **File:** `src/tools/security.ts:47`
+- **Suggestion:** Make timeouts configurable via tool arguments or strictly env vars (currently mixed).
 
 ---
 
-## 🛡️ SECURITY AUDIT (OWASP)
+## SECURITY AUDIT (OWASP)
 
 | Check | Status | Details |
 |-------|--------|---------|
-| **Command Injection** | ✅ Pass | Uses `execFileSync` with argument arrays. `sanitize` helper available. |
-| **Path Traversal** | ✅ Pass | `validatePath` ensures paths are within project root. |
-| **Input Validation** | ✅ Pass | `zod` schemas used for all tool arguments. |
-| **Secrets** | ✅ Pass | No secrets logged or exposed in code found. |
+| Injection (Command) | ✅ Pass | Uses `execFileSync` (no shell) + sanitization. |
+| Path Traversal | ✅ Pass | `validatePath` used consistently. |
+| Broken Auth | N/A | CLI tool, relies on external auth (gh, env vars). |
+| Sensitive Data | ✅ Pass | No secrets committed (checked source). |
+| Input Validation | ✅ Pass | Zod used for all tool inputs. |
 
 ---
 
-## 🧪 QUALITY GATES
+## TYPE SAFETY AUDIT
+
+### `any` Type Locations
+- **Found:** 0 explicit `any` types in `src/`.
+- **Note:** Uses `as Type` assertions in several places (JSON parsing), which effectively bypasses type safety at runtime.
+
+### Strict Mode
+- Enabled: `true`
+- Violations: None found.
+
+---
+
+## PERFORMANCE ANALYSIS
+
+### File Indexing
+- **Observation:** `kit_index_codebase` uses `findFilesAsync` which is good for large repos.
+- **Limit:** `MAX_FILE_SIZE_BYTES` (1MB) prevents processing massive files.
+- **Concurrency:** `Promise.all` with `BATCH_SIZE` (10) controls resource usage.
+
+---
+
+## QUALITY GATES
 
 | Gate | Status | Target |
 |------|--------|--------|
-| **Tests** | ✅ 18 passed | All tests pass |
-| **Strict Types** | ✅ Pass | Strict mode on, no `any` found |
-| **Linting** | ✅ Pass | ESLint config present |
-
----
-
-## 🚀 NEXT STEPS
-
-1.  **Refactor I/O:** Convert `team-state.ts` to use async file operations.
-2.  **Harden Hooks:** Add error handling to `hooks/*.js` files.
-3.  **Centralize Constants:** Move `.gemini-kit` path to a shared constant.
+| Test Coverage | N/A | Not checked in this run. |
+| Zero `any` Types | ✅ 0 found | 0 |
+| Security Scan | ✅ Pass | Pass |
+| No Critical Issues | ✅ 0 found | 0 |

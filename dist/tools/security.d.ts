@@ -5,7 +5,8 @@
 export declare const homeDir: string;
 /**
  * Sanitize string for safe use in shell commands
- * Removes dangerous characters but keeps quotes (safe with execFileSync)
+ * MEDIUM 1 FIX: Relaxed to allow () and [] which are valid in commit messages/paths
+ * Note: execFileSync is already safe, this is extra protection for edge cases
  */
 export declare function sanitize(input: string): string;
 /**

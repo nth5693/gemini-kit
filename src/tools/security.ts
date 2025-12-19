@@ -13,13 +13,13 @@ export const homeDir = os.homedir();
 
 /**
  * Sanitize string for safe use in shell commands
- * Removes dangerous characters but keeps quotes (safe with execFileSync)
+ * MEDIUM 1 FIX: Relaxed to allow () and [] which are valid in commit messages/paths
+ * Note: execFileSync is already safe, this is extra protection for edge cases
  */
 export function sanitize(input: string): string {
-    // Note: execFileSync with array args handles quotes safely, so we only
-    // Only remove shell operators that are dangerous
+    // Only remove dangerous shell operators, keep () and [] for valid workflows
     return String(input)
-        .replace(/[;&|`$(){}[\]<>\\!#*?]/g, '')
+        .replace(/[;&|`$<>\\!#*?]/g, '')
         .trim()
         .slice(0, 500); // Limit length
 }

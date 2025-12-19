@@ -4,7 +4,29 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import { z } from 'zod';
 import { debounce } from '../utils.js';
+// Zod schemas for runtime validation (HIGH 1 fix)
+const AgentResultSchema = z.object({
+    agent: z.string(),
+    status: z.enum(['success', 'failure', 'pending']),
+    output: z.string(),
+    timestamp: z.string(),
+    duration: z.number().optional(),
+});
+const TeamSessionSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    startTime: z.string(),
+    endTime: z.string().optional(),
+    status: z.enum(['active', 'completed', 'failed']),
+    goal: z.string(),
+    agents: z.array(AgentResultSchema),
+    context: z.record(z.unknown()),
+    workflowType: z.string().optional(),
+    retryCount: z.number(),
+    maxRetries: z.number(),
+});
 const DEFAULT_CONFIG = {
     sessionDir: '.gemini-kit/sessions',
     maxRetries: 3,
@@ -84,9 +106,9 @@ function recoverActiveSession() {
         try {
             if (fs.existsSync(pointerFile)) {
                 const data = fs.readFileSync(pointerFile, 'utf-8');
-                const session = JSON.parse(data);
-                if (session.status === 'active') {
-                    return session;
+                const parsed = TeamSessionSchema.safeParse(JSON.parse(data));
+                if (parsed.success && parsed.data.status === 'active') {
+                    return parsed.data;
                 }
             }
         }
@@ -105,11 +127,11 @@ function recoverActiveSession() {
             try {
                 const filePath = path.join(config.sessionDir, file);
                 const data = fs.readFileSync(filePath, 'utf-8');
-                const session = JSON.parse(data);
-                if (session.status === 'active') {
+                const parsed = TeamSessionSchema.safeParse(JSON.parse(data));
+                if (parsed.success && parsed.data.status === 'active') {
                     // Update pointer for next time
-                    setActiveSessionPointer(session.id);
-                    return session;
+                    setActiveSessionPointer(parsed.data.id);
+                    return parsed.data;
                 }
             }
             catch {
@@ -262,7 +284,12 @@ export function loadSession(sessionId) {
         return null;
     }
     const data = fs.readFileSync(filePath, 'utf-8');
-    currentSession = JSON.parse(data);
+    const parsed = TeamSessionSchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+        console.warn(`[gemini-kit] Invalid session format: ${sessionId}`);
+        return null;
+    }
+    currentSession = parsed.data;
     return currentSession;
 }
 /**
@@ -273,11 +300,16 @@ export function listSessions() {
         return [];
     }
     const files = fs.readdirSync(config.sessionDir).filter((f) => f.endsWith('.json'));
-    // FIX LOW 2: Add warning for corrupted JSON files to help debug state issues
+    // FIX HIGH 1: Use Zod validation for corrupted JSON files
     return files.map((file) => {
         try {
             const data = fs.readFileSync(path.join(config.sessionDir, file), 'utf-8');
-            return JSON.parse(data);
+            const parsed = TeamSessionSchema.safeParse(JSON.parse(data));
+            if (!parsed.success) {
+                console.warn(`[gemini-kit] Invalid session format: ${file}`);
+                return null;
+            }
+            return parsed.data;
         }
         catch {
             console.warn(`[gemini-kit] Skipping corrupted session file: ${file}`);

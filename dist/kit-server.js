@@ -20817,7 +20817,7 @@ import * as fs from "fs";
 import * as path from "path";
 var homeDir = os.homedir();
 function sanitize(input) {
-  return String(input).replace(/[;&|`$(){}[\]<>\\!#*?]/g, "").trim().slice(0, 500);
+  return String(input).replace(/[;&|`$<>\\!#*?]/g, "").trim().slice(0, 500);
 }
 function validatePath(filePath, baseDir = process.cwd()) {
   const resolved = path.resolve(baseDir, filePath);
@@ -21973,6 +21973,23 @@ var PrListItemSchema = external_exports.object({
   state: external_exports.string(),
   author: external_exports.object({ login: external_exports.string() })
 });
+var JiraFieldsSchema = external_exports.object({
+  summary: external_exports.string(),
+  status: external_exports.object({ name: external_exports.string() }).optional(),
+  priority: external_exports.object({ name: external_exports.string() }).optional(),
+  assignee: external_exports.object({ displayName: external_exports.string() }).nullable().optional(),
+  reporter: external_exports.object({ displayName: external_exports.string() }).nullable().optional(),
+  issuetype: external_exports.object({ name: external_exports.string() }).optional(),
+  description: external_exports.union([
+    external_exports.string(),
+    external_exports.object({ content: external_exports.array(external_exports.object({ content: external_exports.array(external_exports.object({ text: external_exports.string().optional() })).optional() })).optional() })
+  ]).nullable().optional(),
+  labels: external_exports.array(external_exports.string()).optional()
+});
+var JiraTicketSchema = external_exports.object({
+  errorMessages: external_exports.array(external_exports.string()).optional(),
+  fields: JiraFieldsSchema
+});
 function registerIntegrationTools(server2) {
   server2.tool(
     "kit_github_create_pr",
@@ -22152,7 +22169,17 @@ Expected format: PROJ-123`
             }]
           };
         }
-        const ticket = await response.json();
+        const jsonData = await response.json();
+        const parseResult = JiraTicketSchema.safeParse(jsonData);
+        if (!parseResult.success) {
+          return {
+            content: [{
+              type: "text",
+              text: `\u274C Invalid Jira response format: ${parseResult.error.message}`
+            }]
+          };
+        }
+        const ticket = parseResult.data;
         if (ticket.errorMessages) {
           return {
             content: [{
@@ -22412,6 +22439,26 @@ function debounce(fn, wait) {
 }
 
 // src/tools/team-state.ts
+var AgentResultSchema = external_exports.object({
+  agent: external_exports.string(),
+  status: external_exports.enum(["success", "failure", "pending"]),
+  output: external_exports.string(),
+  timestamp: external_exports.string(),
+  duration: external_exports.number().optional()
+});
+var TeamSessionSchema = external_exports.object({
+  id: external_exports.string(),
+  name: external_exports.string(),
+  startTime: external_exports.string(),
+  endTime: external_exports.string().optional(),
+  status: external_exports.enum(["active", "completed", "failed"]),
+  goal: external_exports.string(),
+  agents: external_exports.array(AgentResultSchema),
+  context: external_exports.record(external_exports.unknown()),
+  workflowType: external_exports.string().optional(),
+  retryCount: external_exports.number(),
+  maxRetries: external_exports.number()
+});
 var DEFAULT_CONFIG = {
   sessionDir: ".gemini-kit/sessions",
   maxRetries: 3,
@@ -22467,9 +22514,9 @@ function recoverActiveSession() {
     try {
       if (fs6.existsSync(pointerFile)) {
         const data = fs6.readFileSync(pointerFile, "utf-8");
-        const session = JSON.parse(data);
-        if (session.status === "active") {
-          return session;
+        const parsed = TeamSessionSchema.safeParse(JSON.parse(data));
+        if (parsed.success && parsed.data.status === "active") {
+          return parsed.data;
         }
       }
     } catch {
@@ -22482,10 +22529,10 @@ function recoverActiveSession() {
       try {
         const filePath = path6.join(config2.sessionDir, file);
         const data = fs6.readFileSync(filePath, "utf-8");
-        const session = JSON.parse(data);
-        if (session.status === "active") {
-          setActiveSessionPointer(session.id);
-          return session;
+        const parsed = TeamSessionSchema.safeParse(JSON.parse(data));
+        if (parsed.success && parsed.data.status === "active") {
+          setActiveSessionPointer(parsed.data.id);
+          return parsed.data;
         }
       } catch {
         continue;
@@ -22571,7 +22618,12 @@ function listSessions() {
   return files.map((file) => {
     try {
       const data = fs6.readFileSync(path6.join(config2.sessionDir, file), "utf-8");
-      return JSON.parse(data);
+      const parsed = TeamSessionSchema.safeParse(JSON.parse(data));
+      if (!parsed.success) {
+        console.warn(`[gemini-kit] Invalid session format: ${file}`);
+        return null;
+      }
+      return parsed.data;
     } catch {
       console.warn(`[gemini-kit] Skipping corrupted session file: ${file}`);
       return null;
