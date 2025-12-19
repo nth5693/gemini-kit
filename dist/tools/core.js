@@ -5,6 +5,7 @@
 import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as crypto from 'crypto';
 import { safeGit, findFiles } from './security.js';
 import { DEFAULT_EXTENSIONS, getFileExtensions } from './config.js';
 /**
@@ -75,7 +76,8 @@ export function registerCoreTools(server) {
                 context,
                 artifacts: artifacts || []
             };
-            const filename = `${Date.now()}-${fromAgent}-${toAgent}.json`;
+            // Issue 5 FIX: Use UUID to prevent filename collision in concurrent handoffs
+            const filename = `${crypto.randomUUID()}-${fromAgent}-${toAgent}.json`;
             fs.writeFileSync(path.join(handoffDir, filename), JSON.stringify(handoff, null, 2));
             return {
                 content: [{
@@ -103,7 +105,8 @@ export function registerCoreTools(server) {
             const safeName = path.basename(String(name))
                 .replace(/[^a-zA-Z0-9-_]/g, '-')
                 .slice(0, 50);
-            const filename = `${safeName}-${Date.now()}.md`;
+            // Issue 5 FIX: Use UUID to prevent filename collision
+            const filename = `${safeName}-${crypto.randomUUID().slice(0, 8)}.md`;
             const filepath = path.join(artifactDir, filename);
             fs.writeFileSync(filepath, content);
             return { content: [{ type: 'text', text: `✅ Artifact saved: ${filepath}` }] };

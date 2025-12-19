@@ -21862,11 +21862,11 @@ File: ${diffData.file}` }] };
               ];
               const allFunctions = [];
               for (const pattern of functionPatterns) {
-                const matches = content.match(pattern) || [];
+                const matches = content.matchAll(pattern);
                 for (const match of matches) {
-                  const nameMatch = match.match(/([a-zA-Z_][a-zA-Z0-9_]*)/);
-                  if (nameMatch && !["function", "async", "const", "let", "var", "export", "React", "FC", "forwardRef"].includes(nameMatch[1])) {
-                    allFunctions.push(nameMatch[1]);
+                  const name = match[1];
+                  if (name && !["function", "async", "const", "let", "var", "export", "React", "FC", "forwardRef"].includes(name)) {
+                    allFunctions.push(name);
                   }
                 }
               }
@@ -22048,7 +22048,9 @@ Run: gh auth login`
         const args = ["pr", "create", "--title", sanitize(title), "--body", body, "--base", base];
         if (draft) args.push("--draft");
         if (labels && labels.length > 0) {
-          args.push("--label", labels.map((l) => sanitize(l)).join(","));
+          for (const label of labels) {
+            args.push("--label", sanitize(label));
+          }
         }
         const result = safeGh(args);
         return {
@@ -22270,6 +22272,7 @@ ${issue2.body || "No description"}`;
 // src/tools/core.ts
 import * as fs5 from "fs";
 import * as path5 from "path";
+import * as crypto from "crypto";
 
 // src/tools/config.ts
 import * as fs4 from "fs";
@@ -22396,7 +22399,7 @@ function registerCoreTools(server2) {
           context,
           artifacts: artifacts || []
         };
-        const filename = `${Date.now()}-${fromAgent}-${toAgent}.json`;
+        const filename = `${crypto.randomUUID()}-${fromAgent}-${toAgent}.json`;
         fs5.writeFileSync(path5.join(handoffDir, filename), JSON.stringify(handoff, null, 2));
         return {
           content: [{
@@ -22424,7 +22427,7 @@ Context: ${context.slice(0, 200)}...`
         const artifactDir = path5.join(process.cwd(), ".gemini-kit", "artifacts", type);
         fs5.mkdirSync(artifactDir, { recursive: true });
         const safeName = path5.basename(String(name)).replace(/[^a-zA-Z0-9-_]/g, "-").slice(0, 50);
-        const filename = `${safeName}-${Date.now()}.md`;
+        const filename = `${safeName}-${crypto.randomUUID().slice(0, 8)}.md`;
         const filepath = path5.join(artifactDir, filename);
         fs5.writeFileSync(filepath, content);
         return { content: [{ type: "text", text: `\u2705 Artifact saved: ${filepath}` }] };

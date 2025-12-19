@@ -336,13 +336,16 @@ Your changes would be lost if applied.
                             // React forwardRef
                             /(?:const|let)\s+([A-Z][a-zA-Z0-9_]*)\s*=\s*(?:React\.)?forwardRef/g,
                         ];
+                        // Issue 1 FIX: Use matchAll to get capture groups correctly
                         const allFunctions = [];
                         for (const pattern of functionPatterns) {
-                            const matches = content.match(pattern) || [];
+                            // matchAll returns capture groups, match() with /g only returns full matches
+                            const matches = content.matchAll(pattern);
                             for (const match of matches) {
-                                const nameMatch = match.match(/([a-zA-Z_][a-zA-Z0-9_]*)/);
-                                if (nameMatch && !['function', 'async', 'const', 'let', 'var', 'export', 'React', 'FC', 'forwardRef'].includes(nameMatch[1])) {
-                                    allFunctions.push(nameMatch[1]);
+                                // match[1] is the first capture group (function name)
+                                const name = match[1];
+                                if (name && !['function', 'async', 'const', 'let', 'var', 'export', 'React', 'FC', 'forwardRef'].includes(name)) {
+                                    allFunctions.push(name);
                                 }
                             }
                         }

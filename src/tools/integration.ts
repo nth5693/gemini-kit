@@ -94,8 +94,11 @@ Run: gh auth login`
                 const args: string[] = ['pr', 'create', '--title', sanitize(title), '--body', body, '--base', base];
 
                 if (draft) args.push('--draft');
+                // Issue 3 FIX: gh CLI requires separate --label flags, not comma-joined
                 if (labels && labels.length > 0) {
-                    args.push('--label', labels.map(l => sanitize(l)).join(','));
+                    for (const label of labels) {
+                        args.push('--label', sanitize(label));
+                    }
                 }
 
                 const result = safeGh(args);
