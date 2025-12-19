@@ -40,14 +40,17 @@ describe('Orchestrator', () => {
             { name: 'quickfix', description: 'Quick bug fix' },
         ]);
         vi.mocked(workflows.autoSelectWorkflow).mockReturnValue({
-            name: 'cook',
-            description: 'Full development workflow',
-            autoRetry: true,
-            maxRetries: 3,
-            steps: [
-                { agent: 'planner', description: 'Create plan', required: true },
-                { agent: 'coder', description: 'Write code', required: true },
-            ],
+            workflow: {
+                name: 'cook',
+                description: 'Full development workflow',
+                autoRetry: true,
+                maxRetries: 3,
+                steps: [
+                    { agent: 'planner', description: 'Create plan', required: true },
+                    { agent: 'coder', description: 'Write code', required: true },
+                ],
+            },
+            confidence: 0.9,
         });
         vi.mocked(workflows.getStepPrompt).mockReturnValue('Test prompt');
     });
@@ -97,11 +100,14 @@ describe('Orchestrator', () => {
             };
             vi.mocked(teamState.startSession).mockReturnValue(mockSession);
             vi.mocked(workflows.autoSelectWorkflow).mockReturnValue({
-                name: 'quickfix',
-                description: 'Quick fix',
-                autoRetry: true,
-                maxRetries: 3,
-                steps: [],
+                workflow: {
+                    name: 'quickfix',
+                    description: 'Quick fix',
+                    autoRetry: true,
+                    maxRetries: 3,
+                    steps: [],
+                },
+                confidence: 0.9,
             });
             const result = orchestrator.teamStart('Fix bug');
             expect(result.suggestedWorkflow).toBe('quickfix');
@@ -251,11 +257,14 @@ describe('Orchestrator', () => {
     describe('smartRoute', () => {
         it('should return high confidence for matching keywords', () => {
             vi.mocked(workflows.autoSelectWorkflow).mockReturnValue({
-                name: 'quickfix',
-                description: 'Quick fix',
-                autoRetry: true,
-                maxRetries: 3,
-                steps: [],
+                workflow: {
+                    name: 'quickfix',
+                    description: 'Quick fix',
+                    autoRetry: true,
+                    maxRetries: 3,
+                    steps: [],
+                },
+                confidence: 0.9,
             });
             const result = orchestrator.smartRoute('fix this bug');
             expect(result.workflow.name).toBe('quickfix');
@@ -263,11 +272,14 @@ describe('Orchestrator', () => {
         });
         it('should return alternative workflows', () => {
             vi.mocked(workflows.autoSelectWorkflow).mockReturnValue({
-                name: 'cook',
-                description: 'Full workflow',
-                autoRetry: true,
-                maxRetries: 3,
-                steps: [],
+                workflow: {
+                    name: 'cook',
+                    description: 'Full workflow',
+                    autoRetry: true,
+                    maxRetries: 3,
+                    steps: [],
+                },
+                confidence: 0.5,
             });
             const result = orchestrator.smartRoute('do something');
             expect(result.alternativeWorkflows).toContain('quickfix');

@@ -135,30 +135,30 @@ export function autoSelectWorkflow(task) {
     const taskLower = task.toLowerCase();
     // Bug/fix patterns
     if (/\b(bug|fix|error|issue|crash|broken|not working)\b/.test(taskLower)) {
-        return WORKFLOWS.quickfix;
+        return { workflow: WORKFLOWS.quickfix, confidence: 0.9 };
     }
     // Feature patterns
     if (/\b(feature|add|implement|create|new|build)\b/.test(taskLower)) {
-        return WORKFLOWS.feature;
+        return { workflow: WORKFLOWS.feature, confidence: 0.9 };
     }
     // Refactor patterns
     if (/\b(refactor|clean|improve|optimize|restructure)\b/.test(taskLower)) {
-        return WORKFLOWS.refactor;
+        return { workflow: WORKFLOWS.refactor, confidence: 0.9 };
     }
     // Review patterns
     if (/\b(review|check|analyze|audit)\b/.test(taskLower)) {
-        return WORKFLOWS.review;
+        return { workflow: WORKFLOWS.review, confidence: 0.9 };
     }
     // Test patterns
     if (/\b(test|tdd|coverage|spec)\b/.test(taskLower)) {
-        return WORKFLOWS.tdd;
+        return { workflow: WORKFLOWS.tdd, confidence: 0.9 };
     }
     // Docs patterns
     if (/\b(doc|document|readme|comment)\b/.test(taskLower)) {
-        return WORKFLOWS.docs;
+        return { workflow: WORKFLOWS.docs, confidence: 0.9 };
     }
-    // Default to cook (full cycle)
-    return WORKFLOWS.cook;
+    // Default to cook (full cycle) with lower confidence
+    return { workflow: WORKFLOWS.cook, confidence: 0.5 };
 }
 /**
  * Get workflow step prompt

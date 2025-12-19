@@ -72,39 +72,39 @@ describe('WORKFLOWS', () => {
     });
     describe('autoSelectWorkflow', () => {
         it('should select quickfix for bug-related tasks', () => {
-            expect(autoSelectWorkflow('fix the bug').name).toBe('quickfix');
-            expect(autoSelectWorkflow('there is an error').name).toBe('quickfix');
-            expect(autoSelectWorkflow('app is broken').name).toBe('quickfix');
+            expect(autoSelectWorkflow('fix the bug').workflow.name).toBe('quickfix');
+            expect(autoSelectWorkflow('there is an error').workflow.name).toBe('quickfix');
+            expect(autoSelectWorkflow('app is broken').workflow.name).toBe('quickfix');
         });
         it('should select feature for new feature tasks', () => {
-            expect(autoSelectWorkflow('add new button').name).toBe('feature');
-            expect(autoSelectWorkflow('implement login').name).toBe('feature');
-            expect(autoSelectWorkflow('create user profile').name).toBe('feature');
+            expect(autoSelectWorkflow('add new button').workflow.name).toBe('feature');
+            expect(autoSelectWorkflow('implement login').workflow.name).toBe('feature');
+            expect(autoSelectWorkflow('create user profile').workflow.name).toBe('feature');
         });
         it('should select refactor for refactoring tasks', () => {
-            expect(autoSelectWorkflow('refactor the code').name).toBe('refactor');
-            expect(autoSelectWorkflow('clean up utils').name).toBe('refactor');
-            expect(autoSelectWorkflow('optimize performance').name).toBe('refactor');
+            expect(autoSelectWorkflow('refactor the code').workflow.name).toBe('refactor');
+            expect(autoSelectWorkflow('clean up utils').workflow.name).toBe('refactor');
+            expect(autoSelectWorkflow('optimize performance').workflow.name).toBe('refactor');
         });
         it('should select review for review tasks', () => {
-            expect(autoSelectWorkflow('review this code').name).toBe('review');
-            expect(autoSelectWorkflow('audit the changes').name).toBe('review');
+            expect(autoSelectWorkflow('review this code').workflow.name).toBe('review');
+            expect(autoSelectWorkflow('audit the changes').workflow.name).toBe('review');
         });
         it('should select tdd for test-related tasks', () => {
             // Pattern: /\b(test|tdd|coverage|spec)\b/
             // Avoid words that match earlier: check->review, improve->refactor
-            expect(autoSelectWorkflow('run test suite').name).toBe('tdd');
-            expect(autoSelectWorkflow('measure coverage').name).toBe('tdd');
-            expect(autoSelectWorkflow('tdd workflow').name).toBe('tdd');
+            expect(autoSelectWorkflow('run test suite').workflow.name).toBe('tdd');
+            expect(autoSelectWorkflow('measure coverage').workflow.name).toBe('tdd');
+            expect(autoSelectWorkflow('tdd workflow').workflow.name).toBe('tdd');
         });
         it('should select docs for documentation tasks', () => {
             // Pattern: /\b(doc|document|readme|comment)\b/
-            expect(autoSelectWorkflow('update readme file').name).toBe('docs');
-            expect(autoSelectWorkflow('write doc for api').name).toBe('docs');
+            expect(autoSelectWorkflow('update readme file').workflow.name).toBe('docs');
+            expect(autoSelectWorkflow('write doc for api').workflow.name).toBe('docs');
         });
         it('should default to cook for general tasks', () => {
-            expect(autoSelectWorkflow('do something').name).toBe('cook');
-            expect(autoSelectWorkflow('make it work').name).toBe('cook');
+            expect(autoSelectWorkflow('do something').workflow.name).toBe('cook');
+            expect(autoSelectWorkflow('make it work').workflow.name).toBe('cook');
         });
     });
     describe('getStepPrompt', () => {

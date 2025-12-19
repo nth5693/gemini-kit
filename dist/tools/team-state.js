@@ -74,7 +74,9 @@ function setActiveSessionPointer(sessionId) {
 /**
  * Initialize team state with optional config
  * Also attempts to recover any active session from previous run
+ * CRITICAL FIX: Now registers shutdown handlers with guard to prevent accumulation
  */
+let shutdownHandlersRegistered = false;
 export function initTeamState(customConfig) {
     config = { ...DEFAULT_CONFIG, ...customConfig };
     // Ensure session directory exists
@@ -88,6 +90,24 @@ export function initTeamState(customConfig) {
             currentSession = recoveredSession;
             console.error(`[gemini-kit] Recovered active session: ${recoveredSession.id}`);
         }
+    }
+    // CRITICAL FIX: Register shutdown handlers only once
+    if (!shutdownHandlersRegistered) {
+        process.on('beforeExit', gracefulShutdown);
+        process.on('SIGINT', () => {
+            gracefulShutdown();
+            process.exit(0);
+        });
+        process.on('SIGTERM', () => {
+            gracefulShutdown();
+            process.exit(0);
+        });
+        process.on('uncaughtException', (error) => {
+            console.error('[gemini-kit] Uncaught exception, saving session...', error);
+            gracefulShutdown();
+            process.exit(1);
+        });
+        shutdownHandlersRegistered = true;
     }
 }
 /**
@@ -118,12 +138,24 @@ function recoverActiveSession() {
         }
     }
     // Fallback: Scan for active session (legacy behavior)
+    // HIGH FIX: Sort by mtime first, only read top 5 most recent
     try {
         const files = fs.readdirSync(config.sessionDir)
-            .filter(f => f.endsWith('.json'))
-            .sort()
-            .reverse(); // Most recent first
-        for (const file of files) {
+            .filter(f => f.endsWith('.json') && f !== ACTIVE_SESSION_POINTER);
+        // Get file stats and sort by modification time (newest first)
+        const fileStats = files.map(f => {
+            try {
+                const filePath = path.join(config.sessionDir, f);
+                const stat = fs.statSync(filePath);
+                return { file: f, mtime: stat.mtime.getTime() };
+            }
+            catch {
+                return { file: f, mtime: 0 };
+            }
+        }).sort((a, b) => b.mtime - a.mtime);
+        // Only check top 5 most recent files
+        const recentFiles = fileStats.slice(0, 5);
+        for (const { file } of recentFiles) {
             try {
                 const filePath = path.join(config.sessionDir, file);
                 const data = fs.readFileSync(filePath, 'utf-8');
@@ -176,8 +208,9 @@ export function getCurrentSession() {
 /**
  * Add agent result to session
  * Issue 3 FIX: Truncate output to prevent memory leak
+ * MEDIUM FIX: Configurable via GEMINI_KIT_MAX_OUTPUT env var (default 50KB)
  */
-const MAX_OUTPUT_SIZE = 10 * 1024; // 10KB limit per agent output
+const MAX_OUTPUT_SIZE = parseInt(process.env.GEMINI_KIT_MAX_OUTPUT || '51200', 10); // 50KB default
 export function addAgentResult(result) {
     if (!currentSession) {
         throw new Error('No active session. Call startSession first.');
@@ -375,18 +408,5 @@ function gracefulShutdown() {
         }
     }
 }
-// Handle various termination signals
-process.on('beforeExit', gracefulShutdown);
-process.on('SIGINT', () => {
-    gracefulShutdown();
-    process.exit(0);
-});
-process.on('SIGTERM', () => {
-    gracefulShutdown();
-    process.exit(0);
-});
-process.on('uncaughtException', (error) => {
-    console.error('[gemini-kit] Uncaught exception, saving session...', error);
-    gracefulShutdown();
-    process.exit(1);
-});
+// CRITICAL FIX: Event listeners are now registered in initTeamState() to prevent accumulation
+// See registerShutdownHandlers() called from initTeamState()

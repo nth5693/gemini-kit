@@ -27,10 +27,6 @@ export interface TeamStateConfig {
     maxRetries: number;
     autoSave: boolean;
 }
-/**
- * Initialize team state with optional config
- * Also attempts to recover any active session from previous run
- */
 export declare function initTeamState(customConfig?: Partial<TeamStateConfig>): void;
 /**
  * Start a new team session

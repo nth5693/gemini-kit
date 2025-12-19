@@ -37,7 +37,10 @@ export declare function listWorkflows(): Array<{
 /**
  * Smart routing: auto-select workflow based on task description
  */
-export declare function autoSelectWorkflow(task: string): Workflow;
+export declare function autoSelectWorkflow(task: string): {
+    workflow: Workflow;
+    confidence: number;
+};
 /**
  * Get workflow step prompt
  */

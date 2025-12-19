@@ -79,7 +79,7 @@ export function teamStart(goal: string, sessionName?: string): {
     allWorkflows: Array<{ name: string; description: string }>;
 } {
     const session = startSession(goal, sessionName);
-    const suggested = autoSelectWorkflow(goal);
+    const { workflow: suggested } = autoSelectWorkflow(goal);
 
     return {
         success: true,
@@ -421,28 +421,9 @@ export function smartRoute(task: string): {
     reasoning: string;
     alternativeWorkflows: string[];
 } {
-    const workflow = autoSelectWorkflow(task);
+    // MEDIUM FIX: Use confidence from autoSelectWorkflow, no duplicate regex
+    const { workflow, confidence } = autoSelectWorkflow(task);
     const allWorkflows = listWorkflows();
-
-    // Simple confidence based on keyword matching
-    let confidence = 0.5;
-    const taskLower = task.toLowerCase();
-
-    const patterns: Record<string, RegExp> = {
-        quickfix: /\b(bug|fix|error|issue|crash|broken)\b/,
-        feature: /\b(feature|add|implement|create|new|build)\b/,
-        refactor: /\b(refactor|clean|improve|optimize)\b/,
-        review: /\b(review|check|analyze|audit)\b/,
-        tdd: /\b(test|tdd|coverage|spec)\b/,
-        docs: /\b(doc|document|readme|comment)\b/,
-    };
-
-    for (const [name, pattern] of Object.entries(patterns)) {
-        if (pattern.test(taskLower) && workflow.name === name) {
-            confidence = 0.9;
-            break;
-        }
-    }
 
     return {
         workflow,

@@ -22509,6 +22509,7 @@ function setActiveSessionPointer(sessionId) {
   } catch {
   }
 }
+var shutdownHandlersRegistered = false;
 function initTeamState(customConfig) {
   config2 = { ...DEFAULT_CONFIG, ...customConfig };
   if (!fs6.existsSync(config2.sessionDir)) {
@@ -22520,6 +22521,23 @@ function initTeamState(customConfig) {
       currentSession = recoveredSession;
       console.error(`[gemini-kit] Recovered active session: ${recoveredSession.id}`);
     }
+  }
+  if (!shutdownHandlersRegistered) {
+    process.on("beforeExit", gracefulShutdown);
+    process.on("SIGINT", () => {
+      gracefulShutdown();
+      process.exit(0);
+    });
+    process.on("SIGTERM", () => {
+      gracefulShutdown();
+      process.exit(0);
+    });
+    process.on("uncaughtException", (error2) => {
+      console.error("[gemini-kit] Uncaught exception, saving session...", error2);
+      gracefulShutdown();
+      process.exit(1);
+    });
+    shutdownHandlersRegistered = true;
   }
 }
 function recoverActiveSession() {
@@ -22542,8 +22560,18 @@ function recoverActiveSession() {
     }
   }
   try {
-    const files = fs6.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json")).sort().reverse();
-    for (const file of files) {
+    const files = fs6.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json") && f !== ACTIVE_SESSION_POINTER);
+    const fileStats = files.map((f) => {
+      try {
+        const filePath = path6.join(config2.sessionDir, f);
+        const stat = fs6.statSync(filePath);
+        return { file: f, mtime: stat.mtime.getTime() };
+      } catch {
+        return { file: f, mtime: 0 };
+      }
+    }).sort((a, b) => b.mtime - a.mtime);
+    const recentFiles = fileStats.slice(0, 5);
+    for (const { file } of recentFiles) {
       try {
         const filePath = path6.join(config2.sessionDir, file);
         const data = fs6.readFileSync(filePath, "utf-8");
@@ -22582,7 +22610,7 @@ function startSession(goal, name) {
 function getCurrentSession() {
   return currentSession;
 }
-var MAX_OUTPUT_SIZE = 10 * 1024;
+var MAX_OUTPUT_SIZE = parseInt(process.env.GEMINI_KIT_MAX_OUTPUT || "51200", 10);
 function addAgentResult(result) {
   if (!currentSession) {
     throw new Error("No active session. Call startSession first.");
@@ -22683,20 +22711,6 @@ function gracefulShutdown() {
     }
   }
 }
-process.on("beforeExit", gracefulShutdown);
-process.on("SIGINT", () => {
-  gracefulShutdown();
-  process.exit(0);
-});
-process.on("SIGTERM", () => {
-  gracefulShutdown();
-  process.exit(0);
-});
-process.on("uncaughtException", (error2) => {
-  console.error("[gemini-kit] Uncaught exception, saving session...", error2);
-  gracefulShutdown();
-  process.exit(1);
-});
 
 // src/tools/workflows.ts
 var WORKFLOWS = {
@@ -22819,24 +22833,24 @@ function listWorkflows() {
 function autoSelectWorkflow(task) {
   const taskLower = task.toLowerCase();
   if (/\b(bug|fix|error|issue|crash|broken|not working)\b/.test(taskLower)) {
-    return WORKFLOWS.quickfix;
+    return { workflow: WORKFLOWS.quickfix, confidence: 0.9 };
   }
   if (/\b(feature|add|implement|create|new|build)\b/.test(taskLower)) {
-    return WORKFLOWS.feature;
+    return { workflow: WORKFLOWS.feature, confidence: 0.9 };
   }
   if (/\b(refactor|clean|improve|optimize|restructure)\b/.test(taskLower)) {
-    return WORKFLOWS.refactor;
+    return { workflow: WORKFLOWS.refactor, confidence: 0.9 };
   }
   if (/\b(review|check|analyze|audit)\b/.test(taskLower)) {
-    return WORKFLOWS.review;
+    return { workflow: WORKFLOWS.review, confidence: 0.9 };
   }
   if (/\b(test|tdd|coverage|spec)\b/.test(taskLower)) {
-    return WORKFLOWS.tdd;
+    return { workflow: WORKFLOWS.tdd, confidence: 0.9 };
   }
   if (/\b(doc|document|readme|comment)\b/.test(taskLower)) {
-    return WORKFLOWS.docs;
+    return { workflow: WORKFLOWS.docs, confidence: 0.9 };
   }
-  return WORKFLOWS.cook;
+  return { workflow: WORKFLOWS.cook, confidence: 0.5 };
 }
 function getStepPrompt(step, task, context) {
   const agentPrompts = {
@@ -22884,7 +22898,7 @@ function initOrchestrator(customConfig) {
 }
 function teamStart(goal, sessionName) {
   const session = startSession(goal, sessionName);
-  const suggested = autoSelectWorkflow(goal);
+  const { workflow: suggested } = autoSelectWorkflow(goal);
   return {
     success: true,
     session,
@@ -23039,24 +23053,8 @@ function advanceStep(stepResult) {
   };
 }
 function smartRoute(task) {
-  const workflow = autoSelectWorkflow(task);
+  const { workflow, confidence } = autoSelectWorkflow(task);
   const allWorkflows = listWorkflows();
-  let confidence = 0.5;
-  const taskLower = task.toLowerCase();
-  const patterns = {
-    quickfix: /\b(bug|fix|error|issue|crash|broken)\b/,
-    feature: /\b(feature|add|implement|create|new|build)\b/,
-    refactor: /\b(refactor|clean|improve|optimize)\b/,
-    review: /\b(review|check|analyze|audit)\b/,
-    tdd: /\b(test|tdd|coverage|spec)\b/,
-    docs: /\b(doc|document|readme|comment)\b/
-  };
-  for (const [name, pattern] of Object.entries(patterns)) {
-    if (pattern.test(taskLower) && workflow.name === name) {
-      confidence = 0.9;
-      break;
-    }
-  }
   return {
     workflow,
     confidence,
