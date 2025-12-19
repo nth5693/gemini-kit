@@ -398,8 +398,8 @@ Your changes would be lost if applied.
                             const functionPatterns = [
                                 // Standard functions
                                 /(?:async\s+)?function\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:<[^>]*>)?\s*\(/g,
-                                // Arrow functions with const/let/var
-                                /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\(/g,
+                                // Issue 2 FIX: Removed false positive pattern that matched `const x = (1+2);`
+                                // Arrow functions with const/let/var - must have =>
                                 /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>/g,
                                 // TypeScript generics: const foo = <T>() =>
                                 /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?<[^>]*>\s*\(/g,
@@ -434,19 +434,20 @@ Your changes would be lost if applied.
                             const imports = (content.match(/(?:import|from|require)\s*[('"]([^'"]+)['"]/g) || [])
                                 .slice(0, 10);
 
-                            index.push({
+                            // Issue 6 FIX: Return data instead of push (map should return values)
+                            return {
                                 file: file.replace(/^\.\//, ''),
                                 keywords,
                                 functions: [...new Set(functions)].slice(0, 10),
                                 classes,
                                 imports,
                                 lineCount: lines.length,
-                            });
+                            };
                         } catch {
                             return null; // Skip failed files
                         }
                     }));
-                    // Filter and add valid results to index
+                    // Issue 6 FIX: Now results actually contains data, filter and push
                     results.filter(Boolean).forEach(result => {
                         if (result) index.push(result);
                     });

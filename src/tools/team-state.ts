@@ -221,13 +221,24 @@ export function getCurrentSession(): TeamSession | null {
 
 /**
  * Add agent result to session
+ * Issue 3 FIX: Truncate output to prevent memory leak
  */
+const MAX_OUTPUT_SIZE = 10 * 1024; // 10KB limit per agent output
+
 export function addAgentResult(result: AgentResult): void {
     if (!currentSession) {
         throw new Error('No active session. Call startSession first.');
     }
 
-    currentSession.agents.push(result);
+    // Issue 3 FIX: Truncate large outputs to prevent OOM
+    const truncatedResult = {
+        ...result,
+        output: result.output.length > MAX_OUTPUT_SIZE
+            ? result.output.slice(0, MAX_OUTPUT_SIZE) + '\n... [truncated]'
+            : result.output
+    };
+
+    currentSession.agents.push(truncatedResult);
 
     if (config.autoSave) {
         saveSession();

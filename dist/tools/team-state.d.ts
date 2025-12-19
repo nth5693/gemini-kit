@@ -40,9 +40,6 @@ export declare function startSession(goal: string, name?: string): TeamSession;
  * Get current active session
  */
 export declare function getCurrentSession(): TeamSession | null;
-/**
- * Add agent result to session
- */
 export declare function addAgentResult(result: AgentResult): void;
 /**
  * Update session context (shared data between agents)

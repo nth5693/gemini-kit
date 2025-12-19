@@ -20817,11 +20817,7 @@ import * as fs from "fs";
 import * as path from "path";
 var homeDir = os.homedir();
 function sanitize(input) {
-  let result = String(input).replace(/[;&|`$<>\\]/g, "").trim().slice(0, 500);
-  if (result.startsWith("-")) {
-    result = `-- ${result}`;
-  }
-  return result;
+  return String(input).replace(/[;&|`$<>\\]/g, "").trim().slice(0, 500);
 }
 function validatePath(filePath, baseDir = process.cwd()) {
   const resolved = path.resolve(baseDir, filePath);
@@ -21847,8 +21843,8 @@ File: ${diffData.file}` }] };
               const functionPatterns = [
                 // Standard functions
                 /(?:async\s+)?function\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:<[^>]*>)?\s*\(/g,
-                // Arrow functions with const/let/var
-                /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\(/g,
+                // Issue 2 FIX: Removed false positive pattern that matched `const x = (1+2);`
+                // Arrow functions with const/let/var - must have =>
                 /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>/g,
                 // TypeScript generics: const foo = <T>() =>
                 /(?:const|let|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(?:async\s*)?<[^>]*>\s*\(/g,
@@ -21877,14 +21873,14 @@ File: ${diffData.file}` }] };
               const functions = [...new Set(allFunctions)].slice(0, 15);
               const classes = (content.match(/class\s+([a-zA-Z_][a-zA-Z0-9_]*)/g) || []).map((m) => m.replace("class ", ""));
               const imports = (content.match(/(?:import|from|require)\s*[('"]([^'"]+)['"]/g) || []).slice(0, 10);
-              index.push({
+              return {
                 file: file.replace(/^\.\//, ""),
                 keywords,
                 functions: [...new Set(functions)].slice(0, 10),
                 classes,
                 imports,
                 lineCount: lines.length
-              });
+              };
             } catch {
               return null;
             }
@@ -22583,11 +22579,16 @@ function startSession(goal, name) {
 function getCurrentSession() {
   return currentSession;
 }
+var MAX_OUTPUT_SIZE = 10 * 1024;
 function addAgentResult(result) {
   if (!currentSession) {
     throw new Error("No active session. Call startSession first.");
   }
-  currentSession.agents.push(result);
+  const truncatedResult = {
+    ...result,
+    output: result.output.length > MAX_OUTPUT_SIZE ? result.output.slice(0, MAX_OUTPUT_SIZE) + "\n... [truncated]" : result.output
+  };
+  currentSession.agents.push(truncatedResult);
   if (config2.autoSave) {
     saveSession();
   }
