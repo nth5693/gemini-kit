@@ -3,6 +3,7 @@
  * Coordinates agents, manages workflows, handles retries and parallel execution
  */
 
+import { z } from 'zod';
 import {
     TeamSession,
     AgentResult,
@@ -28,6 +29,22 @@ import {
     getStepPrompt,
 } from './workflows.js';
 
+// HIGH 2 FIX: Schema for validated workflow context
+const WorkflowContextSchema = z.object({
+    workflowType: z.string().optional(),
+    currentStep: z.number().int().min(-1).default(0),
+    task: z.string().optional(),
+}).passthrough(); // Allow extra keys
+
+// Safe getter for typed context values
+function getTypedContext(context: Record<string, unknown>): z.infer<typeof WorkflowContextSchema> {
+    const result = WorkflowContextSchema.safeParse(context);
+    if (result.success) {
+        return result.data;
+    }
+    // Return safe defaults if parsing fails
+    return { currentStep: 0 };
+}
 export interface OrchestratorConfig {
     maxRetries: number;
     parallelEnabled: boolean;
@@ -225,7 +242,9 @@ export function getNextStep(): {
         };
     }
 
-    const currentStep = (session.context.currentStep as number) || 0;
+    // HIGH 2 FIX: Use validated typed context instead of unsafe cast
+    const typedContext = getTypedContext(session.context);
+    const currentStep = typedContext.currentStep;
 
     if (currentStep >= workflow.steps.length) {
         return {
@@ -270,7 +289,9 @@ export function advanceStep(stepResult: string): {
         };
     }
 
-    const currentStep = (session.context.currentStep as number) || 0;
+    // HIGH 2 FIX: Use validated typed context
+    const typedContext = getTypedContext(session.context);
+    const currentStep = typedContext.currentStep;
     const workflowName = session.context.workflowType as string;
     const workflow = getWorkflow(workflowName);
 

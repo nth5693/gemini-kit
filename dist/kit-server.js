@@ -22859,6 +22859,18 @@ function getStepPrompt(step, task, context) {
 }
 
 // src/tools/orchestrator.ts
+var WorkflowContextSchema = external_exports.object({
+  workflowType: external_exports.string().optional(),
+  currentStep: external_exports.number().int().min(-1).default(0),
+  task: external_exports.string().optional()
+}).passthrough();
+function getTypedContext(context) {
+  const result = WorkflowContextSchema.safeParse(context);
+  if (result.success) {
+    return result.data;
+  }
+  return { currentStep: 0 };
+}
 var DEFAULT_CONFIG2 = {
   maxRetries: 3,
   parallelEnabled: true,
@@ -22955,7 +22967,8 @@ function getNextStep() {
       completed: false
     };
   }
-  const currentStep = session.context.currentStep || 0;
+  const typedContext = getTypedContext(session.context);
+  const currentStep = typedContext.currentStep;
   if (currentStep >= workflow.steps.length) {
     return {
       hasMore: false,
@@ -22986,7 +22999,8 @@ function advanceStep(stepResult) {
       message: "No active session."
     };
   }
-  const currentStep = session.context.currentStep || 0;
+  const typedContext = getTypedContext(session.context);
+  const currentStep = typedContext.currentStep;
   const workflowName = session.context.workflowType;
   const workflow = getWorkflow(workflowName);
   if (!workflow) {

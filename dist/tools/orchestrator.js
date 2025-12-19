@@ -2,8 +2,24 @@
  * Orchestrator Engine
  * Coordinates agents, manages workflows, handles retries and parallel execution
  */
+import { z } from 'zod';
 import { startSession, getCurrentSession, addAgentResult, updateContext, incrementRetry, canRetry, endSession, getSessionSummary, listSessions, initTeamState, } from './team-state.js';
 import { getWorkflow, listWorkflows, autoSelectWorkflow, getStepPrompt, } from './workflows.js';
+// HIGH 2 FIX: Schema for validated workflow context
+const WorkflowContextSchema = z.object({
+    workflowType: z.string().optional(),
+    currentStep: z.number().int().min(-1).default(0),
+    task: z.string().optional(),
+}).passthrough(); // Allow extra keys
+// Safe getter for typed context values
+function getTypedContext(context) {
+    const result = WorkflowContextSchema.safeParse(context);
+    if (result.success) {
+        return result.data;
+    }
+    // Return safe defaults if parsing fails
+    return { currentStep: 0 };
+}
 const DEFAULT_CONFIG = {
     maxRetries: 3,
     parallelEnabled: true,
@@ -139,7 +155,9 @@ export function getNextStep() {
             completed: false,
         };
     }
-    const currentStep = session.context.currentStep || 0;
+    // HIGH 2 FIX: Use validated typed context instead of unsafe cast
+    const typedContext = getTypedContext(session.context);
+    const currentStep = typedContext.currentStep;
     if (currentStep >= workflow.steps.length) {
         return {
             hasMore: false,
@@ -175,7 +193,9 @@ export function advanceStep(stepResult) {
             message: 'No active session.'
         };
     }
-    const currentStep = session.context.currentStep || 0;
+    // HIGH 2 FIX: Use validated typed context
+    const typedContext = getTypedContext(session.context);
+    const currentStep = typedContext.currentStep;
     const workflowName = session.context.workflowType;
     const workflow = getWorkflow(workflowName);
     if (!workflow) {
