@@ -21748,7 +21748,22 @@ To apply: \`kit_apply_stored_diff\` with id: \`${diffId}\``
         if (!fs3.existsSync(diffFile)) {
           return { content: [{ type: "text", text: `\u274C Diff not found: ${diffId}` }] };
         }
-        const parseResult = DiffDataSchema.safeParse(JSON.parse(fs3.readFileSync(diffFile, "utf8")));
+        let rawData;
+        try {
+          rawData = fs3.readFileSync(diffFile, "utf8");
+        } catch {
+          return { content: [{ type: "text", text: `\u274C Cannot read diff file: ${diffId}` }] };
+        }
+        let parsedJson;
+        try {
+          parsedJson = JSON.parse(rawData);
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            return { content: [{ type: "text", text: `\u274C Corrupted diff file: ${diffId}` }] };
+          }
+          throw e;
+        }
+        const parseResult = DiffDataSchema.safeParse(parsedJson);
         if (!parseResult.success) {
           return { content: [{ type: "text", text: `\u274C Invalid diff data: ${parseResult.error.message}` }] };
         }

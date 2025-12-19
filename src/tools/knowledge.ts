@@ -262,8 +262,25 @@ To apply: \`kit_apply_stored_diff\` with id: \`${diffId}\``
                     return { content: [{ type: 'text' as const, text: `❌ Diff not found: ${diffId}` }] };
                 }
 
-                // FIX HIGH 2: Re-validate path from stored JSON to prevent tampering
-                const parseResult = DiffDataSchema.safeParse(JSON.parse(fs.readFileSync(diffFile, 'utf8')));
+                // MEDIUM FIX: Handle corrupted JSON with specific SyntaxError
+                let rawData: string;
+                try {
+                    rawData = fs.readFileSync(diffFile, 'utf8');
+                } catch {
+                    return { content: [{ type: 'text' as const, text: `❌ Cannot read diff file: ${diffId}` }] };
+                }
+
+                let parsedJson: unknown;
+                try {
+                    parsedJson = JSON.parse(rawData);
+                } catch (e) {
+                    if (e instanceof SyntaxError) {
+                        return { content: [{ type: 'text' as const, text: `❌ Corrupted diff file: ${diffId}` }] };
+                    }
+                    throw e;
+                }
+
+                const parseResult = DiffDataSchema.safeParse(parsedJson);
                 if (!parseResult.success) {
                     return { content: [{ type: 'text' as const, text: `❌ Invalid diff data: ${parseResult.error.message}` }] };
                 }

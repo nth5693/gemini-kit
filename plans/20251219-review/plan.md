@@ -1,38 +1,39 @@
-# Code Review Plan: Full Codebase Audit (2025-12-19)
+# Codebase Review Plan - 2025-12-19
 
-## Objective
-Perform a comprehensive audit of the `gemini-kit` codebase to ensure security, stability, type safety, and maintainability.
+## Overview
+Comprehensive review of the `gemini-kit` codebase, focusing on security, reliability, and maintainability.
 
 ## Scope
-- **Source Code:** `src/**/*.ts`
-- **Tests:** `src/**/__tests__/*.ts`
-- **Configuration:** `package.json`, `tsconfig.json`, `eslint.config.js`
-- **Documentation:** `README.md`, `GEMINI.md`
+- **Directory:** `src/`
+- **Key Modules:** Security, Knowledge, Orchestrator
+- **Tests:** `src/**/*.test.ts`
 
-## Phases
+## 1. Findings
 
-### Phase 1: Security Audit
-- [x] Check for shell injection vulnerabilities (usage of `exec`, `spawn`).
-- [x] Verify file system access controls (path traversal).
-- [x] Review API key handling and secret exposure.
-- [x] Validate input sanitization logic.
+### 🟠 High (Reliability & Performance)
+1.  **Fragile Regex Parsing (`src/tools/knowledge.ts`)**
+    -   The `kit_index_codebase` tool uses regex for parsing functions and classes. This is error-prone and misses complex cases.
+    -   *Recommendation:* Switch to an AST-based parser (e.g., `typescript` compiler API or `tree-sitter`) for robust symbol extraction.
 
-### Phase 2: Type Safety & Code Quality
-- [x] Scan for `any` usage.
-- [x] Verify `strict` mode compliance.
-- [x] Check error handling patterns (try-catch blocks).
-- [x] Review linter rules and exclusions.
+2.  **Synchronous File I/O (`src/tools/knowledge.ts`)**
+    -   `kit_get_learnings` uses `fs.readFileSync`. Large learning files could block the event loop.
+    -   *Recommendation:* Switch to `fs.promises.readFile`.
 
-### Phase 3: Architecture & Logic
-- [x] Review `kit-server.ts` entry point.
-- [x] Analyze orchestrator state management (`team-state.ts`, `orchestrator.ts`).
-- [x] Verify workflow logic (`workflows.ts`).
-- [x] Check tool modularity and registration.
+### 🟡 Medium (Error Handling)
+1.  **Unsafe JSON Parsing (`src/tools/knowledge.ts`)**
+    -   `kit_apply_stored_diff` calls `JSON.parse(fs.readFileSync(...))` without a try-catch block for the parsing itself (only the outer block catches generic errors). Malformed JSON will crash the tool execution abruptly.
+    -   *Recommendation:* Wrap `JSON.parse` in a specific try-catch or use `zod`'s `safeParse` on the raw string if possible (though `JSON.parse` must happen first).
 
-### Phase 4: Test Coverage
-- [x] Map source files to test files.
-- [x] Identify coverage gaps.
-- [ ] Run tests (optional, verification step).
+### 🟢 Low (Style & Best Practices)
+1.  **Aggressive Sanitization (`src/tools/security.ts`)**
+    -   `sanitize` removes characters like `;`, `&`, `|` which might be valid in git commit messages or other inputs, even though `execFileSync` is used.
+    -   *Recommendation:* Review if this level of sanitization is strictly necessary when not using `shell: true`.
 
-## Deliverables
-- **Review Report:** `reports/2025-12-19-codebase-review.md` containing findings and recommendations.
+## 2. Testing Status
+-   Tests exist in `src/__tests__` and `src/tools/__tests__`.
+-   Need to verify coverage for `knowledge.ts` edge cases (e.g., malformed files).
+
+## 3. Action Plan
+1.  [ ] **Fix JSON Parsing:** Add error handling for `JSON.parse` in `kit_apply_stored_diff`.
+2.  [ ] **Refactor Sync I/O:** Convert `kit_get_learnings` to use async file reading.
+3.  [ ] **Test Coverage:** Add a test case for malformed JSON in `knowledge.ts`.
