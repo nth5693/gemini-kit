@@ -9,6 +9,12 @@ export declare const homeDir: string;
  */
 export declare function sanitize(input: string): string;
 /**
+ * Validate file path to prevent path traversal attacks
+ * Uses stricter path.sep check to prevent prefix matching flaws
+ * (e.g., /tmp/app should not match /tmp/app-secret)
+ */
+export declare function validatePath(filePath: string, baseDir?: string): string;
+/**
  * Safe git command execution using execFileSync
  * Includes stderr in error message for better debugging
  *

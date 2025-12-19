@@ -12,7 +12,7 @@ import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Diff from 'diff';
-import { homeDir, findFilesAsync } from './security.js';
+import { homeDir, findFilesAsync, validatePath } from './security.js';
 // Constants
 const LEARNING_START = '<!-- LEARNING_START';
 const LEARNING_END = '<!-- LEARNING_END -->';
@@ -27,21 +27,7 @@ const DiffDataSchema = z.object({
     createdAt: z.string(),
     applied: z.boolean(),
 });
-/**
- * FIX HIGH 2: Validate file path to prevent path traversal attacks
- * Uses stricter path.sep check to prevent prefix matching flaws
- * (e.g., /tmp/app should not match /tmp/app-secret)
- * Exported for testability (LOW 3)
- */
-export function validatePath(filePath, baseDir = process.cwd()) {
-    const resolved = path.resolve(baseDir, filePath);
-    const root = path.resolve(baseDir);
-    // Stricter: exact match OR starts with root + separator
-    if (resolved !== root && !resolved.startsWith(root + path.sep)) {
-        throw new Error(`Path traversal detected: ${filePath}`);
-    }
-    return resolved;
-}
+// validatePath imported from security.ts (LOW 6: centralized security utilities)
 export function registerKnowledgeTools(server) {
     // TOOL 7: SAVE LEARNING (FIX 9.5 - unique delimiter)
     server.tool('kit_save_learning', 'Save a learning/lesson from user feedback to improve future responses', {

@@ -2,13 +2,29 @@
 /**
  * BeforeAgent Hook
  * Inject relevant learnings based on prompt context (Phase 5 - Vector Learnings)
+ * 
+ * @typedef {Object} HookInput
+ * @property {string} [prompt] - The user's prompt
+ * @property {string} [agent] - The agent name
+ * @property {Record<string, unknown>} [context] - Additional context
+ * 
+ * @typedef {Object} HookOutput
+ * @property {Object} [hookSpecificOutput]
+ * @property {string} hookSpecificOutput.hookEventName
+ * @property {string} hookSpecificOutput.additionalContext
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
-// Simple semantic matching for learnings
+/**
+ * Find learnings relevant to the current prompt
+ * @param {string} prompt - User's prompt
+ * @param {string} learningsContent - Full learnings file content
+ * @param {number} [limit=3] - Max learnings to return
+ * @returns {string[]} Relevant learning sections
+ */
 function findRelevantLearnings(prompt, learningsContent, limit = 3) {
     // Extract keywords from prompt
     const promptTerms = prompt.toLowerCase().match(/\b[a-z][a-z0-9_]{2,}\b/g) || [];

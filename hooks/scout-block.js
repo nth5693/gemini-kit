@@ -3,17 +3,33 @@
  * Scout Block Hook
  * Prevents file modifications when in scout/exploration mode
  * Triggers on: PreToolUse
+ * 
+ * @typedef {Object} HookInput
+ * @property {string} [toolName] - The tool being called
+ * @property {Record<string, unknown>} [toolInput] - Tool arguments
+ * 
+ * @typedef {Object} BlockDecision
+ * @property {Object} hookSpecificOutput
+ * @property {string} hookSpecificOutput.hookEventName
+ * @property {'block'|'allow'} hookSpecificOutput.decision
+ * @property {string} [hookSpecificOutput.message]
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 
+/** @type {string[]} Tools blocked in scout mode */
 const BLOCKED_TOOLS = [
     'Write', 'Edit', 'Bash', 'Delete', 'Move', 'Rename',
     'write_to_file', 'replace_file_content', 'multi_replace_file_content',
     'run_command'
 ];
 
+/**
+ * Main hook handler
+ * @param {string} input - JSON string input from CLI
+ * @returns {Promise<void>}
+ */
 async function main(input) {
     let data;
     try {

@@ -10,8 +10,45 @@ const DEFAULT_CONFIG = {
     maxRetries: 3,
     autoSave: true,
 };
+// Active session pointer file (HIGH 2: O(1) recovery instead of O(N) scan)
+const ACTIVE_SESSION_POINTER = '.gemini-kit/active-session.json';
 let currentSession = null;
 let config = DEFAULT_CONFIG;
+/**
+ * Get active session ID from pointer file (O(1) lookup)
+ */
+function getActiveSessionPointer() {
+    try {
+        if (fs.existsSync(ACTIVE_SESSION_POINTER)) {
+            const data = JSON.parse(fs.readFileSync(ACTIVE_SESSION_POINTER, 'utf-8'));
+            return data.sessionId || null;
+        }
+    }
+    catch {
+        // Ignore corrupted pointer
+    }
+    return null;
+}
+/**
+ * Set active session pointer
+ */
+function setActiveSessionPointer(sessionId) {
+    try {
+        const dir = path.dirname(ACTIVE_SESSION_POINTER);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        if (sessionId) {
+            fs.writeFileSync(ACTIVE_SESSION_POINTER, JSON.stringify({ sessionId, updatedAt: new Date().toISOString() }));
+        }
+        else if (fs.existsSync(ACTIVE_SESSION_POINTER)) {
+            fs.unlinkSync(ACTIVE_SESSION_POINTER);
+        }
+    }
+    catch {
+        // Best effort
+    }
+}
 /**
  * Initialize team state with optional config
  * Also attempts to recover any active session from previous run
@@ -33,34 +70,55 @@ export function initTeamState(customConfig) {
 }
 /**
  * Attempt to recover an active session from disk
- * Scans sessions folder for most recent active session
+ * HIGH 2 FIX: First check pointer file for O(1) recovery,
+ * fallback to scan only if pointer missing
  */
 function recoverActiveSession() {
     if (!fs.existsSync(config.sessionDir)) {
         return null;
     }
+    // First: Try O(1) lookup via pointer file
+    const pointerId = getActiveSessionPointer();
+    if (pointerId) {
+        const pointerFile = path.join(config.sessionDir, `${pointerId}.json`);
+        try {
+            if (fs.existsSync(pointerFile)) {
+                const data = fs.readFileSync(pointerFile, 'utf-8');
+                const session = JSON.parse(data);
+                if (session.status === 'active') {
+                    return session;
+                }
+            }
+        }
+        catch {
+            // Pointer is stale, clear it and fallback to scan
+            setActiveSessionPointer(null);
+        }
+    }
+    // Fallback: Scan for active session (legacy behavior)
     try {
         const files = fs.readdirSync(config.sessionDir)
             .filter(f => f.endsWith('.json'))
             .sort()
-            .reverse(); // Most recent first (by filename which includes timestamp)
+            .reverse(); // Most recent first
         for (const file of files) {
             try {
                 const filePath = path.join(config.sessionDir, file);
                 const data = fs.readFileSync(filePath, 'utf-8');
                 const session = JSON.parse(data);
                 if (session.status === 'active') {
+                    // Update pointer for next time
+                    setActiveSessionPointer(session.id);
                     return session;
                 }
             }
-            catch (_e) {
-                // Skip corrupted files
+            catch {
                 continue;
             }
         }
     }
-    catch (_e) {
-        // Session directory read error, ignore
+    catch {
+        // Session directory read error
     }
     return null;
 }
@@ -83,6 +141,8 @@ export function startSession(goal, name) {
     if (config.autoSave) {
         saveSession();
     }
+    // Set pointer for O(1) recovery
+    setActiveSessionPointer(currentSession.id);
     return currentSession;
 }
 /**
@@ -156,6 +216,8 @@ export function endSession(status = 'completed') {
     currentSession.status = status;
     currentSession.endTime = new Date().toISOString();
     saveSession(true); // Immediate save for critical operation
+    // Clear pointer since session is no longer active
+    setActiveSessionPointer(null);
     const session = currentSession;
     currentSession = null;
     return session;

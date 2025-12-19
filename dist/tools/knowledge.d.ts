@@ -9,11 +9,4 @@
  * - 9.5: Learning Delimiter - use unique markers
  */
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-/**
- * FIX HIGH 2: Validate file path to prevent path traversal attacks
- * Uses stricter path.sep check to prevent prefix matching flaws
- * (e.g., /tmp/app should not match /tmp/app-secret)
- * Exported for testability (LOW 3)
- */
-export declare function validatePath(filePath: string, baseDir?: string): string;
 export declare function registerKnowledgeTools(server: McpServer): void;

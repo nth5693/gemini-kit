@@ -20819,6 +20819,14 @@ var homeDir = os.homedir();
 function sanitize(input) {
   return String(input).replace(/[;&|`$(){}[\]<>\\!#*?]/g, "").trim().slice(0, 500);
 }
+function validatePath(filePath, baseDir = process.cwd()) {
+  const resolved = path.resolve(baseDir, filePath);
+  const root = path.resolve(baseDir);
+  if (resolved !== root && !resolved.startsWith(root + path.sep)) {
+    throw new Error(`Path traversal detected: ${filePath}`);
+  }
+  return resolved;
+}
 function extractStderr(error2) {
   if (error2 && typeof error2 === "object" && "stderr" in error2) {
     return String(error2.stderr);
@@ -21533,14 +21541,6 @@ var DiffDataSchema = external_exports.object({
   createdAt: external_exports.string(),
   applied: external_exports.boolean()
 });
-function validatePath(filePath, baseDir = process.cwd()) {
-  const resolved = path3.resolve(baseDir, filePath);
-  const root = path3.resolve(baseDir);
-  if (resolved !== root && !resolved.startsWith(root + path3.sep)) {
-    throw new Error(`Path traversal detected: ${filePath}`);
-  }
-  return resolved;
-}
 function registerKnowledgeTools(server2) {
   server2.tool(
     "kit_save_learning",
@@ -22417,8 +22417,33 @@ var DEFAULT_CONFIG = {
   maxRetries: 3,
   autoSave: true
 };
+var ACTIVE_SESSION_POINTER = ".gemini-kit/active-session.json";
 var currentSession = null;
 var config2 = DEFAULT_CONFIG;
+function getActiveSessionPointer() {
+  try {
+    if (fs6.existsSync(ACTIVE_SESSION_POINTER)) {
+      const data = JSON.parse(fs6.readFileSync(ACTIVE_SESSION_POINTER, "utf-8"));
+      return data.sessionId || null;
+    }
+  } catch {
+  }
+  return null;
+}
+function setActiveSessionPointer(sessionId) {
+  try {
+    const dir = path6.dirname(ACTIVE_SESSION_POINTER);
+    if (!fs6.existsSync(dir)) {
+      fs6.mkdirSync(dir, { recursive: true });
+    }
+    if (sessionId) {
+      fs6.writeFileSync(ACTIVE_SESSION_POINTER, JSON.stringify({ sessionId, updatedAt: (/* @__PURE__ */ new Date()).toISOString() }));
+    } else if (fs6.existsSync(ACTIVE_SESSION_POINTER)) {
+      fs6.unlinkSync(ACTIVE_SESSION_POINTER);
+    }
+  } catch {
+  }
+}
 function initTeamState(customConfig) {
   config2 = { ...DEFAULT_CONFIG, ...customConfig };
   if (!fs6.existsSync(config2.sessionDir)) {
@@ -22436,6 +22461,21 @@ function recoverActiveSession() {
   if (!fs6.existsSync(config2.sessionDir)) {
     return null;
   }
+  const pointerId = getActiveSessionPointer();
+  if (pointerId) {
+    const pointerFile = path6.join(config2.sessionDir, `${pointerId}.json`);
+    try {
+      if (fs6.existsSync(pointerFile)) {
+        const data = fs6.readFileSync(pointerFile, "utf-8");
+        const session = JSON.parse(data);
+        if (session.status === "active") {
+          return session;
+        }
+      }
+    } catch {
+      setActiveSessionPointer(null);
+    }
+  }
   try {
     const files = fs6.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json")).sort().reverse();
     for (const file of files) {
@@ -22444,13 +22484,14 @@ function recoverActiveSession() {
         const data = fs6.readFileSync(filePath, "utf-8");
         const session = JSON.parse(data);
         if (session.status === "active") {
+          setActiveSessionPointer(session.id);
           return session;
         }
-      } catch (_e) {
+      } catch {
         continue;
       }
     }
-  } catch (_e) {
+  } catch {
   }
   return null;
 }
@@ -22470,6 +22511,7 @@ function startSession(goal, name) {
   if (config2.autoSave) {
     saveSession();
   }
+  setActiveSessionPointer(currentSession.id);
   return currentSession;
 }
 function getCurrentSession() {
@@ -22500,6 +22542,7 @@ function endSession(status = "completed") {
   currentSession.status = status;
   currentSession.endTime = (/* @__PURE__ */ new Date()).toISOString();
   saveSession(true);
+  setActiveSessionPointer(null);
   const session = currentSession;
   currentSession = null;
   return session;

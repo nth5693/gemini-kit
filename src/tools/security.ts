@@ -25,6 +25,22 @@ export function sanitize(input: string): string {
 }
 
 /**
+ * Validate file path to prevent path traversal attacks
+ * Uses stricter path.sep check to prevent prefix matching flaws
+ * (e.g., /tmp/app should not match /tmp/app-secret)
+ */
+export function validatePath(filePath: string, baseDir: string = process.cwd()): string {
+    const resolved = path.resolve(baseDir, filePath);
+    const root = path.resolve(baseDir);
+
+    // Stricter: exact match OR starts with root + separator
+    if (resolved !== root && !resolved.startsWith(root + path.sep)) {
+        throw new Error(`Path traversal detected: ${filePath}`);
+    }
+    return resolved;
+}
+
+/**
  * Extract stderr from error for better logging
  */
 function extractStderr(error: unknown): string {
