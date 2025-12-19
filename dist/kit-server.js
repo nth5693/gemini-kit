@@ -20874,36 +20874,6 @@ function commandExists(cmd) {
     return false;
   }
 }
-function findFiles(dir, extensions, maxFiles, excludeDirs = ["node_modules", ".git", "dist", "build", "coverage"]) {
-  const results = [];
-  const queue = [
-    { fullPath: dir, relativePath: "" }
-  ];
-  while (queue.length > 0 && results.length < maxFiles) {
-    const current = queue.shift();
-    let entries;
-    try {
-      entries = fs.readdirSync(current.fullPath, { withFileTypes: true });
-    } catch {
-      continue;
-    }
-    for (const entry of entries) {
-      if (results.length >= maxFiles) break;
-      const entryFullPath = path.join(current.fullPath, entry.name);
-      const entryRelPath = current.relativePath ? path.join(current.relativePath, entry.name) : entry.name;
-      if (entry.isDirectory()) {
-        if (!excludeDirs.includes(entry.name)) {
-          queue.push({ fullPath: entryFullPath, relativePath: entryRelPath });
-        }
-      } else if (entry.isFile()) {
-        if (extensions.some((ext) => entry.name.endsWith(ext))) {
-          results.push(entryRelPath);
-        }
-      }
-    }
-  }
-  return results;
-}
 async function findFilesAsync(dir, extensions, maxFiles, excludeDirs = ["node_modules", ".git", "dist", "build", "coverage"]) {
   const results = [];
   async function walk(currentDir, relativePath = "") {
@@ -21639,7 +21609,8 @@ Lesson: ${lesson}` }] };
             let score = 0;
             const sectionLower = section.content.toLowerCase();
             for (const term of queryTerms) {
-              const matches = (sectionLower.match(new RegExp(term, "g")) || []).length;
+              const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+              const matches = (sectionLower.match(new RegExp(escapedTerm, "g")) || []).length;
               score += matches * 2;
               if (sectionLower.includes(`lesson:** ${term}`) || sectionLower.includes(`lesson:**${term}`)) {
                 score += 5;
@@ -22342,7 +22313,7 @@ function registerCoreTools(server2) {
       try {
         const projectDir = process.cwd();
         const extensions = getFileExtensions(projectDir);
-        const files = findFiles(projectDir, extensions, 50);
+        const files = await findFilesAsync(projectDir, extensions, 50);
         const structure = files.filter((f) => {
           const parts = f.split(path5.sep);
           return parts.length <= depth + 1;
@@ -22661,12 +22632,23 @@ function saveSession(immediate = false) {
     debouncedSave();
   }
 }
-function listSessions() {
+var MAX_SESSIONS_TO_LIST = parseInt(process.env.GEMINI_KIT_MAX_SESSIONS || "20", 10);
+function listSessions(limit = MAX_SESSIONS_TO_LIST) {
   if (!fs6.existsSync(config2.sessionDir)) {
     return [];
   }
-  const files = fs6.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json"));
-  return files.map((file) => {
+  const files = fs6.readdirSync(config2.sessionDir).filter((f) => f.endsWith(".json") && f !== ACTIVE_SESSION_POINTER);
+  const fileStats = files.map((file) => {
+    try {
+      const filePath = path6.join(config2.sessionDir, file);
+      const stat = fs6.statSync(filePath);
+      return { file, mtime: stat.mtime.getTime() };
+    } catch {
+      return { file, mtime: 0 };
+    }
+  }).sort((a, b) => b.mtime - a.mtime);
+  const recentFiles = fileStats.slice(0, limit);
+  return recentFiles.map(({ file }) => {
     try {
       const data = fs6.readFileSync(path6.join(config2.sessionDir, file), "utf-8");
       const parsed = TeamSessionSchema.safeParse(JSON.parse(data));
@@ -22968,8 +22950,20 @@ function getNextStep() {
       completed: false
     };
   }
-  const workflowName = session.context.workflowType;
-  const task = session.context.task;
+  const typedContext = getTypedContext(session.context);
+  const currentStep = typedContext.currentStep;
+  const workflowName = typedContext.workflowType;
+  const task = typedContext.task || session.goal;
+  if (!workflowName) {
+    return {
+      hasMore: false,
+      stepIndex: -1,
+      step: null,
+      prompt: "No workflow type set. Start a workflow first.",
+      remainingSteps: 0,
+      completed: false
+    };
+  }
   const workflow = getWorkflow(workflowName);
   if (!workflow) {
     return {
@@ -22981,8 +22975,6 @@ function getNextStep() {
       completed: false
     };
   }
-  const typedContext = getTypedContext(session.context);
-  const currentStep = typedContext.currentStep;
   if (currentStep >= workflow.steps.length) {
     return {
       hasMore: false,
@@ -23015,13 +23007,20 @@ function advanceStep(stepResult) {
   }
   const typedContext = getTypedContext(session.context);
   const currentStep = typedContext.currentStep;
-  const workflowName = session.context.workflowType;
+  const workflowName = typedContext.workflowType;
+  if (!workflowName) {
+    return {
+      advanced: false,
+      nextStepIndex: -1,
+      message: "No workflow type set in session. Start a workflow first."
+    };
+  }
   const workflow = getWorkflow(workflowName);
   if (!workflow) {
     return {
       advanced: false,
       nextStepIndex: currentStep,
-      message: "Workflow not found."
+      message: `Workflow '${workflowName}' not found.`
     };
   }
   if (currentStep >= workflow.steps.length) {

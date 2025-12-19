@@ -6,7 +6,7 @@ import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
-import { safeGit, findFiles } from './security.js';
+import { safeGit, findFilesAsync } from './security.js';
 import { DEFAULT_EXTENSIONS, getFileExtensions } from './config.js';
 /**
  * Register core tools with MCP server
@@ -14,12 +14,14 @@ import { DEFAULT_EXTENSIONS, getFileExtensions } from './config.js';
 export function registerCoreTools(server) {
     // ═══════════════════════════════════════════════════════════════
     // TOOL: GET PROJECT CONTEXT (Cross-platform)
+    // HIGH FIX: Uses async file scanning to avoid blocking event loop
     // ═══════════════════════════════════════════════════════════════
     server.tool('kit_get_project_context', 'Gather project context including structure, dependencies, and recent changes', { depth: z.number().optional().default(2).describe('Directory depth to scan') }, async ({ depth = 2 }) => {
         try {
             const projectDir = process.cwd();
             const extensions = getFileExtensions(projectDir);
-            const files = findFiles(projectDir, extensions, 50);
+            // HIGH FIX: Use async version to avoid blocking
+            const files = await findFilesAsync(projectDir, extensions, 50);
             // Filter by depth (approximate)
             const structure = files.filter(f => {
                 const parts = f.split(path.sep);

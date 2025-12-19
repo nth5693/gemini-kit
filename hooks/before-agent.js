@@ -66,7 +66,9 @@ async function main(input) {
     let data;
     try {
         data = JSON.parse(input);
-    } catch {
+    } catch (e) {
+        // M1 FIX: Log error to stderr for debugging (doesn't interfere with MCP stdout)
+        console.error('[before-agent] Failed to parse input:', e.message);
         console.log(JSON.stringify({}));
         process.exit(0);
     }

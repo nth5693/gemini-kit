@@ -9,7 +9,7 @@ import * as path from 'path';
 import * as crypto from 'crypto';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
-import { safeGit, findFiles } from './security.js';
+import { safeGit, findFilesAsync } from './security.js';
 import { DEFAULT_EXTENSIONS, getFileExtensions } from './config.js';
 
 /**
@@ -18,6 +18,7 @@ import { DEFAULT_EXTENSIONS, getFileExtensions } from './config.js';
 export function registerCoreTools(server: McpServer): void {
     // ═══════════════════════════════════════════════════════════════
     // TOOL: GET PROJECT CONTEXT (Cross-platform)
+    // HIGH FIX: Uses async file scanning to avoid blocking event loop
     // ═══════════════════════════════════════════════════════════════
     server.tool(
         'kit_get_project_context',
@@ -27,7 +28,8 @@ export function registerCoreTools(server: McpServer): void {
             try {
                 const projectDir = process.cwd();
                 const extensions = getFileExtensions(projectDir);
-                const files = findFiles(projectDir, extensions, 50);
+                // HIGH FIX: Use async version to avoid blocking
+                const files = await findFilesAsync(projectDir, extensions, 50);
 
                 // Filter by depth (approximate)
                 const structure = files.filter(f => {

@@ -141,7 +141,9 @@ ${LEARNING_END}
                         let score = 0;
                         const sectionLower = section.content.toLowerCase();
                         for (const term of queryTerms) {
-                            const matches = (sectionLower.match(new RegExp(term, 'g')) || []).length;
+                            // CRITICAL FIX: Escape regex special chars to prevent ReDoS
+                            const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            const matches = (sectionLower.match(new RegExp(escapedTerm, 'g')) || []).length;
                             score += matches * 2;
                             if (sectionLower.includes(`lesson:** ${term}`) ||
                                 sectionLower.includes(`lesson:**${term}`)) {

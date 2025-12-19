@@ -62,10 +62,7 @@ export declare function endSession(status?: 'completed' | 'failed'): TeamSession
  * Phase 1 FIX: Validates sessionId format to prevent path traversal
  */
 export declare function loadSession(sessionId: string): TeamSession | null;
-/**
- * List all sessions
- */
-export declare function listSessions(): TeamSession[];
+export declare function listSessions(limit?: number): TeamSession[];
 /**
  * Get session summary
  */

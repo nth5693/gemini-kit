@@ -227,8 +227,23 @@ export function getNextStep(): {
         };
     }
 
-    const workflowName = session.context.workflowType as string;
-    const task = session.context.task as string;
+    // M2 FIX: Use validated typed context for all context values
+    const typedContext = getTypedContext(session.context);
+    const currentStep = typedContext.currentStep;
+    const workflowName = typedContext.workflowType;
+    const task = typedContext.task || session.goal;
+
+    if (!workflowName) {
+        return {
+            hasMore: false,
+            stepIndex: -1,
+            step: null,
+            prompt: 'No workflow type set. Start a workflow first.',
+            remainingSteps: 0,
+            completed: false,
+        };
+    }
+
     const workflow = getWorkflow(workflowName);
 
     if (!workflow) {
@@ -241,10 +256,6 @@ export function getNextStep(): {
             completed: false,
         };
     }
-
-    // HIGH 2 FIX: Use validated typed context instead of unsafe cast
-    const typedContext = getTypedContext(session.context);
-    const currentStep = typedContext.currentStep;
 
     if (currentStep >= workflow.steps.length) {
         return {
@@ -292,14 +303,24 @@ export function advanceStep(stepResult: string): {
     // HIGH 2 FIX: Use validated typed context
     const typedContext = getTypedContext(session.context);
     const currentStep = typedContext.currentStep;
-    const workflowName = session.context.workflowType as string;
+
+    // M2 FIX: Validate workflowType instead of unsafe cast
+    const workflowName = typedContext.workflowType;
+    if (!workflowName) {
+        return {
+            advanced: false,
+            nextStepIndex: -1,
+            message: 'No workflow type set in session. Start a workflow first.'
+        };
+    }
+
     const workflow = getWorkflow(workflowName);
 
     if (!workflow) {
         return {
             advanced: false,
             nextStepIndex: currentStep,
-            message: 'Workflow not found.'
+            message: `Workflow '${workflowName}' not found.`
         };
     }
 

@@ -417,16 +417,33 @@ export function loadSession(sessionId: string): TeamSession | null {
 
 /**
  * List all sessions
+ * H1 FIX: Optimized - sort by mtime first, limit reads to most recent N
  */
-export function listSessions(): TeamSession[] {
+const MAX_SESSIONS_TO_LIST = parseInt(process.env.GEMINI_KIT_MAX_SESSIONS || '20', 10);
+
+export function listSessions(limit: number = MAX_SESSIONS_TO_LIST): TeamSession[] {
     if (!fs.existsSync(config.sessionDir)) {
         return [];
     }
 
-    const files = fs.readdirSync(config.sessionDir).filter((f: string) => f.endsWith('.json'));
+    const files = fs.readdirSync(config.sessionDir)
+        .filter((f: string) => f.endsWith('.json') && f !== ACTIVE_SESSION_POINTER);
 
-    // FIX HIGH 1: Use Zod validation for corrupted JSON files
-    return files.map((file: string) => {
+    // H1 FIX: Sort by mtime BEFORE reading file contents (much faster)
+    const fileStats = files.map(file => {
+        try {
+            const filePath = path.join(config.sessionDir, file);
+            const stat = fs.statSync(filePath);
+            return { file, mtime: stat.mtime.getTime() };
+        } catch {
+            return { file, mtime: 0 };
+        }
+    }).sort((a, b) => b.mtime - a.mtime);
+
+    // Only read the most recent N files
+    const recentFiles = fileStats.slice(0, limit);
+
+    return recentFiles.map(({ file }) => {
         try {
             const data = fs.readFileSync(path.join(config.sessionDir, file), 'utf-8');
             const parsed = TeamSessionSchema.safeParse(JSON.parse(data));

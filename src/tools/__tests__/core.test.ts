@@ -31,6 +31,7 @@ vi.mock('fs', () => ({
 vi.mock('../security.js', () => ({
     safeGit: vi.fn().mockReturnValue('abc123 commit\ndef456 commit'),
     findFiles: vi.fn().mockReturnValue(['index.ts', 'src/utils.ts']),
+    findFilesAsync: vi.fn().mockResolvedValue(['index.ts', 'src/utils.ts']),
 }));
 
 // Mock config
