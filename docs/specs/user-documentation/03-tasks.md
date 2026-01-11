@@ -12,7 +12,7 @@
 
 ## Phase 1: Quick Start Guide
 
-**Goal:** Người mới có thể chạy lệnh đầu tiên trong 5 phút
+**Goal:** Newcomers can run their first command in 5 minutes
 
 **Exit Criteria:**
 - [ ] QUICKSTART.md exists
@@ -26,14 +26,14 @@
 - [ ] 1.2 Write installation section
 - [ ] 1.3 Write "First 5 Minutes" section
 - [ ] 1.4 Write "Essential Commands" section
-- [ ] 1.5 Add examples và screenshots
-- [ ] 1.6 Test với fresh perspective
+- [ ] 1.5 Add examples and screenshots
+- [ ] 1.6 Test with fresh perspective
 
 ---
 
 ## Phase 2: Feature Reference
 
-**Goal:** Document tất cả features quan trọng
+**Goal:** Document all important features
 
 **Exit Criteria:**
 - [ ] FEATURES.md complete
@@ -42,16 +42,16 @@
 
 ### Tasks
 
-- [ ] 2.1 Create FEATURES.md với agent list
+- [ ] 2.1 Create FEATURES.md with agent list
 - [ ] 2.2 Document top 10 workflows
-- [ ] 2.3 Create WORKFLOWS.md với flowcharts
+- [ ] 2.3 Create WORKFLOWS.md with flowcharts
 - [ ] 2.4 Add MCP tools reference
 
 ---
 
 ## Phase 3: Best Practices
 
-**Goal:** Hướng dẫn sử dụng hiệu quả
+**Goal:** Guide to effective usage
 
 **Exit Criteria:**
 - [ ] BEST-PRACTICES.md complete

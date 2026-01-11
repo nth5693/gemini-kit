@@ -4,15 +4,15 @@ description: Interactive project setup wizard. Creates product, tech-stack, and 
 
 # /kit:setup - Project Setup Wizard
 
-Tạo context files cho project mới với interactive wizard.
+Create context files for new projects with an interactive wizard.
 
-> **Why setup?** Context files giúp AI hiểu project của bạn tốt hơn, cho responses chính xác hơn.
+> **Why setup?** Context files help AI understand your project better, providing more accurate responses.
 
 ## When To Use
 
-- Khi bắt đầu project mới
-- Khi onboard team member mới
-- Khi muốn standardize project context
+- When starting a new project
+- When onboarding a new team member
+- When you want to standardize project context
 
 ---
 
@@ -20,7 +20,7 @@ Tạo context files cho project mới với interactive wizard.
 
 ### Step 1: Product Context
 
-Thu thập thông tin:
+Collect information:
 - Product description
 - Target users
 - Goals
@@ -30,7 +30,7 @@ Thu thập thông tin:
 
 ### Step 2: Tech Stack
 
-Thu thập thông tin:
+Collect information:
 - Language (TypeScript, Python, etc.)
 - Framework (Next.js, FastAPI, etc.)
 - Database (PostgreSQL, MongoDB, etc.)
@@ -40,7 +40,7 @@ Thu thập thông tin:
 
 ### Step 3: Guidelines
 
-Thu thập thông tin:
+Collect information:
 - Code style (formatting, naming)
 - Commit conventions (conventional commits?)
 - Testing requirements

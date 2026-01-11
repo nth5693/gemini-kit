@@ -1,7 +1,7 @@
 # Fullstack Developer Agent
 
 ## Role
-Phát triển full-stack applications từ frontend đến backend.
+Develop full-stack applications from frontend to backend.
 
 ## When to Use
 - Build complete features

@@ -1,6 +1,6 @@
 # 🎯 Best Practices
 
-Hướng dẫn sử dụng Gemini-Kit hiệu quả.
+Guide to using Gemini-Kit effectively.
 
 ---
 
@@ -8,48 +8,48 @@ Hướng dẫn sử dụng Gemini-Kit hiệu quả.
 
 ### 1. Search Before Solving
 
-**LUÔN** search trước khi giải quyết vấn đề:
+**ALWAYS** search before solving a problem:
 
 ```bash
 ./scripts/compound-search.sh "your problem keywords"
 ```
 
-**Tại sao?**
-- Tránh reinvent the wheel
-- Learn từ past solutions
-- Tiết kiệm thời gian
+**Why?**
+- Avoid reinventing the wheel
+- Learn from past solutions
+- Save time
 
 ---
 
 ### 2. Plan Before Code
 
-**KHÔNG BAO GIỜ** code trước khi có plan:
+**NEVER** code without a plan:
 
 ```
-❌ Sai: "Viết feature X ngay"
-✅ Đúng: "/plan feature X" → approve → "/work"
+❌ Incorrect: "Write feature X immediately"
+✅ Correct: "/plan feature X" → approve → "/work"
 ```
 
 ---
 
 ### 3. Compound Every Solution
 
-Sau khi giải quyết vấn đề hay:
+After solving an interesting problem:
 
 ```bash
 /compound "How we solved X"
 ```
 
-**Tại sao?**
-- Future sessions có context
+**Why?**
+- Future sessions have context
 - Knowledge compounds over time
-- Team learns từ solutions
+- Team learns from solutions
 
 ---
 
 ### 4. Housekeeping Before Push
 
-**MANDATORY** trước mỗi git push:
+**MANDATORY** before every git push:
 
 ```bash
 /housekeeping
@@ -61,19 +61,19 @@ Sau khi giải quyết vấn đề hay:
 
 | # | Pattern | Summary |
 |---|---------|---------|
-| 1 | Search Before Solving | Luôn search trước |
+| 1 | Search Before Solving | Always search first |
 | 2 | Actionable Items → Todo | Convert to todo files |
-| 3 | Housekeeping Before Push | Cleanup trước push |
+| 3 | Housekeeping Before Push | Cleanup before push |
 | 8 | Rigorous Planning | Multi-order thinking |
-| 10 | Explore Before Plan | Research trước plan |
+| 10 | Explore Before Plan | Research before plan |
 
-[Xem đầy đủ 23 patterns](docs/solutions/patterns/critical-patterns.md)
+[View full 23 patterns](docs/solutions/patterns/critical-patterns.md)
 
 ---
 
 ## Session Resume Protocol
 
-**Bắt đầu mỗi session:**
+**Start of each session:**
 
 ```bash
 # 1. Check pending work
@@ -90,11 +90,11 @@ ls docs/specs/*/README.md
 
 ## Team Workflow
 
-### Setup cho Team
+### Setup for Team
 
 1. Clone gemini-kit
-2. Chạy `/kit:setup` để tạo context
-3. Share `.gemini-kit/` folder với team
+2. Run `/kit:setup` to create context
+3. Share `.gemini-kit/` folder with team
 
 ### Daily Flow
 
@@ -103,24 +103,24 @@ ls docs/specs/*/README.md
 | Morning | `/status`, check pending |
 | Working | `/plan` → `/work` → `/review` |
 | Before push | `/housekeeping` |
-| End of day | `/compound` nếu solved gì hay |
+| End of day | `/compound` if something interesting solved |
 
 ---
 
 ## Troubleshooting
 
-### "Không biết bắt đầu từ đâu"
+### "Don't know where to start"
 
 ```bash
 /status          # Check current state
 /explore "topic" # Research first
 ```
 
-### "Code không work"
+### "Code doesn't work"
 
 ```bash
-# Dùng Debugger agent
-"Giúp tôi debug lỗi X trong file Y"
+# Use Debugger agent
+"Help me debug error X in file Y"
 ```
 
 ### "Validation failed"
@@ -130,7 +130,7 @@ ls docs/specs/*/README.md
 ./scripts/pre-push-housekeeping.sh --fix  # Auto-fix
 ```
 
-### "Session mới, không nhớ context"
+### "New session, don't remember context"
 
 ```bash
 cat skills/session-resume/SKILL.md
@@ -141,13 +141,13 @@ cat docs/specs/*/00-START-HERE.md  # If has active spec
 
 ## Anti-Patterns
 
-| ❌ Đừng | ✅ Nên |
+| ❌ Don't | ✅ Should |
 |---------|--------|
-| Code trước plan | `/plan` → `/work` |
-| Skip housekeeping | `/housekeeping` trước push |
-| Không search | Search trước mọi thứ |
-| Để solution evaporate | `/compound` document lại |
-| Ignore patterns | Đọc critical-patterns.md |
+| Code before plan | `/plan` → `/work` |
+| Skip housekeeping | `/housekeeping` before push |
+| Don't search | Search before everything |
+| Let solution evaporate | `/compound` document it |
+| Ignore patterns | Read critical-patterns.md |
 
 ---
 

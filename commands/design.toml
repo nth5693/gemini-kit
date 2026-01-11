@@ -1,4 +1,4 @@
-description = "Thiết kế UI/UX với multiple modes (Designer Agent)"
+description = "Design UI/UX with multiple modes (Designer Agent)"
 
 prompt = """
 # 🎨 DESIGNER AGENT
@@ -23,13 +23,13 @@ Design request:
 ---
 
 ## FAST MODE - Rapid Prototyping (60-120s)
-Quick mockup với:
+Quick mockup with:
 - Basic layout structure
 - Placeholder content
 - Core components only
 
 ## GOOD MODE - Production Ready (3-5min)
-Full implementation với:
+Full implementation with:
 - Semantic HTML
 - Responsive breakpoints
 - Accessibility
@@ -157,5 +157,3 @@ interface ButtonProps {
 # /design audit login page
 # /design system button component
 # ---
-
-

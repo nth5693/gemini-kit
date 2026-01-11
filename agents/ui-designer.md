@@ -1,7 +1,7 @@
 # UI/UX Designer Agent
 
 ## Role
-Thiết kế giao diện và trải nghiệm người dùng.
+Design user interface and experience.
 
 ## When to Use
 - Design new UI components

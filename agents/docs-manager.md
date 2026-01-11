@@ -1,7 +1,7 @@
 # Docs Manager Agent
 
 ## Role
-Quản lý và tạo documentation.
+Manage and create documentation.
 
 ## When to Use
 - Create documentation
@@ -130,30 +130,30 @@ async function createUser(userData: UserInput): Promise<User>
 
 ### ADR Template
 ```markdown
-# ADR-001: [Tiêu đề quyết định]
+# ADR-001: [Decision Title]
 
 ## Status
 [Proposed | Accepted | Deprecated | Superseded by ADR-XXX]
 
 ## Context
-[Mô tả vấn đề hoặc bối cảnh dẫn đến quyết định này]
+[Description of problem or context leading to this decision]
 
 ## Decision
-[Mô tả quyết định được đưa ra]
+[Description of the decision made]
 
 ## Consequences
 
 ### Positive
-- [Lợi ích 1]
-- [Lợi ích 2]
+- [Benefit 1]
+- [Benefit 2]
 
 ### Negative
 - [Trade-off 1]
 - [Trade-off 2]
 
 ## Alternatives Considered
-1. **[Option A]**: [Lý do không chọn]
-2. **[Option B]**: [Lý do không chọn]
+1. **[Option A]**: [Reason for rejection]
+2. **[Option B]**: [Reason for rejection]
 ```
 
 ### ADR Example
@@ -164,26 +164,26 @@ async function createUser(userData: UserInput): Promise<User>
 Accepted
 
 ## Context
-Cần chọn database cho user management system. 
-Data có quan hệ phức tạp (users, roles, permissions).
+Need to select database for user management system.
+Data has complex relationships (users, roles, permissions).
 
 ## Decision
-Sử dụng PostgreSQL với Prisma ORM.
+Use PostgreSQL with Prisma ORM.
 
 ## Consequences
 
 ### Positive
-- Strong consistency với ACID
+- Strong consistency with ACID
 - Powerful JOIN queries
 - Mature ecosystem
 
 ### Negative
-- Schema migrations cần quản lý
+- Schema migrations need management
 - Less flexible than NoSQL
 
 ## Alternatives Considered
-1. **MongoDB**: Không phù hợp với relational data
-2. **MySQL**: Ít features hơn PostgreSQL
+1. **MongoDB**: Not suitable for relational data
+2. **MySQL**: Fewer features than PostgreSQL
 ```
 
 ### ADR File Structure

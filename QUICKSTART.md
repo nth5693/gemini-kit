@@ -1,28 +1,28 @@
 # 🚀 Quick Start Guide
 
-Bắt đầu với Gemini-Kit trong 5 phút!
+Get started with Gemini-Kit in 5 minutes!
 
 ## Prerequisites
 
-- [Gemini CLI](https://github.com/google-gemini/gemini-cli) đã cài đặt
-- Node.js 18+ (cho MCP tools)
+- [Gemini CLI](https://github.com/google-gemini/gemini-cli) installed
+- Node.js 18+ (for MCP tools)
 
-## Bước 1: Cài đặt Gemini-Kit (30s)
+## Step 1: Install Gemini-Kit (30s)
 
 ```bash
 # Clone repository
 git clone https://github.com/nth5693/gemini-kit.git
 
-# Di chuyển vào thư mục
+# Navigate to the directory
 cd gemini-kit
 
-# Cài dependencies
+# Install dependencies
 npm install
 ```
 
-## Bước 2: Cấu hình Extension (30s)
+## Step 2: Configure Extension (30s)
 
-Thêm vào `~/.gemini/settings.json`:
+Add to `~/.gemini/settings.json`:
 
 ```json
 {
@@ -35,20 +35,20 @@ Thêm vào `~/.gemini/settings.json`:
 }
 ```
 
-## Bước 3: Lệnh đầu tiên! (1 phút)
+## Step 3: First command! (1 minute)
 
 ```bash
-# Mở project của bạn
+# Open your project
 cd /your/project
 
-# Khởi động Gemini CLI
+# Start Gemini CLI
 gemini
 
-# Chạy lệnh đầu tiên
+# Run the first command
 /status
 ```
 
-**Output mẫu:**
+**Sample output:**
 ```
 📊 PROJECT STATUS
 ================
@@ -62,33 +62,33 @@ gemini
 
 ## Essential Commands
 
-### 🔥 Top 5 Commands cho người mới
+### 🔥 Top 5 Commands for newcomers
 
-| Command | Mô tả | Khi nào dùng |
-|---------|-------|--------------|
-| `/status` | Xem tiến độ project | Bắt đầu mỗi session |
-| `/explore` | Nghiên cứu trước khi làm | Trước feature mới |
-| `/plan` | Tạo kế hoạch | Trước khi code |
-| `/work` | Execute plan | Khi đã có plan |
-| `/housekeeping` | Cleanup | Trước khi push |
+| Command | Description | When to use |
+|---------|-------------|--------------|
+| `/status` | View project progress | Start of each session |
+| `/explore` | Research before doing | Before new feature |
+| `/plan` | Create plan | Before coding |
+| `/work` | Execute plan | When plan exists |
+| `/housekeeping` | Cleanup | Before pushing |
 
-### 🤖 Agents chính
+### 🤖 Primary Agents
 
-| Agent | Khi cần |
-|-------|---------|
-| Planner | "Tạo plan cho feature X" |
-| Coder | "Viết code cho Y" |
-| Reviewer | "Review code này" |
-| Debugger | "Tìm lỗi trong Z" |
+| Agent | When needed |
+|-------|-------------|
+| Planner | "Create plan for feature X" |
+| Coder | "Write code for Y" |
+| Reviewer | "Review this code" |
+| Debugger | "Find error in Z" |
 
 ---
 
-## Workflow cơ bản
+## Basic Workflow
 
 ```
-📝 /explore → Nghiên cứu
+📝 /explore → Research
      ↓
-📋 /plan → Lên kế hoạch  
+📋 /plan → Plan
      ↓
 💻 /work → Execute
      ↓
@@ -103,14 +103,14 @@ gemini
 
 ## Next Steps
 
-1. **Đọc [FEATURES.md](docs/FEATURES.md)** - Hiểu tất cả features
-2. **Thử `/kit:setup`** - Setup project context
-3. **Thử `/explore`** - Nghiên cứu một topic
+1. **Read [FEATURES.md](docs/FEATURES.md)** - Understand all features
+2. **Try `/kit:setup`** - Setup project context
+3. **Try `/explore`** - Research a topic
 
 ---
 
-## Cần help?
+## Need help?
 
-- Gõ `/help` trong Gemini CLI
-- Xem [API Reference](docs/API.md)
-- Xem [Critical Patterns](docs/solutions/patterns/critical-patterns.md)
+- Type `/help` in Gemini CLI
+- View [API Reference](docs/API.md)
+- View [Critical Patterns](docs/solutions/patterns/critical-patterns.md)

@@ -1,11 +1,11 @@
 # Exploration: Conductor Extension vs Gemini-Kit
 
 **Date:** 2024-12-24
-**Question:** Conductor extension có những tính năng gì có thể thêm vào Gemini-Kit?
+**Question:** What features from Conductor extension can be added to Gemini-Kit?
 
 ## Overview
 
-[Conductor](https://github.com/gemini-cli-extensions/conductor) là Gemini CLI extension cho phép specify, plan, và implement software features với structured workflow.
+[Conductor](https://github.com/gemini-cli-extensions/conductor) is a Gemini CLI extension that allows specifying, planning, and implementing software features with a structured workflow.
 
 ## Feature Comparison
 
@@ -13,27 +13,27 @@
 
 | Feature | Command | Description |
 |---------|---------|-------------|
-| **Project Setup** | `/conductor:setup` | Tạo context files (product, tech-stack, guidelines) |
-| **Track System** | `/conductor:newTrack` | Tạo feature/bug track với spec + plan |
-| **Implementation** | `/conductor:implement` | Auto-implement theo plan với TDD |
-| **Status** | `/conductor:status` | Xem progress của tracks |
-| **Smart Revert** | `/conductor:revert` | Git-aware revert theo logical units |
+| **Project Setup** | `/conductor:setup` | Create context files (product, tech-stack, guidelines) |
+| **Track System** | `/conductor:newTrack` | Create feature/bug track with spec + plan |
+| **Implementation** | `/conductor:implement` | Auto-implement according to plan with TDD |
+| **Status** | `/conductor:status` | View track progress |
+| **Smart Revert** | `/conductor:revert` | Git-aware revert by logical units |
 
-### Gemini-Kit Features (hiện tại)
+### Gemini-Kit Features (current)
 
-| Feature | Có? | Tương đương |
+| Feature | Has? | Equivalent |
 |---------|-----|-------------|
-| Project Setup | ⚠️ Partial | Có `GEMINI.md` nhưng không có wizard |
-| Track System | ⚠️ Partial | Có `/specs` và `/plan` nhưng riêng biệt |
-| Implementation | ✅ Có | `/work` workflow |
-| Status | ⚠️ Partial | `/compound-dashboard.sh` cho compound, không có track status |
-| Smart Revert | ❌ Không | Có checkpoint nhưng không git-aware |
+| Project Setup | ⚠️ Partial | Has `GEMINI.md` but no wizard |
+| Track System | ⚠️ Partial | Has `/specs` and `/plan` but separate |
+| Implementation | ✅ Yes | `/work` workflow |
+| Status | ⚠️ Partial | `/compound-dashboard.sh` for compound, no track status |
+| Smart Revert | ❌ No | Has checkpoints but not git-aware |
 
-## Key Features có thể thêm vào Gemini-Kit
+## Key Features that can be added to Gemini-Kit
 
 ### 1️⃣ **Project Setup Wizard** (HIGH VALUE)
 
-**Conductor có:**
+**Conductor has:**
 ```
 /conductor:setup
 ├── conductor/product.md           # Product context
@@ -43,16 +43,16 @@
 └── conductor/code_styleguides/    # Code style
 ```
 
-**Gemini-Kit hiện có:**
+**Gemini-Kit currently has:**
 - `GEMINI.md` - All-in-one config
 
-**Benefit:** Chia nhỏ config → dễ maintain, team-friendly
+**Benefit:** Break down config → easier to maintain, team-friendly
 
 ---
 
 ### 2️⃣ **Track-Based Feature Management** (HIGH VALUE)
 
-**Conductor có:**
+**Conductor has:**
 ```
 conductor/tracks/
 ├── tracks.md                      # Master list
@@ -62,12 +62,12 @@ conductor/tracks/
     └── metadata.json              # Status tracking
 ```
 
-**Gemini-Kit hiện có:**
-- `docs/specs/` - Cho multi-session specs
+**Gemini-Kit currently has:**
+- `docs/specs/` - For multi-session specs
 - `plans/` - Standalone plans
 - `todos/` - Task tracking
 
-**Gap:** Không có unified "track" linking spec → plan → implementation
+**Gap:** No unified "track" linking spec → plan → implementation
 
 ---
 
@@ -79,43 +79,43 @@ conductor/tracks/
 3. Refactor
 4. Verify coverage
 
-**Gemini-Kit có:**
+**Gemini-Kit has:**
 - `skills/testing/` skill
-- Nhưng không enforce TDD flow
+- But does not enforce TDD flow
 
 ---
 
 ### 4️⃣ **Git Notes for Task Commits** (MEDIUM VALUE)
 
-**Conductor có:**
+**Conductor has:**
 ```bash
 git notes add -m "<task summary>" <commit_hash>
 ```
 - Attach task context to commits
 - Queryable history
 
-**Gemini-Kit không có** git notes integration.
+**Gemini-Kit does not have** git notes integration.
 
 ---
 
 ### 5️⃣ **Smart Revert by Track/Phase/Task** (HIGH VALUE)
 
-**Conductor có:**
+**Conductor has:**
 ```
 /conductor:revert
 ```
 - Understands logical units (tracks, phases, tasks)
 - Not just commit hashes
 
-**Gemini-Kit có:**
+**Gemini-Kit has:**
 - `kit_create_checkpoint` - Git-based snapshots
-- Nhưng không track-aware
+- But not track-aware
 
 ---
 
 ### 6️⃣ **Status Dashboard** (MEDIUM VALUE)
 
-**Conductor có:**
+**Conductor has:**
 ```
 /conductor:status
 ```
@@ -123,9 +123,9 @@ git notes add -m "<task summary>" <commit_hash>
 - Phase completion
 - Task status
 
-**Gemini-Kit có:**
+**Gemini-Kit has:**
 - `compound-dashboard.sh` - Compound health
-- Không có feature/track status
+- No feature/track status
 
 ---
 
@@ -134,7 +134,7 @@ git notes add -m "<task summary>" <commit_hash>
 ### MUST HAVE (High Value, Easy to Add)
 
 1. **Project Setup Wizard** (`/kit:setup`)
-   - Interactive setup cho new projects
+   - Interactive setup for new projects
    - Generate structured context files
    - Effort: ~2-3 hours
 
@@ -167,11 +167,11 @@ git notes add -m "<task summary>" <commit_hash>
 
 ## Decision
 
-**Proceed to /plan** để implement:
+**Proceed to /plan** to implement:
 1. `/kit:setup` - Project Setup Wizard
 2. `/status` - Unified Status Dashboard
 
-Defer các items khác cho future iterations.
+Defer other items for future iterations.
 
 ---
 

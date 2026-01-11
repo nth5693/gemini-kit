@@ -6,15 +6,15 @@
 
 ## Summary
 
-Thêm các tính năng hay nhất từ Conductor extension vào Gemini-Kit: Project Setup Wizard (`/kit:setup`), Status Dashboard (`/status`), và Smart Revert (`/revert`).
+Add the best features from Conductor extension to Gemini-Kit: Project Setup Wizard (`/kit:setup`), Status Dashboard (`/status`), and Smart Revert (`/revert`).
 
 
 ## Problem Statement
 
-Gemini-Kit đã có compound system mạnh mẽ nhưng thiếu:
-1. **Setup Wizard** - Phải manual config GEMINI.md
-2. **Unified Status** - Không có dashboard cho specs/plans/todos
-3. **Smart Revert** - Chỉ có checkpoint, không revert theo logic
+Gemini-Kit already has a powerful compound system but lacks:
+1. **Setup Wizard** - Must manually configure GEMINI.md
+2. **Unified Status** - No dashboard for specs/plans/todos
+3. **Smart Revert** - Only has checkpoints, no logical revert
 
 ## Prior Solutions
 
@@ -28,9 +28,9 @@ Gemini-Kit đã có compound system mạnh mẽ nhưng thiếu:
 
 ### Phase 1: `/kit:setup` - Project Setup Wizard (2-3h)
 
-**Mục tiêu:** Interactive wizard để setup project context
+**Goal:** Interactive wizard to setup project context
 
-**Files tạo:**
+**Files created:**
 ```
 .gemini-kit/
 ├── product.md           # Product context
@@ -39,9 +39,9 @@ Gemini-Kit đã có compound system mạnh mẽ nhưng thiếu:
 ```
 
 **Implementation:**
-1. Tạo command `commands/kit-setup.toml`
-2. Tạo workflow `.agent/workflows/kit-setup.md`
-3. Tạo templates `.gemini-kit/templates/`
+1. Create command `commands/kit-setup.toml`
+2. Create workflow `.agent/workflows/kit-setup.md`
+3. Create templates `.gemini-kit/templates/`
 
 **Code Example:**
 ```toml
@@ -51,14 +51,14 @@ description = "Interactive project setup wizard"
 prompt = """
 # 🚀 Kit Setup Wizard
 
-Đây là wizard để setup project context.
+This is the wizard to setup project context.
 
 ## Steps:
-1. Product Context - Mô tả sản phẩm, users, goals
+1. Product Context - Product description, users, goals
 2. Tech Stack - Language, framework, database
 3. Guidelines - Code style, commit conventions
 
-Bắt đầu với: Bạn đang build gì? Cho ai?
+Start with: What are you building? For whom?
 """
 ```
 
@@ -66,13 +66,13 @@ Bắt đầu với: Bạn đang build gì? Cho ai?
 
 ### Phase 2: `/status` - Unified Status Dashboard (1h)
 
-**Mục tiêu:** Xem tiến độ specs/plans/todos ở một nơi
+**Goal:** View progress of specs/plans/todos in one place
 
 **Implementation:**
-1. Tạo script `scripts/status-dashboard.sh`
-2. Tạo command `commands/status.toml`
+1. Create script `scripts/status-dashboard.sh`
+2. Create command `commands/status.toml`
 
-**Output mẫu:**
+**Sample output:**
 ```
 📊 PROJECT STATUS
 ================
@@ -95,40 +95,40 @@ Bắt đầu với: Bạn đang build gì? Cho ai?
 
 ### Phase 3: `/revert` - Smart Revert (2-3h) [DEFERRED]
 
-> ⚠️ Phức tạp hơn, defer cho future iteration
+> ⚠️ More complex, defer for future iteration
 
-**Mục tiêu:** Revert theo plan/task thay vì commit
+**Goal:** Revert by plan/task instead of commit
 
 **Dependencies:**
-- Cần track plan → commit mapping
-- Cần git notes integration
+- Need to track plan → commit mapping
+- Need git notes integration
 
 ---
 
 ## Acceptance Criteria
 
 ### Phase 1: `/kit:setup` ✅
-- [x] Command `/kit:setup` hoạt động
-- [x] Tạo được 3 files context
-- [x] Interactive prompts cho từng section
+- [x] Command `/kit:setup` working
+- [x] Created 3 context files
+- [x] Interactive prompts for each section
 
 ### Phase 2: `/status` ✅
-- [x] Command `/status` hoạt động
-- [x] Hiển thị specs/plans/todos count
-- [x] Hiển thị compound health
-- [x] Hiển thị recent workflows
+- [x] Command `/status` working
+- [x] Display specs/plans/todos count
+- [x] Display compound health
+- [x] Display recent workflows
 
 ---
 
 ## Technical Considerations
 
 ### Dependencies
-- Không cần thêm dependencies
-- Sử dụng existing scripts infrastructure
+- No additional dependencies needed
+- Use existing scripts infrastructure
 
 ### Risks
 - Low risk - Additive changes only
-- Không modify existing functionality
+- Do not modify existing functionality
 
 ### Alternatives Considered
 | Alternative | Decision |

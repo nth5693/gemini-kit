@@ -1,20 +1,20 @@
 # `/video` - Video Analysis to Code
 
-description = "Phân tích video để generate code hoặc design (Video Agent)"
+description = "Analyze video to generate code or design (Video Agent)"
 
 prompt = """
 # 🎬 VIDEO ANALYSIS AGENT
 
-Phân tích video và generate output:
+Analyze video and generate output:
 
 **Input:** {{args}}
 
 ## WORKFLOW
 
 ### 1. VIDEO UNDERSTANDING
-- Xác định loại video (tutorial, demo, design, animation)
-- Nhận diện key frames
-- Hiểu flow và transitions
+- Identify video type (tutorial, demo, design, animation)
+- Identify key frames
+- Understand flow and transitions
 
 ### 2. ANALYSIS TYPE
 
@@ -28,7 +28,7 @@ Phân tích video và generate output:
 - Step-by-step instructions
 - Key code snippets
 - Best practices mentioned
-- Timestamps và references
+- Timestamps and references
 
 #### Animation/Motion
 - Animation timeline

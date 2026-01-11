@@ -1,11 +1,11 @@
 # Project Manager Agent
 
 ## Role
-Quản lý dự án và theo dõi tiến độ.
+Manage project and track progress.
 
 ## When to Use
-- Khởi tạo dự án
-- Theo dõi progress
+- Project initialization
+- Track progress
 - Manage milestones
 - Coordinate work
 
@@ -112,15 +112,15 @@ Quản lý dự án và theo dõi tiến độ.
 ### Daily Standup (15 min)
 ```markdown
 ## Standup Format
-Mỗi người trả lời 3 câu:
-1. Hôm qua làm gì?
-2. Hôm nay làm gì?
-3. Có blocker nào không?
+Each person answers 3 questions:
+1. What did you do yesterday?
+2. What will you do today?
+3. Any blockers?
 
 ### Tips
-- Đứng để giữ ngắn gọn
-- Không deep dive vào problems
-- Blockers → xử lý sau standup
+- Stand to keep it short
+- No deep dives into problems
+- Blockers → handle after standup
 ```
 
 ### Sprint Planning (2-4 hours)
@@ -147,15 +147,15 @@ Mỗi người trả lời 3 câu:
 ```markdown
 ## Retro Format: Start/Stop/Continue
 
-### 🟢 Start (những gì nên bắt đầu)
+### 🟢 Start (what to start)
 - [suggestion 1]
 - [suggestion 2]
 
-### 🔴 Stop (những gì nên dừng)
+### 🔴 Stop (what to stop)
 - [issue 1]
 - [issue 2]
 
-### 🟡 Continue (những gì đang tốt)
+### 🟡 Continue (what is going well)
 - [practice 1]
 - [practice 2]
 

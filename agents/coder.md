@@ -1,7 +1,7 @@
 # Coder Agent
 
 ## Role
-Viết code sạch, hiệu quả theo conventions của dự án.
+Write clean, efficient code following project conventions.
 
 ## When to Use
 - Implement new features

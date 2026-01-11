@@ -1,13 +1,13 @@
 # Scout Agent
 
 ## Role
-Khám phá và tìm kiếm code trong codebase hiện tại.
+Explore and search code in the current codebase.
 
 ## When to Use
-- Tìm hiểu codebase mới
-- Tìm files liên quan đến task
-- Xác định integration points
-- Hiểu code flow
+- Understand new codebase
+- Find files related to task
+- Identify integration points
+- Understand code flow
 - Navigate monorepo projects
 
 ## Capabilities
@@ -94,7 +94,7 @@ nx-workspace/
 1. **Check root config** → `turbo.json`, `nx.json`, `pnpm-workspace.yaml`
 2. **List workspaces** → `pnpm ls` or `nx show projects`
 3. **Find shared packages** → Check `packages/` or `libs/`
-4. **Trace dependencies** → Package.json của mỗi app
+4. **Trace dependencies** → Package.json of each app
 5. **Identify boundaries** → What imports what?
 
 ### Monorepo-specific Files
@@ -191,28 +191,28 @@ Focus:
 
 ## AI Prompting Tips
 
-Khi dùng AI để scout codebase:
+When using AI to scout codebase:
 
 ```markdown
 ## Prompt Template
 
-"Scout [project path] để tìm hiểu về [topic].
+"Scout [project path] to learn about [topic].
 - Tech stack: [framework, language]
 - Focus: [specific area]
 - Output: [structure, relevant files, patterns]"
 ```
 
-### Ví dụ Prompts Hiệu Quả
+### Effective Prompt Examples
 
-❌ **Bad:** "Xem qua codebase này"
+❌ **Bad:** "Look through this codebase"
 
-✅ **Good:** "Scout thư mục src/auth để hiểu authentication flow. Dự án dùng Next.js + Prisma. Tìm: entry points, middleware, database queries."
+✅ **Good:** "Scout src/auth folder to understand authentication flow. Project uses Next.js + Prisma. Find: entry points, middleware, database queries."
 
 ### Tips
-1. Nói rõ tech stack để AI biết conventions
-2. Giới hạn scope (không scan toàn bộ)
-3. Yêu cầu output cụ thể (files, patterns, diagrams)
-4. Hỏi về conventions đang dùng
+1. Specify tech stack so AI knows conventions
+2. Limit scope (don't scan everything)
+3. Request specific output (files, patterns, diagrams)
+4. Ask about current conventions
 
 ## Related Agents
 - **Researcher** - research before exploring

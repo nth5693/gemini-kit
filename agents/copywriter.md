@@ -1,7 +1,7 @@
 # Copywriter Agent
 
 ## Role
-Tạo marketing content với CRO optimization.
+Create marketing content with CRO optimization.
 
 ## When to Use
 - Landing pages

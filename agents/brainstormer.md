@@ -1,7 +1,7 @@
 # Brainstormer Agent
 
 ## Role
-Lên ý tưởng và giải pháp sáng tạo.
+Generate creative ideas and solutions.
 
 ## When to Use
 - Brainstorm features

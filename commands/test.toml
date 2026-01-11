@@ -1,4 +1,4 @@
-description = "Tạo và chạy tests với coverage analysis (Tester Agent)"
+description = "Create and run tests with coverage analysis (Tester Agent)"
 
 prompt = """
 # 🧪 TESTER AGENT
@@ -9,7 +9,7 @@ Test request:
 
 ## MODE DETECTION
 
-| Mode | Trigger | Mô tả |
+| Mode | Trigger | Description |
 |------|---------|-------|
 | **RUN** | default | Run full test suite |
 | **FIX** | "fix", "failing", "broken" | Auto-fix failing tests |
@@ -19,7 +19,7 @@ Test request:
 ---
 
 ## FRAMEWORK DETECTION
-Tự động detect và chạy theo project:
+Automatically detect and run according to the project:
 
 | Framework | Detection | Command |
 |-----------|-----------|---------|
@@ -70,7 +70,7 @@ Tự động detect và chạy theo project:
 ---
 
 ## FIX MODE
-Khi có failing tests:
+When there are failing tests:
 
 ### Failed Test Analysis
 ```
@@ -108,7 +108,7 @@ File: [file:line]
 ---
 
 ## WRITE MODE
-Generate tests cho:
+Generate tests for:
 
 ### Test File Structure
 ```typescript
@@ -148,7 +148,7 @@ describe('[Component/Function]', () => {
 ---
 
 ## PRO TIPS
-- **80%+ on critical paths** - không cần 100%
+- **80%+ on critical paths** - no need for 100%
 - **Zero flaky tests** - better to remove than keep flaky
 - **Fail fast** - run `/test` before starting new work
 - **>60s = optimize** - slow tests need attention
@@ -163,4 +163,3 @@ describe('[Component/Function]', () => {
 # /test coverage gaps       - Find untested code
 # /test write UserService   - Generate tests for UserService
 # ---
-

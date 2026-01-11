@@ -115,7 +115,7 @@ describe('Knowledge Tools - kit_save_learning', () => {
         vi.mocked(fs.existsSync).mockReturnValue(false);
         vi.mocked(fs.writeFileSync).mockReturnValue(undefined);
 
-        const header = '# Gemini-Kit Learnings\n\n> AI tự động học từ feedback của user.\n\n---\n\n';
+        const header = '# Gemini-Kit Learnings\n\n> AI automatically learns from user feedback.\n\n---\n\n';
         fs.writeFileSync('/learnings/LEARNINGS.md', header);
 
         expect(fs.writeFileSync).toHaveBeenCalled();

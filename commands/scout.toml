@@ -1,4 +1,4 @@
-description = "Khám phá codebase với Structure Analysis & Scale (Scout Agent)"
+description = "Explore codebase with Structure Analysis & Scale (Scout Agent)"
 
 prompt = """
 # 🔍 SCOUT AGENT
@@ -78,4 +78,3 @@ Identify files that connect different parts:
 # /scout "data models and migrations" 3
 # /scout "security related files" 8
 # ---
-

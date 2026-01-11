@@ -7,7 +7,7 @@
 
 ## Overview
 
-Tạo comprehensive documentation cho người mới sử dụng Gemini-Kit với Compound Engineering Plugin.
+Create comprehensive documentation for newcomers using Gemini-Kit with Compound Engineering Plugin.
 
 ## Progress
 

@@ -1,30 +1,30 @@
 # 📚 Features Reference
 
-Tổng hợp tất cả features của Gemini-Kit.
+Summary of all Gemini-Kit features.
 
 ---
 
 ## 🤖 Agents (15)
 
-Gemini-Kit có 15 specialized agents, mỗi agent có expertise riêng.
+Gemini-Kit has 15 specialized agents, each with its own expertise.
 
-| Agent | Role | Khi nào dùng |
+| Agent | Role | When to use |
 |-------|------|--------------|
-| **Planner** | Tạo kế hoạch triển khai | Trước feature mới |
-| **Scout** | Khám phá codebase | Hiểu code mới |
-| **Coder** | Viết code sạch | Implement features |
-| **Tester** | Viết tests | Đảm bảo chất lượng |
-| **Reviewer** | Review code | Trước merge |
-| **Debugger** | Phân tích lỗi | Khi có bugs |
+| **Planner** | Create implementation plans | Before new feature |
+| **Scout** | Explore codebase | Understand new code |
+| **Coder** | Write clean code | Implement features |
+| **Tester** | Write tests | Ensure quality |
+| **Reviewer** | Review code | Before merge |
+| **Debugger** | Analyze errors | When there are bugs |
 | **Git Manager** | Version control | Commit, branch |
 | **Copywriter** | Marketing content | Docs, copy |
-| **Database Admin** | Quản lý database | Schema, queries |
-| **Researcher** | External research | Tìm best practices |
-| **UI Designer** | Thiết kế UI/UX | Frontend design |
+| **Database Admin** | Manage database | Schema, queries |
+| **Researcher** | External research | Find best practices |
+| **UI Designer** | Design UI/UX | Frontend design |
 | **Docs Manager** | Documentation | Update docs |
-| **Brainstormer** | Ý tưởng sáng tạo | Ideation |
+| **Brainstormer** | Creative ideas | Ideation |
 | **Fullstack Dev** | Full-stack | End-to-end features |
-| **Project Manager** | Quản lý dự án | Planning, tracking |
+| **Project Manager** | Project management | Planning, tracking |
 
 ---
 
@@ -93,7 +93,7 @@ Gemini-Kit có 15 specialized agents, mỗi agent có expertise riêng.
 
 ## 🎯 Skills (7)
 
-Modular capabilities cho agents.
+Modular capabilities for agents.
 
 | Skill | Location | Purpose |
 |-------|----------|---------|
@@ -111,7 +111,7 @@ Modular capabilities cho agents.
 
 ### Critical Patterns (23)
 
-Key patterns để tránh lỗi lặp lại:
+Key patterns to avoid repeating errors:
 
 | Pattern | Summary |
 |---------|---------|

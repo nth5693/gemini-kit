@@ -4,9 +4,9 @@ problem_type: "workflow_gap"
 component: "workflow"
 severity: "medium"
 symptoms:
-  - "Gemini-Kit thiếu knowledge compounding system"
-  - "Solutions không được persist qua sessions"
-  - "Không có health monitoring cho agent behaviors"
+  - "Gemini-Kit lacks knowledge compounding system"
+  - "Solutions are not persisted across sessions"
+  - "No health monitoring for agent behaviors"
 root_cause: "process_issue"
 tags:
   - compound-system
@@ -19,21 +19,21 @@ related_solutions: []
 last_referenced: "2024-12-24"
 ---
 
-# Tích hợp Antigravity Compound Engineering Plugin vào Gemini-Kit
+# Integrating Antigravity Compound Engineering Plugin into Gemini-Kit
 
 ## Problem Statement
 
-**Vấn đề:**
-Gemini-Kit có hệ thống multi-agent mạnh mẽ nhưng thiếu cơ chế **compound learning** - mỗi session bắt đầu lại từ đầu, không có persistent knowledge base.
+**Problem:**
+Gemini-Kit has a powerful multi-agent system but lacks a **compound learning** mechanism - each session starts from scratch, with no persistent knowledge base.
 
 **Impact:**
-- Agent không nhớ solutions đã tìm được
-- Lặp lại công việc đã làm
-- Không có health monitoring cho compound behaviors
+- Agents don't remember found solutions
+- Work already done is repeated
+- No health monitoring for compound behaviors
 
 ## Solution Overview
 
-Tích hợp **Antigravity Compound Engineering Plugin** để bổ sung:
+Integrate **Antigravity Compound Engineering Plugin** to add:
 - Knowledge Base system
 - 32+ workflows
 - 50+ automation scripts
@@ -53,7 +53,7 @@ git clone https://github.com/salavender/antigravity-compound-engineering-plugin.
 # Copy scripts, skills, todos, plans
 cp -r .compound-plugin-temp/{docs,scripts,skills,todos,plans} .
 
-# Copy workflows (không ghi đè đã có)
+# Copy workflows (do not overwrite existing)
 cp -n .compound-plugin-temp/.agent/workflows/* .agent/workflows/
 
 # Set permissions
@@ -68,7 +68,7 @@ mkdir -p docs/specs/templates docs/architecture docs/explorations
 
 ### Step 4: Create Architecture Documentation
 
-Tạo các files:
+Create files:
 - `docs/specs/README.md` - Specs system guide
 - `docs/specs/templates/spec-template.md` - Template
 - `docs/architecture/README.md` - Architecture entry point
@@ -76,7 +76,7 @@ Tạo các files:
 
 ### Step 5: Update GEMINI.md
 
-Thêm section **Compound Behaviors** với:
+Add **Compound Behaviors** section with:
 - Session Resume protocol
 - Search Before Solving
 - Document After Solving
@@ -95,9 +95,9 @@ Thêm section **Compound Behaviors** với:
 
 | File | Purpose |
 |------|---------|
-| `docs/specs/README.md` | Hướng dẫn specs system |
-| `docs/specs/templates/spec-template.md` | Template cho multi-session specs |
-| `docs/architecture/README.md` | Entry point cho architecture docs |
+| `docs/specs/README.md` | Specs system guide |
+| `docs/specs/templates/spec-template.md` | Template for multi-session specs |
+| `docs/architecture/README.md` | Entry point for architecture docs |
 | `docs/architecture/compound-system.md` | Full compound architecture |
 | `docs/explorations/compound-plugin-integration-20241224.md` | Exploration document |
 
@@ -105,7 +105,7 @@ Thêm section **Compound Behaviors** với:
 
 | File | Changes |
 |------|---------|
-| `GEMINI.md` | Thêm Compound Behaviors section |
+| `GEMINI.md` | Add Compound Behaviors section |
 
 ## Verification
 
@@ -122,20 +122,20 @@ Thêm section **Compound Behaviors** với:
 
 ## Key Learnings
 
-1. **Cherry-pick, không copy toàn bộ**: Gemini-Kit đã có nhiều features (agents, security), chỉ cần thêm những gì thiếu
+1. **Cherry-pick, don't copy everything**: Gemini-Kit already has many features (agents, security), only add what is missing.
 
-2. **Merge GEMINI.md cẩn thận**: Giữ nguyên agent system, thêm compound behaviors
+2. **Merge GEMINI.md carefully**: Keep the agent system intact, add compound behaviors.
 
-3. **Verify sau khi tích hợp**: Chạy `validate-compound.sh` để đảm bảo patterns valid
+3. **Verify after integration**: Run `validate-compound.sh` to ensure patterns are valid.
 
 ## Prevention Strategies
 
-### Khi tích hợp plugin mới
+### When integrating new plugins
 
-- [ ] Explore trước với `/explore` 
-- [ ] So sánh features để tránh duplicate
-- [ ] Review sau khi tích hợp với `/review`
-- [ ] Document với `/compound`
+- [ ] Explore first with `/explore` 
+- [ ] Compare features to avoid duplication
+- [ ] Review after integration with `/review`
+- [ ] Document with `/compound`
 
 ## Cross-References
 
@@ -153,4 +153,4 @@ Thêm section **Compound Behaviors** với:
 ---
 
 *Documented: 2024-12-24*
-*Time to resolve: ~30 phút*
+*Time to resolve: ~30 minutes*

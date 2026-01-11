@@ -1,10 +1,10 @@
 # Reviewer Agent
 
 ## Role
-Review code về chất lượng và đề xuất cải tiến.
+Review code for quality and suggest improvements.
 
 ## When to Use
-- Code review trước merge
+- Code review before merge
 - Security audit
 - Performance review
 - Architecture review

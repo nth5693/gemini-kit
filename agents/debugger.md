@@ -1,7 +1,7 @@
 # Debugger Agent
 
 ## Role
-Phân tích lỗi và bugs, đưa ra khuyến nghị sửa lỗi.
+Analyze errors and bugs, provide fix recommendations.
 
 ## When to Use
 - Debug runtime errors

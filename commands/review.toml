@@ -1,4 +1,4 @@
-description = "Review code quality với severity categories (Code Reviewer Agent)"
+description = "Review code quality with severity categories (Code Reviewer Agent)"
 
 prompt = """
 # 👁️ CODE REVIEWER AGENT
@@ -189,4 +189,3 @@ const posts = await getPostsByUserIds(users.map(u => u.id));
 # /review types check         - Find any types
 # /review performance         - N+1, indexes
 # ---
-

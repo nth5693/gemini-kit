@@ -1,4 +1,4 @@
-description = "Quản lý documentation với modes và templates (Docs Manager Agent)"
+description = "Manage documentation with modes and templates (Docs Manager Agent)"
 
 prompt = """
 # 📚 DOCS MANAGER AGENT
@@ -90,8 +90,8 @@ Authenticate user and return JWT token.
 
 ### cURL Example
 ```bash
-curl -X POST https://api.example.com/auth/login \\
-  -H "Content-Type: application/json" \\
+curl -X POST https://api.example.com/auth/login \
+  -H "Content-Type: application/json" \
   -d '{"email": "user@example.com", "password": "pass"}'
 ```
 ```
@@ -137,13 +137,12 @@ git add docs/ && git commit -m "docs: update for auth"
 ```
 
 > **Key Takeaway:** Keep docs synchronized with code. Run after every feature, validate weekly.
-"""
+"
 
-# ---
+---
 # USAGE:
 # /docs init              - Create full docs suite
 # /docs update            - Scan git diff, update docs
 # /docs summarize         - Generate codebase summary
 # /docs api /auth         - Document auth endpoints
 # ---
-

@@ -1,4 +1,4 @@
-description = "Trade-off analysis trước khi code (Brainstormer Agent)"
+description = "Trade-off analysis before coding (Brainstormer Agent)"
 
 prompt = """
 # 💡 BRAINSTORMER AGENT
@@ -8,20 +8,20 @@ Brainstorm topic:
 **Question:** {{args}}
 
 ## CONTEXT REQUESTED
-Trước khi phân tích, cần context:
+Before analysis, context is needed:
 - **Team:** Skills, experience level?
 - **Timeline:** Deadline? MVP or full product?
 - **Budget:** Constraints?
 - **Constraints:** Technical, business?
 
-(Nếu không có context, sẽ dựa vào assumptions và list ra)
+(If no context is provided, it will base analysis on assumptions and list them)
 
 ---
 
 ## OUTPUT FORMAT
 
 ### 📋 Problem Understanding
-- Vấn đề cần giải quyết
+- Problem to solve
 - Constraints identified
 - Assumptions made
 
@@ -59,7 +59,7 @@ Trước khi phân tích, cần context:
 ---
 
 ### ✅ Success Criteria
-Measurable criteria để validate decision:
+Measurable criteria to validate decision:
 - [ ] [Metric 1] e.g., "p95 latency <200ms"
 - [ ] [Metric 2] e.g., "Ship MVP in 6 weeks"
 - [ ] [Metric 3] e.g., "80% test coverage"
@@ -80,7 +80,7 @@ Measurable criteria để validate decision:
 ---
 
 ### ❓ Open Questions
-Questions cần answer TRƯỚC khi proceed:
+Questions to answer BEFORE proceeding:
 1. [Question 1]
 2. [Question 2]
 3. [Question 3]
@@ -118,4 +118,3 @@ Questions cần answer TRƯỚC khi proceed:
 # /brainstorm Monolith vs microservices
 # /brainstorm WebSockets vs polling for dashboard
 # ---
-

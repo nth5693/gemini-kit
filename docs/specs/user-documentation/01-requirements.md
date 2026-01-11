@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-Gemini-Kit + Compound Plugin có nhiều tính năng nhưng thiếu documentation cho người mới:
+Gemini-Kit + Compound Plugin have many features but lack documentation for newcomers:
 - 15 specialized agents
 - 32+ workflows
 - 50+ automation scripts
@@ -11,14 +11,14 @@ Gemini-Kit + Compound Plugin có nhiều tính năng nhưng thiếu documentatio
 
 ## Target Audience
 
-1. **Developer mới** - Lần đầu dùng Gemini-Kit
-2. **Team lead** - Setup cho team
-3. **Experienced user** - Muốn tối ưu workflow
+1. **New Developer** - First time using Gemini-Kit
+2. **Team lead** - Setup for team
+3. **Experienced user** - Want to optimize workflow
 
 ## Acceptance Criteria
 
 ### Phase 1: Quick Start Guide
-- [ ] 5-minute tutorial từ install → first command
+- [ ] 5-minute tutorial from install → first command
 - [ ] List essential commands
 - [ ] Example workflows
 
@@ -34,5 +34,5 @@ Gemini-Kit + Compound Plugin có nhiều tính năng nhưng thiếu documentatio
 
 ## Success Metrics
 
-- User có thể chạy first command trong 5 phút
-- User hiểu được 80% features sau 30 phút đọc docs
+- User can run first command in 5 minutes
+- User understands 80% of features after 30 minutes of reading docs

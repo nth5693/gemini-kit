@@ -2,23 +2,23 @@
 
 > **Last Updated:** 2024-12-24  
 > **Current Phase:** 1 - Quick Start Guide  
-> **Session Goal:** Tạo QUICKSTART.md
+> **Session Goal:** Create QUICKSTART.md
 
 ## Context
 
-Gemini-Kit cần comprehensive documentation cho người mới vì:
+Gemini-Kit needs comprehensive documentation for newcomers because:
 - 15 agents + 32 workflows + 50+ scripts = Overwhelming
-- Không có hướng dẫn step-by-step
-- Người mới không biết bắt đầu từ đâu
+- No step-by-step guide
+- Newcomers don't know where to start
 
 ## Current Status
 
-### ✅ Đã có
-- README.md cơ bản
-- API.md cho MCP tools
-- docs/architecture/ cho system design
+### ✅ Available
+- README.md basic
+- API.md for MCP tools
+- docs/architecture/ for system design
 
-### ❌ Thiếu
+### ❌ Missing
 - Quick Start Guide
 - Feature Reference
 - Workflow tutorials
@@ -26,9 +26,9 @@ Gemini-Kit cần comprehensive documentation cho người mới vì:
 
 ## Immediate Next Steps
 
-1. Tạo `QUICKSTART.md` với 5-minute tutorial
-2. Liệt kê essential commands
-3. Tạo workflow guide
+1. Create `QUICKSTART.md` with 5-minute tutorial
+2. List essential commands
+3. Create workflow guide
 
 ## Key Files
 

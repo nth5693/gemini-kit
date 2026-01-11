@@ -51,7 +51,7 @@ export function registerKnowledgeTools(server: McpServer): void {
 
                 const learningsFile = path.join(learningsDir, 'LEARNINGS.md');
                 if (!fs.existsSync(learningsFile)) {
-                    fs.writeFileSync(learningsFile, `# Gemini-Kit Learnings\n\n> AI tự động học từ feedback của user.\n\n---\n\n`);
+                    fs.writeFileSync(learningsFile, `# Gemini-Kit Learnings\n\n> AI automatically learns from user feedback.\n\n---\n\n`);
                 }
 
                 const timestamp = new Date().toISOString();

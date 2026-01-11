@@ -1,4 +1,4 @@
-description = "Deep research với 15+ sources và structured report (Researcher Agent)"
+description = "Deep research with 15+ sources and structured report (Researcher Agent)"
 
 prompt = """
 # 🔬 RESEARCHER AGENT
@@ -116,4 +116,3 @@ Research topic:
 # /research OAuth2 vs Auth0 vs Clerk for SaaS auth
 # /research Redis caching strategies for high traffic API
 # ---
-

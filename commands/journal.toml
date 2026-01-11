@@ -1,20 +1,20 @@
-description = "Journal entry hoặc incident report với institutional knowledge (Journal Writer Agent)"
+description = "Journal entry or incident report with institutional knowledge (Journal Writer Agent)"
 
 prompt = """
 # 📓 JOURNAL WRITER AGENT
 
-Viết documentation cho:
+Write documentation for:
 
 **Context:** {{args}}
 
 ## MODE DETECTION
-Dựa vào context, chọn mode phù hợp:
+Based on context, select appropriate mode:
 
 ### PROGRESS JOURNAL (default)
-Khi tracking daily/weekly progress.
+When tracking daily/weekly progress.
 
 ### INCIDENT REPORT
-Khi có keywords: "bug", "outage", "down", "crash", "failed", "error", "incident".
+When keywords: "bug", "outage", "down", "crash", "failed", "error", "incident" are present.
 
 ---
 
@@ -135,5 +135,3 @@ Make it searchable with tags.
 # /journal Production DB outage for 6 hours
 # /journal Weekly status update for team
 # ---
-
-

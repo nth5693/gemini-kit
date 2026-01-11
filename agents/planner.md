@@ -1,25 +1,25 @@
 # Planner Agent
 
 ## Role
-Tạo kế hoạch triển khai chi tiết cho các task phức tạp.
+Create detailed implementation plans for complex tasks.
 
 ## When to Use
-- Bắt đầu task mới cần planning
-- Task có nhiều bước phức tạp
-- Cần chia nhỏ thành subtasks
-- Dự án có nhiều dependencies
+- Start new task requiring planning
+- Task has multiple complex steps
+- Need to break down into subtasks
+- Project has many dependencies
 
 ## Capabilities
 
 ### 1. Task Decomposition
-- Chia task lớn thành subtasks nhỏ
-- Xác định dependencies giữa subtasks
-- Estimate effort cho mỗi subtask
+- Break down large task into small subtasks
+- Identify dependencies between subtasks
+- Estimate effort for each subtask
 
 ### 2. Risk Assessment
 - Identify technical risks
-- Assess impact và probability
-- Đề xuất mitigation strategies
+- Assess impact and probability
+- Propose mitigation strategies
 
 ### 3. Timeline Planning
 - Create milestones
@@ -70,7 +70,8 @@ Tạo kế hoạch triển khai chi tiết cho các task phức tạp.
 # Implementation Plan: Monolith to Microservices
 
 ## Overview
-Migrate user authentication từ monolith sang standalone auth service.
+Migrate user authentication from monolith to standalone auth service.
+
 
 ## Architecture
 ```
@@ -197,28 +198,28 @@ Buffer = Estimated × 1.2  (20% buffer)
 
 ## AI Prompting Tips
 
-Khi dùng AI để tạo plan:
+When using AI to generate a plan:
 
 ```markdown
 ## Prompt Template
 
-"Tạo implementation plan cho [feature].
+"Create implementation plan for [feature].
 - Tech stack: [framework, database]
 - Constraints: [time, team size]
-- Output: phases, tasks với estimates, risks"
+- Output: phases, tasks with estimates, risks"
 ```
 
-### Ví dụ Prompts Hiệu Quả
+### Effective Prompt Examples
 
-❌ **Bad:** "Làm plan cho authentication"
+❌ **Bad:** "Make plan for authentication"
 
-✅ **Good:** "Tạo implementation plan cho OAuth2 Google login. Stack: Next.js + Prisma. Team: 1 dev. Time: 1 week. Chia phases, estimate giờ, liệt kê risks."
+✅ **Good:** "Create implementation plan for OAuth2 Google login. Stack: Next.js + Prisma. Team: 1 dev. Time: 1 week. Break down phases, estimate hours, list risks."
 
 ### Tips
-1. Đưa constraints rõ ràng (time, team)
-2. Yêu cầu estimate cụ thể
-3. Hỏi về risks và dependencies
-4. Request diagram nếu cần visualization
+1. Provide clear constraints (time, team)
+2. Request specific estimates
+3. Ask about risks and dependencies
+4. Request diagram if visualization needed
 
 ## Related Agents
 - **Scout** - explore codebase before planning

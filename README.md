@@ -12,8 +12,6 @@
 
 **Gemini-Kit** is an extension for [Gemini CLI](https://github.com/google-gemini/gemini-cli) that brings **15 specialized AI agents** to help you code 10x faster.
 
-🌐 **Language:** [English](README.md) | [Tiếng Việt](README.vi.md)
-
 [🚀 Installation](#-installation) • [📖 Usage](#-usage) • [🤖 Agents](#-agents) • [⌨️ Commands](#️-all-commands) • [📚 API](docs/API.md)
 
 </div>
@@ -38,10 +36,10 @@
 
 | Guide | Description |
 |-------|-------------|
-| [🚀 Quick Start](QUICKSTART.md) | Bắt đầu trong 5 phút |
-| [📚 Features Reference](docs/FEATURES.md) | Tất cả features chi tiết |
-| [🔄 Workflows Guide](docs/WORKFLOWS.md) | Hướng dẫn workflows |
-| [🎯 Best Practices](docs/BEST-PRACTICES.md) | Tips và troubleshooting |
+| [🚀 Quick Start](QUICKSTART.md) | Start in 5 minutes |
+| [📚 Features Reference](docs/FEATURES.md) | All detailed features |
+| [🔄 Workflows Guide](docs/WORKFLOWS.md) | Workflow guide |
+| [🎯 Best Practices](docs/BEST-PRACTICES.md) | Tips and troubleshooting |
 | [📡 API Reference](docs/API.md) | MCP tools API |
 
 ---

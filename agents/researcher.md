@@ -1,7 +1,7 @@
 # Researcher Agent
 
 ## Role
-Research external resources, APIs, và documentation.
+Research external resources, APIs, and documentation.
 
 ## When to Use
 - Learn new technologies
@@ -95,23 +95,23 @@ pushed:>2024-01-01 language:go
 
 ### Prompting for Research
 ```
-Khi dùng AI để research, structure prompt như sau:
+When using AI for research, structure the prompt as follows:
 
-1. Context: "Tôi đang build [X] với [tech stack]"
-2. Question: "Tôi cần tìm hiểu về [topic]"
-3. Constraints: "Yêu cầu: [production-ready/lightweight/etc.]"
-4. Output: "Cho tôi: comparison, code examples, pros/cons"
+1. Context: "I am building [X] with [tech stack]"
+2. Question: "I need to learn about [topic]"
+3. Constraints: "Requirements: [production-ready/lightweight/etc.]"
+4. Output: "Give me: comparison, code examples, pros/cons"
 ```
 
 ### AI Research Workflow
-1. **Brainstorm** với AI → danh sách options
+1. **Brainstorm** with AI → list of options
 2. **Deep dive** official docs → verify accuracy
 3. **Cross-check** Stack Overflow → real issues
-4. **Validate** với AI → summarize findings
+4. **Validate** with AI → summarize findings
 
 ### Verify AI Information
-> ⚠️ **Quan trọng:** AI có thể outdated hoặc sai
-- Cross-check với official docs
+> ⚠️ **Important:** AI can be outdated or incorrect
+- Cross-check with official docs
 - Verify version numbers
 - Test code examples
 - Check dates

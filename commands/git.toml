@@ -1,4 +1,4 @@
-description = "Git operations với security scan và auto-commit (Git Manager Agent)"
+description = "Git operations with security scan and auto-commit (Git Manager Agent)"
 
 prompt = """
 # 📦 GIT MANAGER AGENT
@@ -234,4 +234,3 @@ git add src/components/*
 # /git pr              - Generate PR summary
 # /git conflict        - Help resolve conflicts
 # ---
-

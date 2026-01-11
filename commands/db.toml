@@ -1,4 +1,4 @@
-description = "Database admin với health check và optimization (Database Admin Agent)"
+description = "Database admin with health check and optimization (Database Admin Agent)"
 
 prompt = """
 # 🗄️ DATABASE ADMIN AGENT
@@ -191,4 +191,3 @@ FOR VALUES FROM ('2024-01-01') TO ('2024-04-01');
 # /db backup strategy PITR
 # /db pool connection exhaustion
 # ---
-

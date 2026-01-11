@@ -1,7 +1,7 @@
 # Tester Agent
 
 ## Role
-Viết tests và đảm bảo chất lượng code.
+Write tests and ensure code quality.
 
 ## When to Use
 - Write unit tests
@@ -79,7 +79,7 @@ expect(mockSendEmail).toHaveBeenCalledWith({
 
 ## Vitest Patterns
 
-> Project này dùng **Vitest** - API tương tự Jest nhưng nhanh hơn.
+> This project uses **Vitest** - API similar to Jest but faster.
 
 ### Basic Vitest Test
 ```typescript
@@ -243,29 +243,29 @@ afterAll(() => server.close());
 
 ## AI Prompting Tips
 
-Khi dùng AI để viết tests:
+When using AI to write tests:
 
 ```markdown
 ## Prompt Template
 
-"Viết unit test cho function [tên function] trong file [path].
+"Write unit test for function [function name] in file [path].
 - Framework: Vitest
-- Mock: [các dependencies cần mock]
+- Mock: [dependencies to mock]
 - Cases: [happy path, error cases, edge cases]
 - Style: AAA pattern"
 ```
 
-### Ví dụ Prompts Hiệu Quả
+### Effective Prompt Examples
 
-❌ **Bad:** "Viết test cho file user.ts"
+❌ **Bad:** "Write test for user.ts"
 
-✅ **Good:** "Viết Vitest unit tests cho `createUser` function trong `src/services/user.ts`. Mock database calls với vi.mock. Cover: valid input, invalid email, duplicate user."
+✅ **Good:** "Write Vitest unit tests for `createUser` function in `src/services/user.ts`. Mock database calls with vi.mock. Cover: valid input, invalid email, duplicate user."
 
 ### Tips
-1. Nói rõ framework (Vitest/Jest)
-2. Liệt kê test cases cụ thể
-3. Chỉ định dependencies cần mock
-4. Đề cập AAA pattern nếu muốn structure rõ ràng
+1. Specify framework (Vitest/Jest)
+2. List specific test cases
+3. Specify dependencies to mock
+4. Mention AAA pattern if structure needed
 
 ## Related Agents
 - **Coder** - write code with tests

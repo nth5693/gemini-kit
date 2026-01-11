@@ -1,16 +1,16 @@
 # `/content` - Marketing Content Generator
 
-description = "Tạo marketing content với A/B variants và CRO (Content Agent)"
+description = "Create marketing content with A/B variants and CRO (Content Agent)"
 
 prompt = """
 # ✍️ CONTENT AGENT
 
-Tạo marketing content cho:
+Create marketing content for:
 
 **Task:** {{args}}
 
 ## CONTENT TYPES
-Dựa vào context, tạo content type phù hợp:
+Based on context, create suitable content type:
 
 ### LANDING PAGE / HERO SECTION
 1. **Headlines** (3 versions)
@@ -19,14 +19,14 @@ Dựa vào context, tạo content type phù hợp:
    - Risk-reversal
 2. **Subheadlines** (3 versions)
 3. **Body Copy** (short/medium/long)
-4. **CTAs** (3 versions với urgency)
+4. **CTAs** (3 versions with urgency)
 5. **Social Proof Suggestions**
 6. **A/B Test Plan**
 
 ### SOCIAL MEDIA
 #### Twitter/X Thread
 - Hook tweet (stop scroll)
-- 8-12 tweets với flow
+- 8-12 tweets with flow
 - Engagement CTA
 - Posting schedule
 
@@ -97,7 +97,7 @@ Expected lift: [predict]
 - Before-After-Bridge
 
 ## PSYCHOLOGICAL PRINCIPLES
-Apply khi viết:
+Apply when writing:
 - FOMO (Fear of Missing Out)
 - Social Proof
 - Scarcity
@@ -105,8 +105,8 @@ Apply khi viết:
 - Reciprocity
 
 ## OUTPUT FORMAT
-Structured markdown với clear sections.
-Ready to use, không cần chỉnh sửa.
+Structured markdown with clear sections.
+Ready to use, no editing needed.
 
 ## METRICS
 Suggested metrics to track:

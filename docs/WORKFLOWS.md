@@ -1,6 +1,6 @@
 # 🔄 Workflows Guide
 
-Hướng dẫn sử dụng các workflows trong Gemini-Kit.
+Guide to using workflows in Gemini-Kit.
 
 ---
 
@@ -19,17 +19,17 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 │       │                                      ▼              │
 │       └──────────────────────────  /housekeeping            │
 │                                                             │
-│   Mỗi vòng lặp → Knowledge compounds → Next loop dễ hơn    │
+│   Each loop → Knowledge compounds → Next loop easier       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Workflows Chi Tiết
+## Detailed Workflows
 
 ### 1. /explore - Research First
 
-**Khi nào:** Trước feature phức tạp, công nghệ mới
+**When:** Before complex features or new technologies
 
 ```bash
 /explore "authentication best practices"
@@ -42,7 +42,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 2. /plan - Quick Planning
 
-**Khi nào:** Feature đơn giản, scope rõ ràng
+**When:** Simple features with clear scope
 
 ```bash
 /plan "Add user profile page"
@@ -55,7 +55,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 3. /plan-compound - Comprehensive Planning
 
-**Khi nào:** Feature phức tạp, cần search existing solutions
+**When:** Complex features, need to search existing solutions
 
 ```bash
 /plan-compound "Implement OAuth2"
@@ -70,7 +70,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 4. /work - Execute Plan
 
-**Khi nào:** Đã có plan, ready to implement
+**When:** Plan ready, ready to implement
 
 ```bash
 /work
@@ -87,7 +87,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 5. /review - Quick Review
 
-**Khi nào:** Self-review, small changes
+**When:** Self-review, small changes
 
 ```bash
 /review
@@ -97,7 +97,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 6. /review-compound - Multi-Pass Review
 
-**Khi nào:** Before merge, critical changes
+**When:** Before merge, critical changes
 
 **Passes:**
 1. 🔒 Security Review
@@ -110,7 +110,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 7. /compound - Document Solution
 
-**Khi nào:** Solved interesting problem, found pattern
+**When:** Solved interesting problem, found pattern
 
 ```bash
 /compound "How we fixed the caching issue"
@@ -123,7 +123,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 8. /housekeeping - Pre-Push Cleanup
 
-**Khi nào:** MANDATORY trước git push
+**When:** MANDATORY before git push
 
 ```bash
 /housekeeping
@@ -138,7 +138,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 9. /specs - Multi-Session Initiative
 
-**Khi nào:** Work spans multiple weeks
+**When:** Work spans multiple weeks
 
 ```bash
 /specs "Major refactor"
@@ -153,7 +153,7 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ### 10. /status - Project Status
 
-**Khi nào:** Bắt đầu session, check progress
+**When:** Start of session, check progress
 
 ```bash
 /status
@@ -165,11 +165,11 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 | Situation | Workflow |
 |-----------|----------|
-| Bắt đầu feature mới | `/explore` → `/plan` |
-| Feature đơn giản | `/plan` → `/work` |
-| Feature phức tạp | `/explore` → `/plan-compound` → `/work` |
-| Review changes | `/review` hoặc `/review-compound` |
-| Trước git push | `/housekeeping` |
+| Starting a new feature | `/explore` → `/plan` |
+| Simple feature | `/plan` → `/work` |
+| Complex feature | `/explore` → `/plan-compound` → `/work` |
+| Review changes | `/review` or `/review-compound` |
+| Before git push | `/housekeeping` |
 | Multi-week project | `/specs` |
 | Check status | `/status` |
 
@@ -177,8 +177,8 @@ Hướng dẫn sử dụng các workflows trong Gemini-Kit.
 
 ## Tips
 
-1. **Luôn search trước** - `./scripts/compound-search.sh`
-2. **Plan trước code** - Không improvise
-3. **Test liên tục** - Không đợi cuối
-4. **Document solutions** - `/compound` sau khi giải bug
-5. **Housekeeping trước push** - MANDATORY
+1. **Always search first** - `./scripts/compound-search.sh`
+2. **Plan before code** - No improvisation
+3. **Test continuously** - Don't wait until the end
+4. **Document solutions** - `/compound` after fixing bug
+5. **Housekeeping before push** - MANDATORY

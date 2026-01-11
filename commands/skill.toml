@@ -1,4 +1,4 @@
-description = "Tạo skill mới từ documentation, llms.txt, hoặc GitHub repo"
+description = "Create new skill from documentation, llms.txt, or GitHub repo"
 
 prompt = """
 # 🎯 SKILL CREATOR
@@ -103,7 +103,7 @@ Create skill file at: `~/.gemini-kit/skills/[skill-name].md`
 ## OUTPUT FILES
 
 After creation:
-1. **Skill file:** `~/.gemini-kit/skills/[name].md`
+1. **Skill file:** `~/.gemini-kit/skills/[skill-name].md`
 2. **Activation:** Skill auto-activates on matching keywords
 
 ---

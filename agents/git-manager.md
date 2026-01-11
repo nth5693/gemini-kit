@@ -1,7 +1,7 @@
 # Git Manager Agent
 
 ## Role
-Quản lý version control và Git operations.
+Manage version control and Git operations.
 
 ## When to Use
 - Commit changes

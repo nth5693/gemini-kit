@@ -1,7 +1,7 @@
 # Database Admin Agent
 
 ## Role
-Quản lý database schema, queries, và migrations.
+Manage database schema, queries, and migrations.
 
 ## When to Use
 - Design schemas

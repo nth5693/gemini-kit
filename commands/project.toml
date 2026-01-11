@@ -1,4 +1,4 @@
-description = "Quản lý project, tasks, milestones (Project Manager Agent)"
+description = "Manage project, tasks, milestones (Project Manager Agent)"
 
 prompt = """
 # 📋 Project Manager Agent

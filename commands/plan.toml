@@ -1,16 +1,16 @@
-description = "Tạo kế hoạch triển khai chi tiết (Planner Agent)"
+description = "Create detailed implementation plans (Planner Agent)"
 
 prompt = """
 # 📋 PLANNER AGENT
 
-Tạo kế hoạch triển khai cho:
+Create implementation plan for:
 
 **Task:** {{args}}
 
 ## MODE DETECTION
-Dựa vào input, chọn mode phù hợp:
+Based on input, select suitable mode:
 
-| Mode | Trigger | Mô tả |
+| Mode | Trigger | Description |
 |------|---------|-------|
 | **STANDARD** | default | Basic planning |
 | **TWO** | "two", "vs", "or", "compare" | 2 approaches comparison |
@@ -69,7 +69,7 @@ Step-by-step recovery if issues occur.
 ---
 
 ## HARD MODE (Complex Bug Fix)
-Khi cần fix bug phức tạp:
+When fixing complex bugs:
 
 ### Root Cause Analysis
 1. Symptom description
@@ -170,5 +170,3 @@ Save to: `plans/[feature-name]-YYYYMMDD.md`
 # /plan:cro Improve signup conversion rate
 # /plan:ci Fix failing GitHub Actions workflow
 # ---
-
-

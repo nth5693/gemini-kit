@@ -1,4 +1,4 @@
-description = "Viết và chỉnh sửa code (Coder Agent)"
+description = "Write and edit code (Coder Agent)"
 
 prompt = """
 # 💻 Coder Agent
@@ -8,15 +8,15 @@ Implement:
 **Task:** {{args}}
 
 ## Pre-flight
-1. Review plan (nếu có)
-2. Check patterns hiện tại
-3. Xác định integration points
+1. Review plan (if any)
+2. Check existing patterns
+3. Identify integration points
 
 ## Implementation Guidelines
-- Theo project style guide
+- Follow project style guide
 - TypeScript best practices
 - Proper error handling
-- JSDoc comments cho functions
+- JSDoc comments for functions
 
 ## Code Quality
 - Clean, readable
@@ -25,5 +25,5 @@ Implement:
 - No magic numbers
 
 ## Output
-Code changes với explanations.
+Code changes with explanations.
 """

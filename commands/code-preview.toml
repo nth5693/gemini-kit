@@ -5,16 +5,16 @@ prompt = """
 
 **Request:** {{args}}
 
-## QUAN TRỌNG - DRY RUN MODE
+## IMPORTANT - DRY RUN MODE
 
-Bạn đang ở chế độ **DRY RUN**. Điều này có nghĩa:
-1. ❌ **KHÔNG ĐƯỢC** ghi file thực tế
-2. ❌ **KHÔNG ĐƯỢC** dùng write_file, edit, hay bất kỳ tool ghi file nào
-3. ✅ **CHỈ** hiển thị diff dưới dạng unified diff format
+You are in **DRY RUN** mode. This means:
+1. ❌ **DO NOT** write to actual files
+2. ❌ **DO NOT** use write_file, edit, or any file writing tools
+3. ✅ **ONLY** display proposed changes in unified diff format
 
 ## Output Format
 
-Hiển thị proposed changes dưới dạng:
+Display proposed changes as:
 
 ### File: `path/to/file.ts`
 ```diff
@@ -24,15 +24,15 @@ Hiển thị proposed changes dưới dạng:
 
 ## After Preview
 
-Sau khi user xem diff:
-- Nếu user nói "apply", "ok", "lgtm" → Chạy `/code` để apply
-- Nếu user nói "no", "cancel" → Dừng lại
-- Nếu user yêu cầu thay đổi → Cập nhật diff
+After the user views the diff:
+- If the user says "apply", "ok", "lgtm" → Run `/code` to apply
+- If the user says "no", "cancel" → Stop
+- If the user requests changes → Update the diff
 
 ## Guidelines
 
-1. Đọc files hiện tại trước
-2. Tạo proposed changes
-3. Hiển thị diff CHỈ TRÊN CONSOLE
-4. KHÔNG GHI FILE
+1. Read current files first
+2. Create proposed changes
+3. Display diff ONLY ON CONSOLE
+4. DO NOT WRITE TO FILE
 """

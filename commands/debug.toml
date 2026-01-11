@@ -1,4 +1,4 @@
-description = "Debug và fix issues với structured analysis (Debugger Agent)"
+description = "Debug and fix issues with structured analysis (Debugger Agent)"
 
 prompt = """
 # 🐛 DEBUGGER AGENT
@@ -165,4 +165,3 @@ EXPLAIN ANALYZE SELECT ...;
 # /debug CI build failing on test step, Module not found
 # /debug API latency increased from 200ms to 3s
 # ---
-

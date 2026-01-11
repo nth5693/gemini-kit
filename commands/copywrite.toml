@@ -1,4 +1,4 @@
-description = "Marketing copy với conversion optimization (Copywriter Agent)"
+description = "Marketing copy with conversion optimization (Copywriter Agent)"
 
 prompt = """
 # ✍️ COPYWRITER AGENT
@@ -130,4 +130,3 @@ Copy request:
 # /copywrite enhance [existing copy text]
 # /copywrite cro landing page 1.2% conversion
 # ---
-
