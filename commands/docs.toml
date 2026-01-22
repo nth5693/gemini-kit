@@ -137,9 +137,9 @@ git add docs/ && git commit -m "docs: update for auth"
 ```
 
 > **Key Takeaway:** Keep docs synchronized with code. Run after every feature, validate weekly.
-"
+"""
 
----
+# ---
 # USAGE:
 # /docs init              - Create full docs suite
 # /docs update            - Scan git diff, update docs
