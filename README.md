@@ -193,17 +193,23 @@ Skills are loaded automatically based on context and agent configuration.
 
 ## ⌨️ Commands
 
-### 🔄 Core Workflow (Compound Loop)
+### 🔄 Core Workflow
 
+**Slash Commands:**
 | Command | Description | Example |
 |---------|-------------|---------|
-| `/explore` | Research before implementing | `/explore JWT authentication best practices` |
-| `/plan` | Create detailed implementation plan | `/plan Add user authentication with JWT` |
-| `/work` | Execute plan step by step | `/work` |
-| `/review` | Code review with multi-pass analysis | `/review src/api/auth.ts` |
-| `/compound` | Document solution for future use | `/compound` |
-| `/housekeeping` | Cleanup before git push | `/housekeeping` |
-| `/cycle` | Run full workflow cycle | `/cycle Add payment integration` |
+| `/plan` | Create detailed implementation plan | `/plan Add user authentication` |
+| `/review` | Code review with Reviewer Agent | `/review src/api/auth.ts` |
+| `/cook` | Full dev cycle (plan→code→test→review) | `/cook Add login feature` |
+
+**Workflows (type name or use `/workflow`):**
+| Workflow | Description |
+|----------|-------------|
+| `explore` | Research before implementing |
+| `work` | Execute plan step by step |
+| `compound` | Document solution for future use |
+| `housekeeping` | Cleanup before git push |
+| `cycle` | Run full workflow cycle |
 
 ### 💻 Development
 
@@ -271,28 +277,24 @@ Skills are loaded automatically based on context and agent configuration.
 | `/status` | Show project status | `/status` |
 | `/kit-setup` | Initialize project context | `/kit-setup` |
 
-### ⚡ Workflows (Advanced)
+### ⚡ Workflows (via `/workflow` command)
 
-| Command | Description |
-|---------|-------------|
-| `/specs` | Create multi-session specifications |
-| `/plan-compound` | Create plan with solution search |
-| `/review-compound` | Multi-pass code review |
-| `/triage` | Triage review findings |
-| `/triage-sprint` | Batch process pending todos |
-| `/resolve_todo` | Resolve multiple todos |
-| `/resolve_pr` | Handle PR comments |
-| `/report-bug` | Report bugs with reproduction steps |
-| `/reproduce-bug` | Reproduce reported bugs |
-| `/promote_pattern` | Promote issue to critical pattern |
-| `/compound_health` | Check compound system health |
-| `/heal-skill` | Fix broken skills |
-| `/skill-review` | Review potential new skills |
-| `/create-agent-skill` | Create new agent skill |
-| `/generate_command` | Create new workflow command |
-| `/deploy-docs` | Deploy documentation |
-| `/release-docs` | Prepare release documentation |
-| `/xcode-test` | Run Xcode tests (iOS) |
+> **Note**: These are workflow guides in `.agent/workflows/`. Run them using `/workflow [name]` or just type the workflow name as a prompt.
+
+| Workflow | Description |
+|----------|-------------|
+| `explore` | Deep research before planning |
+| `plan-compound` | Create plan with solution search |
+| `work` | Execute plan step by step |
+| `review-compound` | Multi-pass code review |
+| `compound` | Document solution for reuse |
+| `housekeeping` | Cleanup before git push |
+| `specs` | Create multi-session specifications |
+| `triage` | Triage review findings |
+| `report-bug` | Report bugs with reproduction steps |
+| `adr` | Create Architecture Decision Record |
+| `changelog` | Generate changelog from commits |
+| `kit-setup` | Initialize project context |
 
 ### 🔧 Utilities
 
