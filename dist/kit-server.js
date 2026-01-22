@@ -21530,7 +21530,7 @@ function registerKnowledgeTools(server2) {
         if (!fs3.existsSync(learningsFile)) {
           fs3.writeFileSync(learningsFile, `# Gemini-Kit Learnings
 
-> AI t\u1EF1 \u0111\u1ED9ng h\u1ECDc t\u1EEB feedback c\u1EE7a user.
+> AI automatically learns from user feedback.
 
 ---
 

@@ -34,6 +34,10 @@ Details about each agent in the `agents/` directory:
 | Brainstormer | [brainstormer.md](agents/brainstormer.md) | Generate creative ideas |
 | Fullstack Developer | [fullstack-developer.md](agents/fullstack-developer.md) | Full-stack development |
 | Project Manager | [project-manager.md](agents/project-manager.md) | Project management |
+| Security Auditor | [security-auditor.md](agents/security-auditor.md) | Security audit, vulnerability scanning |
+| Frontend Specialist | [frontend-specialist.md](agents/frontend-specialist.md) | React, Next.js, UI/UX expert |
+| Backend Specialist | [backend-specialist.md](agents/backend-specialist.md) | API, Database, Docker expert |
+| DevOps Engineer | [devops-engineer.md](agents/devops-engineer.md) | CI/CD, Kubernetes, Infrastructure |
 
 ## Workflow
 

@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-01-22
+
+### 🎉 Major Release - Antigravity Kit Integration
+
+Integrated features from Antigravity Compound Engineering Plugin and Antigravity Kit.
+
+### ✨ New Agents (4)
+
+- **Security Auditor**: Master cybersecurity specialist for code audit, vulnerability scanning, OWASP compliance
+- **Frontend Specialist**: Frontend architect expert in React, Next.js, UI/UX, SEO, performance
+- **Backend Specialist**: Backend architect expert in API design, database architecture, Docker
+- **DevOps Engineer**: Infrastructure & CI/CD expert for Docker, Kubernetes, GitHub Actions
+
+### 🛠️ New Skills (8)
+
+- **react-patterns**: Modern React hooks, state management, component composition
+- **nextjs**: App Router, Server Components, data fetching strategies
+- **security**: OWASP Top 10, JWT security, XSS/CSRF prevention
+- **api-design**: RESTful patterns, validation, rate limiting
+- **docker**: Multi-stage builds, Docker Compose, container security
+- **mobile**: React Native, Flutter, mobile performance
+- **performance**: Core Web Vitals, caching strategies, optimization
+- **tailwind**: Tailwind CSS v4 patterns, responsive design
+
+### 📊 Stats
+
+- **Total Agents**: 19 (was 15)
+- **Total Skills**: 15 categories (was 7)
+- **Tests**: 291 passing
+- **Lint**: 0 warnings, 0 errors
+- **Build**: Successful
+
+---
+
+
 ## [3.0.0] - 2024-12-20
 
 ### 🎉 Major Release - Comprehensive Bug Fix & Quality Improvement
