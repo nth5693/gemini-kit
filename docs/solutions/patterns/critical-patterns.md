@@ -1,6 +1,6 @@
 ---
 tags: [patterns, compound-learning, workflows, architecture]
-last_referenced: "2025-12-23"
+last_referenced: "2026-01-24"
 ---
 
 # Antigravity Critical Patterns

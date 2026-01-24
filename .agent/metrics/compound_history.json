@@ -60,5 +60,72 @@
       "count": 0
     },
     "health_grade": "D"
+  },
+  {
+    "date": "2026-01-24",
+    "solutions": {
+      "total": 3,
+      "hit_rate": 100,
+      "zombies": 1
+    },
+    "workflows": {
+      "invocations": 18,
+      "top": [
+        {
+          "name": "/review-compound",
+          "count": 3
+        },
+        {
+          "name": "/housekeeping",
+          "count": 3
+        },
+        {
+          "name": "/work",
+          "count": 2
+        }
+      ],
+      "unused_count": 23,
+      "unused": [
+        "/adr",
+        "/changelog",
+        "/compound_health",
+        "/create-agent-skill",
+        "/cycle",
+        "/deploy-docs",
+        "/development-rules",
+        "/doc",
+        "/documentation-management",
+        "/generate_command",
+        "/heal-skill",
+        "/kit-setup",
+        "/orchestration-protocol",
+        "/primary-workflow",
+        "/promote_pattern",
+        "/release-docs",
+        "/report-bug",
+        "/reproduce-bug",
+        "/resolve_pr",
+        "/resolve_todo",
+        "/triage-sprint",
+        "/triage",
+        "/xcode-test"
+      ]
+    },
+    "skills": {
+      "invocations": 0,
+      "top": []
+    },
+    "todos": {
+      "active": 0,
+      "avg_quality": 0
+    },
+    "drift": {
+      "plan_drift": 0,
+      "spec_drift": 0
+    },
+    "explorations": {
+      "count": 2
+    },
+    "health_grade": "D"
   }
 ]

@@ -16,7 +16,7 @@ tags:
   - antigravity
 related_issues: []
 related_solutions: []
-last_referenced: "2024-12-24"
+last_referenced: "2026-01-24"
 ---
 
 # Integrating Antigravity Compound Engineering Plugin into Gemini-Kit
@@ -141,9 +141,9 @@ Add **Compound Behaviors** section with:
 
 ### Related
 
-- [Exploration Document](../explorations/compound-plugin-integration-20241224.md)
-- [Compound System Architecture](../architecture/compound-system.md)
-- [Critical Patterns](../solutions/patterns/critical-patterns.md)
+- [Exploration Document](../../explorations/compound-plugin-integration-20241224.md)
+- [Compound System Architecture](../../architecture/compound-system.md)
+- [Critical Patterns](../patterns/critical-patterns.md)
 
 ### External Resources
 

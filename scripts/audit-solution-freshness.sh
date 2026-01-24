@@ -31,8 +31,11 @@ get_creation_date() {
 
 # Iterate all solution files
 while IFS= read -r file; do
-    # Skip non-markdown or schema
+    # Skip non-markdown, schema, README, and template files
     if [[ "$file" == *"schema.yaml" ]]; then continue; fi
+    if [[ "$file" == *"README.md" ]]; then continue; fi
+    if [[ "$file" == *"template"* ]]; then continue; fi
+    if [[ "$file" == *"/templates/"* ]]; then continue; fi
     
     # Get Frontmatter Data (using simple grep for speed/portability)
     LAST_REF=$(grep "^  last_referenced:" "$file" | awk '{print $2}' | tr -d '"')
