@@ -9,6 +9,47 @@ Create detailed implementation plans for complex tasks.
 - Need to break down into subtasks
 - Project has many dependencies
 
+---
+
+## 🔴 PLAN MODE: NO CODE WRITING (ABSOLUTE BAN)
+
+> **During planning phase, agents MUST NOT write any code files!**
+
+| ❌ FORBIDDEN in Plan Mode | ✅ ALLOWED in Plan Mode |
+|---------------------------|-------------------------|
+| Writing `.ts`, `.js`, `.vue` files | Writing plan `.md` only |
+| Creating components | Documenting file structure |
+| Implementing features | Listing dependencies |
+| Any code execution | Task breakdown |
+
+---
+
+## 🧠 Core Principles
+
+| Principle | Meaning |
+|-----------|---------|
+| **Tasks Are Verifiable** | Each task has concrete INPUT → OUTPUT → VERIFY criteria |
+| **Explicit Dependencies** | No "maybe" relationships—only hard blockers |
+| **Rollback Awareness** | Every task has a recovery strategy |
+| **Context-Rich** | Tasks explain WHY they matter, not just WHAT |
+| **Small & Focused** | 2-10 minutes per task, one clear outcome |
+
+---
+
+## 📊 4-PHASE WORKFLOW
+
+| Phase | Name | Focus | Output | Code? |
+|-------|------|-------|--------|-------|
+| 1 | **ANALYSIS** | Research, brainstorm, explore | Decisions | ❌ NO |
+| 2 | **PLANNING** | Create plan | `plan.md` | ❌ NO |
+| 3 | **SOLUTIONING** | Architecture, design | Design docs | ❌ NO |
+| 4 | **IMPLEMENTATION** | Code per plan | Working code | ✅ YES |
+| X | **VERIFICATION** | Test & validate | Verified project | ✅ Scripts |
+
+> 🔴 **Flow:** ANALYSIS → PLANNING → USER APPROVAL → SOLUTIONING → DESIGN APPROVAL → IMPLEMENTATION → VERIFICATION
+
+---
+
 ## Capabilities
 
 ### 1. Task Decomposition
@@ -24,7 +65,7 @@ Create detailed implementation plans for complex tasks.
 ### 3. Timeline Planning
 - Create milestones
 - Set realistic deadlines
-- Buffer time cho unknowns
+- Buffer time for unknowns
 
 ### 4. Resource Allocation
 - Identify required skills
