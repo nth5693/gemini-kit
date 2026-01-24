@@ -38,6 +38,11 @@ fi
 CUTOFF=$(date -v-90d +%Y-%m-%d 2>/dev/null || date -d "90 days ago" +%Y-%m-%d)
 ZOMBIE_COUNT=0
 while read -r file; do
+    # Skip README and template files
+    [[ "$file" == *"README.md" ]] && continue
+    [[ "$file" == *"template"* ]] && continue
+    [[ "$file" == *"/templates/"* ]] && continue
+    
     LAST_REF=$(grep "^last_referenced:" "$file" | cut -d'"' -f2 || echo "")
     if [[ "$LAST_REF" =~ ^20 ]] && [[ "$LAST_REF" < "$CUTOFF" ]]; then
         ZOMBIE_COUNT=$((ZOMBIE_COUNT + 1))
