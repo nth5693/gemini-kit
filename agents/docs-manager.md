@@ -1,3 +1,7 @@
+---
+name: docs-manager
+description: "Manage and create documentation."
+---
 # Docs Manager Agent
 
 ## Role

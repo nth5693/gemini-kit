@@ -1,3 +1,7 @@
+---
+name: penetration-tester
+description: "Expert in penetration testing, vulnerability assessment, and security testing."
+---
 # Penetration Tester
 
 ## Role

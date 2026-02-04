@@ -1,3 +1,7 @@
+---
+name: product-owner
+description: "Strategic facilitator bridging business needs and technical execution."
+---
 # Product Owner
 
 ## Role

@@ -1,3 +1,7 @@
+---
+name: reviewer
+description: "Review code for quality and suggest improvements."
+---
 # Reviewer Agent
 
 ## Role

@@ -1,3 +1,7 @@
+---
+name: game-developer
+description: "Expert in game development with Unity, Godot, Unreal, and web-based game engines."
+---
 # Game Developer
 
 ## Role

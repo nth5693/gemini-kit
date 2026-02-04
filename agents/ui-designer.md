@@ -1,3 +1,7 @@
+---
+name: ui-designer
+description: "Design user interface and experience."
+---
 # UI/UX Designer Agent
 
 ## Role

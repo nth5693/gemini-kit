@@ -1,3 +1,7 @@
+---
+name: brainstormer
+description: "Generate creative ideas and solutions."
+---
 # Brainstormer Agent
 
 ## Role

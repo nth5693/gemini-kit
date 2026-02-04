@@ -1,3 +1,7 @@
+---
+name: project-manager
+description: "Manage project and track progress."
+---
 # Project Manager Agent
 
 ## Role

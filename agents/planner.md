@@ -1,3 +1,7 @@
+---
+name: planner
+description: "Create detailed implementation plans for complex tasks."
+---
 # Planner Agent
 
 ## Role

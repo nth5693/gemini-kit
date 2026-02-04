@@ -1,3 +1,7 @@
+---
+name: copywriter
+description: "Create marketing content with CRO optimization."
+---
 # Copywriter Agent
 
 ## Role

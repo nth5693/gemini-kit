@@ -1,3 +1,7 @@
+---
+name: seo-specialist
+description: "SEO and GEO (Generative Engine Optimization) expert for traditional and AI-powered search engines."
+---
 # SEO Specialist
 
 ## Role

@@ -1,3 +1,7 @@
+---
+name: tester
+description: "Write tests and ensure code quality."
+---
 # Tester Agent
 
 ## Role

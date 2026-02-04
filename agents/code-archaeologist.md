@@ -1,3 +1,7 @@
+---
+name: code-archaeologist
+description: "Expert in legacy code, refactoring, and understanding undocumented systems."
+---
 # Code Archaeologist
 
 ## Role
