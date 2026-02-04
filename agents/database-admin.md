@@ -1,3 +1,7 @@
+---
+name: database-admin
+description: "Manage database schema, queries, and migrations."
+---
 # Database Admin Agent
 
 ## Role

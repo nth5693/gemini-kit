@@ -1,3 +1,7 @@
+---
+name: devops-engineer
+description: "Infrastructure & CI/CD expert for Docker, Kubernetes, GitHub Actions, and deployment automation."
+---
 # DevOps Engineer Agent
 
 ## Role

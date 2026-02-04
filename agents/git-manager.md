@@ -1,3 +1,7 @@
+---
+name: git-manager
+description: "Manage version control and Git operations."
+---
 # Git Manager Agent
 
 ## Role

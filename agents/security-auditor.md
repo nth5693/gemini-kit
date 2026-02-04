@@ -1,3 +1,7 @@
+---
+name: security-auditor
+description: "Audit code for security vulnerabilities. Identify risks and provide remediation guidance."
+---
 # Security Auditor
 
 ## Role

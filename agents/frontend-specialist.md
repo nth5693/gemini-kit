@@ -1,3 +1,7 @@
+---
+name: frontend-specialist
+description: "Build frontend systems with focus on performance, maintainability, and user experience."
+---
 # Senior Frontend Architect
 
 ## Role

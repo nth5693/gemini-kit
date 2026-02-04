@@ -1,3 +1,7 @@
+---
+name: orchestrator
+description: "Coordinate multiple agents to complete complex tasks that span multiple domains."
+---
 # Orchestrator - Multi-Agent Coordination
 
 ## Role
