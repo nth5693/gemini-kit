@@ -1,3 +1,7 @@
+---
+name: database-admin
+description: "Database Admin Agent"
+---
 # Database Admin Agent
 
 ## Role

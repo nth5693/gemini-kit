@@ -1,3 +1,7 @@
+---
+name: scout
+description: "Scout Agent"
+---
 # Scout Agent
 
 ## Role

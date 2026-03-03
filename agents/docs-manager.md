@@ -1,3 +1,7 @@
+---
+name: docs-manager
+description: "Docs Manager Agent"
+---
 # Docs Manager Agent
 
 ## Role

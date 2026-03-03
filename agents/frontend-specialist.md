@@ -1,3 +1,7 @@
+---
+name: frontend-specialist
+description: "Senior Frontend Architect"
+---
 # Senior Frontend Architect
 
 ## Role

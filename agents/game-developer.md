@@ -1,3 +1,7 @@
+---
+name: game-developer
+description: "Game Developer"
+---
 # Game Developer
 
 ## Role

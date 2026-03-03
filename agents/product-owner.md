@@ -1,3 +1,7 @@
+---
+name: product-owner
+description: "Product Owner"
+---
 # Product Owner
 
 ## Role

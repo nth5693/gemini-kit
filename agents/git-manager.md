@@ -1,3 +1,7 @@
+---
+name: git-manager
+description: "Git Manager Agent"
+---
 # Git Manager Agent
 
 ## Role

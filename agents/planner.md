@@ -1,3 +1,7 @@
+---
+name: planner
+description: "Planner Agent"
+---
 # Planner Agent
 
 ## Role

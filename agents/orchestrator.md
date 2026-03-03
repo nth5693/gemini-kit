@@ -1,3 +1,7 @@
+---
+name: orchestrator
+description: "Orchestrator - Multi-Agent Coordination"
+---
 # Orchestrator - Multi-Agent Coordination
 
 ## Role

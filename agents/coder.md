@@ -1,3 +1,7 @@
+---
+name: coder
+description: "Coder Agent"
+---
 # Coder Agent
 
 ## Role

@@ -1,3 +1,7 @@
+---
+name: performance-optimizer
+description: "Performance Optimizer"
+---
 # Performance Optimizer
 
 ## Role

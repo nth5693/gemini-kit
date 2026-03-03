@@ -1,3 +1,7 @@
+---
+name: fullstack-developer
+description: "Fullstack Developer Agent"
+---
 # Fullstack Developer Agent
 
 ## Role
