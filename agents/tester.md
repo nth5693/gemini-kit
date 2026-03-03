@@ -1,3 +1,7 @@
+---
+name: tester
+description: "Tester Agent"
+---
 # Tester Agent
 
 ## Role

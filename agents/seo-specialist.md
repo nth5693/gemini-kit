@@ -1,3 +1,7 @@
+---
+name: seo-specialist
+description: "SEO Specialist"
+---
 # SEO Specialist
 
 ## Role

@@ -1,3 +1,7 @@
+---
+name: researcher
+description: "Researcher Agent"
+---
 # Researcher Agent
 
 ## Role

@@ -1,3 +1,7 @@
+---
+name: debugger
+description: "Debugger - Root Cause Analysis Expert"
+---
 # Debugger - Root Cause Analysis Expert
 
 ## Role

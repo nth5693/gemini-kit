@@ -1,3 +1,7 @@
+---
+name: brainstormer
+description: "Brainstormer Agent"
+---
 # Brainstormer Agent
 
 ## Role

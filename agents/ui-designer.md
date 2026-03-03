@@ -1,3 +1,7 @@
+---
+name: ui-designer
+description: "UI/UX Designer Agent"
+---
 # UI/UX Designer Agent
 
 ## Role

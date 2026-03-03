@@ -1,3 +1,7 @@
+---
+name: reviewer
+description: "Reviewer Agent"
+---
 # Reviewer Agent
 
 ## Role

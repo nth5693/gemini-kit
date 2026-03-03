@@ -1,3 +1,7 @@
+---
+name: copywriter
+description: "Copywriter Agent"
+---
 # Copywriter Agent
 
 ## Role

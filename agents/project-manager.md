@@ -1,3 +1,7 @@
+---
+name: project-manager
+description: "Project Manager Agent"
+---
 # Project Manager Agent
 
 ## Role

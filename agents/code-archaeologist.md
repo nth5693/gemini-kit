@@ -1,3 +1,7 @@
+---
+name: code-archaeologist
+description: "Code Archaeologist"
+---
 # Code Archaeologist
 
 ## Role

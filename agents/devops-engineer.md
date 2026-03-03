@@ -1,3 +1,7 @@
+---
+name: devops-engineer
+description: "DevOps Engineer Agent"
+---
 # DevOps Engineer Agent
 
 ## Role
